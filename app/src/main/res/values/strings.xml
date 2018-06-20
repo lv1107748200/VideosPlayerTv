@@ -1,0 +1,4 @@
+<resources>
+    <item name="tag_view_hold" type="id" />
+    <string name="app_name">VideosPlayerTv</string>
+</resources>

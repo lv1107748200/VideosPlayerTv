@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+    <style name="TwoWayViewBase">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+    <style name="oneWayView" parent="TwoWayViewBase">
+        <item name="android:scrollbars">none</item>
+    </style>
+    <style name="TwoWayView" parent="TwoWayViewBase">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:paddingTop">@dimen/x36</item>
+        <item name="android:paddingLeft">@dimen/x60</item>
+        <item name="android:paddingRight">@dimen/x60</item>
+        <item name="android:paddingBottom">@dimen/x60</item>
+    </style>
+
+
+</resources>

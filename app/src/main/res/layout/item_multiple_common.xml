@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        >
+
+        <ImageView
+            android:focusable="true"
+            android:clickable="true"
+            android:id="@+id/image_one"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/hehe"
+            />
+        <ImageView
+            android:id="@+id/image_two"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:background="@drawable/hehe"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:padding="20dp"
+        android:layout_weight="1.6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:padding="20dp"
+        android:layout_weight="1.4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/image_three"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/hehe"
+            />
+        <ImageView
+            android:id="@+id/image_four"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/hehe"
+            />
+        <ImageView
+            android:id="@+id/image_five"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:background="@drawable/hehe"
+            />
+    </LinearLayout>
+
+</LinearLayout>
