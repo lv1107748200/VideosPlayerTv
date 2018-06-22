@@ -87,6 +87,7 @@ dependencies {
     implementation externalAndroidSupportV4
     implementation externalAndroidConstraintLayout
     implementation leanbackv17
+    implementation externalAndroidDesign
     testImplementation externalJunit
     androidTestImplementation externalAndroidTestRunner
     androidTestImplementation externalAndroidTestEspressoCore
@@ -130,5 +131,8 @@ dependencies {
 
     implementation project(':tvRecycleview')
     implementation project(':mylibrary')
+
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
 
 }

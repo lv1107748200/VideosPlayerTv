@@ -68,7 +68,7 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
     private WeakReference<View> mOldFocusView;
     private OnFocusCallback mOnFocusCallback;
     private boolean mIsVisible = false;
-    
+
     private float mScaleX;
     private float mScaleY;
     
@@ -179,8 +179,9 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
     public void setVisible(boolean visible) {
         if(mIsVisible != visible) {
             mIsVisible = visible;
-            setVisibility(visible ? VISIBLE : INVISIBLE);
-            
+            setVisibility(visible ? VISIBLE : GONE);
+
+
             if(!visible && null != mOldFocusView && null != mOldFocusView.get()) {
                 runFocusScaleAnimation(mOldFocusView.get(), 1f, 1f);
                 mOldFocusView.clear();
@@ -313,7 +314,7 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         
         final Options options = null != mOnFocusCallback ? (Options) mOnFocusCallback.onFocus(oldFocus, newFocus) : null;
         if(null != options) {
-            runFocusAnimation(newFocus, options);
+           runFocusAnimation(newFocus, options);
         }
     }
 
@@ -322,7 +323,7 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         mScaleX = options.scaleX;
         mScaleY = options.scaleY;
         runFocusScaleAnimation(focusView, mScaleX, mScaleY); // 焦点缩放动画
-        runBorderAnimation(focusView, options); // 移动边框的动画。
+       // runBorderAnimation(focusView, options); // 移动边框的动画。
     }
     
     protected void runBorderAnimation(View focusView, Options options) {
@@ -366,11 +367,12 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         final int newY = toRect.top - fromRect.top;
         
         final List<Animator> together = new ArrayList<>();
-        final List<Animator> appendTogether = getTogetherAnimators(newX, newY, newWidth, newHeight, options);
-        together.add(getTranslationXAnimator(newX));
-        together.add(getTranslationYAnimator(newY));
-        together.add(getWidthAnimator(newWidth));
-        together.add(getHeightAnimator(newHeight));
+         final List<Animator> appendTogether = getTogetherAnimators(newX, newY, newWidth, newHeight, options);
+
+            together.add(getTranslationXAnimator(newX));
+            together.add(getTranslationYAnimator(newY));
+            together.add(getWidthAnimator(newWidth));
+            together.add(getHeightAnimator(newHeight));
 
         if(null != appendTogether && !appendTogether.isEmpty()) {
             together.addAll(appendTogether);

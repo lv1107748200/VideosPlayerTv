@@ -1,4 +1,19 @@
 <resources>
     <item name="tag_view_hold" type="id" />
     <string name="app_name">VideosPlayerTv</string>
+
+    <string name="svp_search">搜索</string>
+    <string name="svp_personal_center">个人中心</string>
+    <string name="svp_favorite">收藏夹</string>
+    <string name="svp_histories">历史纪录</string>
+    <string name="svp_recently_played_videos">播放记录</string>
+
+    <!-- 键盘自定义按键，这只是DEMO，你可以自定义自己的 -->
+    <string name="keycode_space">62</string> <!-- 空格 -->
+    <string name="keycode_center">66</string> <!-- 回车 -->
+    <string name="keycode_back">4</string> <!-- 返回 -->
+    <string name="keycode_left">21</string> <!-- 左边 -->
+    <string name="keycode_right">22</string> <!-- 右边 -->
+    <string name="keycode_del">67</string> <!-- 删除 -->
+
 </resources>

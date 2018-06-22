@@ -2,6 +2,7 @@ package com.hr.videosplayertv.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.hr.videosplayertv.R;
@@ -10,26 +11,49 @@ import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
 import com.owen.tvrecyclerview.widget.MetroTitleItemDecoration;
 
-public class HomeAdapter extends CommonRecyclerViewAdapter<ListData> implements MetroTitleItemDecoration.Adapter{
+public class HomeAdapter extends CommonRecyclerViewAdapter<ListData> {
+
+
 
     public HomeAdapter(Context context) {
         super(context);
     }
 
     @Override
+    public int getItemViewType(int position) {
+        ListData listData =    getItem(position);
+
+        if(null != listData){
+            if(listData.getType() == 1){
+                return 1;
+            }else {
+                return 2;
+            }
+        }
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public int getItemLayoutId(int viewType) {
-        return R.layout.item_list_data;
+        if(viewType == 1){
+            return R.layout.item_home_grid;
+        }else {
+            return R.layout.item_home_title;
+        }
     }
 
     @Override
     public void onBindItemHolder(CommonRecyclerViewHolder helper, ListData item, int position) {
-        helper.getHolder()
-                .showImage(R.id.image,"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4116929131,507038119&fm=26&gp=0.jpg");
+
+        if(item.getType() == 1){
+            helper.getHolder()
+                    .showImage(R.id.image,"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4116929131,507038119&fm=26&gp=0.jpg");
+
+        }else {
+            helper.getHolder()
+                    .setText(R.id.title,"标题");
+        }
+
     }
 
-
-    @Override
-    public View getTitleView(int index, RecyclerView parent) {
-        return null;
-    }
 }

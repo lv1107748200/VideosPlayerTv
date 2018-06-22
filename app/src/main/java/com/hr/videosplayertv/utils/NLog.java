@@ -14,6 +14,7 @@ public class NLog {
     private static boolean isDebug = true;
     public static final String TAG = "Http";
     public static final String TAGOther = "other";
+    public static final String KEY = "key";
 
     public static void d(String tag, Object... args) {
         log(Log.DEBUG, null, tag, args);

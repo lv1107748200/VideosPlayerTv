@@ -48,6 +48,8 @@
         <activity android:name=".ui.activity.ListDataActivity"/>//视频列表
         <activity android:name=".ui.activity.SearchActivity"/>//搜索
         <activity android:name=".ui.activity.DetailActivity"/>//详情页
+        <activity android:name=".ui.activity.UserCenterActivity"/>//个人中心
+        <activity android:name=".ui.activity.DiversityActivity"/>//个人中心
 
     </application>
 
