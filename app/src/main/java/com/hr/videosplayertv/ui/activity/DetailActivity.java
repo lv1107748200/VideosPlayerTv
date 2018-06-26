@@ -1,8 +1,10 @@
 package com.hr.videosplayertv.ui.activity;
 
+import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -13,7 +15,10 @@ import com.hr.videosplayertv.ui.adapter.CommentAdapter;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.GlideUtil;
+import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.widget.focus.FocusBorder;
 import com.hr.videosplayertv.widget.tablayout.TabLayout;
 import com.hr.videosplayertv.widget.tablayout.TvTabLayout;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -44,6 +49,9 @@ public class DetailActivity extends BaseActivity {
     @BindView(R.id.tab_layout)
     TvTabLayout tabLayout;
 
+    @BindView(R.id.image_poster)
+    ImageView imagePoster;
+
     private ListDataMenuAdapter listDataMenuAdapter;
 
 
@@ -53,10 +61,14 @@ public class DetailActivity extends BaseActivity {
     public void Onclick(View view){
         switch (view.getId()){
             case R.id.btn_player:
-                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+               // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                Intent intent = new Intent();
+                intent.setClass(this,PlayerActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_collect:
-                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                //behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
         }
     }
@@ -82,6 +94,9 @@ public class DetailActivity extends BaseActivity {
         selectCollect.setAdapter(listDataMenuAdapter);
 
         initData();
+
+        GlideUtil.setGlideImage(this, ImgDatasUtils.getUrl(),imagePoster);
+
     }
 
     private void initData(){

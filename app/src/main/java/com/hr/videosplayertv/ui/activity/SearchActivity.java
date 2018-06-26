@@ -32,7 +32,7 @@ public class SearchActivity extends BaseActivity {
     public void init() {
         super.init();
 
-        skbContainer = (SkbContainer) findViewById(R.id.skbContainer);
+        skbContainer = findViewById(R.id.skbContainer);
         skbContainer.setSkbLayout(R.xml.sbd_qwerty);
         skbContainer.setFocusable(true);
         skbContainer.setFocusableInTouchMode(true);
@@ -133,11 +133,14 @@ public class SearchActivity extends BaseActivity {
     private void setSkbContainerMove() {
         mOldSoftKey = null;
         skbContainer.setMoveSoftKey(true); // 设置是否移动按键边框.
+
+        int sise = DisplayUtils.getDimen(R.dimen.x20);
+
         RectF rectf = new RectF(
-                DisplayUtils.dip2px(15),
-                DisplayUtils.dip2px(15),
-                DisplayUtils.dip2px(15),
-                DisplayUtils.dip2px(15)
+                sise,
+                sise,
+                sise,
+                sise
         );
         skbContainer.setSoftKeySelectPadding(rectf); // 设置移动边框相差的间距.
         skbContainer.setMoveDuration(200); // 设置移动边框的时间(默认:300)

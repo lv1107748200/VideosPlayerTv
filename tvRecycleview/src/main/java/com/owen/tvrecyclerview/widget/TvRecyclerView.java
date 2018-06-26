@@ -357,6 +357,8 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     
     @Override
     public void onClick(View itemView) {
+        Loger.i("onClick");
+
         if(null != mOnItemListener && this != itemView) {
             mOnItemListener.onItemClick(TvRecyclerView.this, itemView, getChildAdapterPosition(itemView));
         }

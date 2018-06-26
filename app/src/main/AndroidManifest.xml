@@ -50,6 +50,7 @@
         <activity android:name=".ui.activity.DetailActivity"/>//详情页
         <activity android:name=".ui.activity.UserCenterActivity"/>//个人中心
         <activity android:name=".ui.activity.DiversityActivity"/>//个人中心
+        <activity android:name=".ui.activity.PlayerActivity"/>//播放页
 
     </application>
 

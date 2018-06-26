@@ -12,9 +12,9 @@ import android.util.Log;
  */
 public class Loger {
 
-    private final static String customTagPrefix = "[other]";
+    private final static String customTagPrefix = "tvRecycleView";
     
-    public static boolean isDebug = false;
+    public static boolean isDebug = true;
 
     private Loger() {
     }

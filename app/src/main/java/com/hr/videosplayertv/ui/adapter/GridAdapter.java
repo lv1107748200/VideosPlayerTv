@@ -24,7 +24,7 @@ import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.net.entry.ListData;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
-
+import com.hr.videosplayertv.utils.ImgDatasUtils;
 
 
 public class GridAdapter extends CommonRecyclerViewAdapter<ListData> {
@@ -40,6 +40,6 @@ public class GridAdapter extends CommonRecyclerViewAdapter<ListData> {
     @Override
     public void onBindItemHolder(CommonRecyclerViewHolder helper, ListData item, int position) {
         helper.getHolder()
-        .showImage(R.id.image,"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4116929131,507038119&fm=26&gp=0.jpg");
+        .showImage(R.id.image, ImgDatasUtils.getUrl());
     }
 }

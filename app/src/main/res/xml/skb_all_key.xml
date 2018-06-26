@@ -2,32 +2,32 @@
 <!-- 全键盘 -->
 <Keyboard
     bg_res="@drawable/main_bg"
-    key_left_padding="@dimen/w_10"
+    key_left_padding="@dimen/x10"
     key_bg_res="@drawable/key_bg_rectangle"
     key_press_res="@drawable/softkey_bg_press2"
     key_select_res="@drawable/softkey_bg_select2"
     key_text_color="#b8bbbf"
-    key_text_size="@dimen/w_30"
-    key_top_padding="@dimen/h_10"
-    key_height="@dimen/h_70"
-    key_width="@dimen/w_70"
-    start_pos_x="@dimen/w_240"
-    start_pos_y="@dimen/h_20"
+    key_text_size="@dimen/x30"
+    key_top_padding="@dimen/x10"
+    key_height="@dimen/x70"
+    key_width="@dimen/x70"
+    start_pos_x="@dimen/x240"
+    start_pos_y="@dimen/x20"
     left_right_move="false"
     top_bottom_move="false" >
 
     <!-- 第一行 -->
-    <row>
-         <!-- 删除 -->
-        <key
-            key_code="@string/keycode_del"
-            key_icon="@drawable/delete" />
-        <!-- 删除 -->
-        <key
-            key_left_padding="@dimen/w_250"
-            key_code="@string/keycode_del"
-            key_icon="@drawable/delete" />
-    </row>
+    <!--<row>-->
+         <!--&lt;!&ndash; 删除 &ndash;&gt;-->
+        <!--<key-->
+            <!--key_code="@string/keycode_del"-->
+            <!--key_icon="@drawable/delete" />-->
+        <!--&lt;!&ndash; 删除 &ndash;&gt;-->
+        <!--<key-->
+            <!--key_left_padding="@dimen/x250"-->
+            <!--key_code="@string/keycode_del"-->
+            <!--key_icon="@drawable/delete" />-->
+    <!--</row>-->
     
     <!-- 第二行 -->
     <row>
@@ -49,14 +49,23 @@
             labels="U|V|W|X|Y"
             splitter="|" />
     </row>
-    
     <row>
-        <key
-            key_label="Z" />
-        <!-- 123数字切换 -->
-        <key
-            key_code="250"
-            key_icon="@drawable/quit_skb" />
+        <keys
+            labels="1|2|3|4|5"
+            splitter="|" />
+    </row>
+    <row>
+        <keys
+            labels="6|7|8|9|0"
+            splitter="|" />
+    </row>
+    <row>
+        <!--<key-->
+            <!--key_label="Z" />-->
+        <!--&lt;!&ndash; 123数字切换 &ndash;&gt;-->
+        <!--<key-->
+            <!--key_code="250"-->
+            <!--key_icon="@drawable/quit_skb" />-->
          <!-- 删除 -->
         <key
             key_code="@string/keycode_del"

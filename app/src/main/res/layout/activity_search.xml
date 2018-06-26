@@ -6,9 +6,12 @@
 
 
     <com.hr.videosplayertv.widget.keyboard.SkbContainer
+        android:layout_weight="1"
         android:id="@+id/skbContainer"
         android:layout_width="match_parent"
-        android:layout_height="300dp" >
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        >
     </com.hr.videosplayertv.widget.keyboard.SkbContainer>
 
     <!-- 键盘切换测试 -->

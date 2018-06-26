@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hr.videosplayertv.widget.layout.RoundFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/x300"
-    app:rfl_radius="@dimen/rfl_radius"
-    android:focusable="true"
-    android:clickable="true">
-    <ImageView
+    android:layout_height="match_parent">
+
+    <com.hr.videosplayertv.widget.layout.RoundFrameLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:rfl_radius="@dimen/rfl_radius"
+        android:focusable="true"
+        android:clickable="true">
+
+       <ImageView
         android:id="@+id/image"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-</com.hr.videosplayertv.widget.layout.RoundFrameLayout>
+      </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
+
+
+</FrameLayout>

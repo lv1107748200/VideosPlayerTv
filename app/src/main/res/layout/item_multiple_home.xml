@@ -5,14 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--<com.hr.videosplayertv.widget.layout.SmoothVorizontalScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--&gt;-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical"-->
+            <!--&gt;-->
+
+            <!--<include layout="@layout/item_multiple_home_one"/>-->
+
+            <!--<com.owen.tvrecyclerview.widget.TvRecyclerView-->
+                <!--android:id="@+id/tv_list"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--style="@style/ThreeWayView"-->
+                <!--android:orientation="vertical"-->
+                <!--/>-->
+
+        <!--</LinearLayout>-->
+    <!--</com.hr.videosplayertv.widget.layout.SmoothVorizontalScrollView>-->
+
+
     <com.owen.tvrecyclerview.widget.TvRecyclerView
-        android:layout_weight="1"
         android:id="@+id/tv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/TwoWayView"
+        style="@style/ThreeWayView"
         android:orientation="vertical"
-        app:spanCount="6"
-        app:tv_layoutManager="V7GridLayoutManager"/>
+        />
 
 </LinearLayout>

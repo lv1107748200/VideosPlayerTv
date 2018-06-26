@@ -24,10 +24,21 @@ import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+import static android.view.View.GONE;
 /*
 *
 * */
@@ -38,6 +49,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
     private List<MultipleFragment> multipleFragments;
 
     private ListDataMenuAdapter listDataMenuAdapter;
+    private Disposable mDisposable;//脉搏
+
 
     @BindView(R.id.tv_view_pager)
     TvViewPager tvViewPager;
@@ -87,6 +100,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         multipleFragments = new ArrayList<>();
 
         initData();
+
+        getTimesPosable();
     }
     private void setListener() {
 
@@ -162,5 +177,78 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
 
         return super.onKeyDown(keyCode, event);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dispose();
+    }
+
+    protected void getTimesPosable() {
+
+        dispose();
+
+        mDisposable = Flowable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .doOnNext(new Consumer<Long>() {
+                    @Override
+                    public void accept(@NonNull Long aLong) throws Exception {
+
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(@NonNull Long aLong) throws Exception {
+                        tvTime.setText(getTime());
+                    }
+                });
+
+    }
+    private void dispose(){
+        if (mDisposable != null){
+            mDisposable.dispose();
+            mDisposable = null;
+        }
+    }
+
+    //获得当前年月日时分秒星期 
+    public String getTime(){
+            final Calendar c = Calendar.getInstance();
+            c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+            String mYear = String.valueOf(c.get(Calendar.YEAR)); // 获取当前年份 
+             String mMonth = String.valueOf(c.get(Calendar.MONTH) + 1);// 获取当前月份 
+            String mDay = String.valueOf(c.get(Calendar.DAY_OF_MONTH));// 获取当前月份的日期号码 
+            String mWay = String.valueOf(c.get(Calendar.DAY_OF_WEEK));
+            String mHour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));//时 
+            String mMinute = String.valueOf(c.get(Calendar.MINUTE));//分 
+            String mSecond = String.valueOf(c.get(Calendar.SECOND));//秒 
+
+            if(mSecond.length() == 1){
+                mSecond = "0"+mSecond;
+            }
+            if(mMinute.length() == 1){
+                mMinute = "0"+mMinute;
+            }
+            if(mHour.length() == 1){
+                mHour = "0"+mHour;
+            }
+            if("1".equals(mWay)){
+            mWay ="日";
+            }else if("2".equals(mWay)){
+            mWay ="一";
+            }else if("3".equals(mWay)){
+            mWay ="二";
+            }else if("4".equals(mWay)){
+            mWay ="三";
+            }else if("5".equals(mWay)){
+            mWay ="四";
+            }else if("6".equals(mWay)){
+            mWay ="五";
+            }else if("7".equals(mWay)) {
+                mWay = "六";
+            }
+     return mYear + "年" + mMonth + "月" + mDay+"日"+" "+"星期"+mWay+" "+mHour+":"+mMinute+":"+mSecond;
+   }
 
 }
