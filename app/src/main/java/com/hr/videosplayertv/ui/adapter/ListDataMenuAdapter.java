@@ -34,6 +34,8 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
 
         if(item instanceof ListData){
             helper.getHolder().setText(R.id.title, ((ListData) item).getTitle()+"title");
+        }else {
+            helper.getHolder().setText(R.id.title, item.toString());
         }
 
     }

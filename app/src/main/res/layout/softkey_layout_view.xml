@@ -4,8 +4,9 @@
     <!-- 需要绘制的键盘布局 -->
 	<com.hr.videosplayertv.widget.keyboard.SoftKeyboardView
 	    android:id="@+id/softKeyboardView"
-	    android:layout_height="match_parent"
-	    android:layout_width="match_parent"/>
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+		/>
 	
 	<!-- 弹出的键盘布局 -->
 	<com.hr.videosplayertv.widget.keyboard.SoftKeyboardView

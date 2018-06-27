@@ -35,7 +35,7 @@ import butterknife.OnClick;
  */
 public class DetailActivity extends BaseActivity {
 
-    private CommentAdapter CommentAdapter;
+
 
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
@@ -53,7 +53,7 @@ public class DetailActivity extends BaseActivity {
     ImageView imagePoster;
 
     private ListDataMenuAdapter listDataMenuAdapter;
-
+    private CommentAdapter CommentAdapter;
 
     private BottomSheetBehavior behavior;
 
@@ -82,7 +82,7 @@ public class DetailActivity extends BaseActivity {
     public void init() {
         super.init();
         setBottomSheetBehavior();
-        setTab();
+
 
         setListener();
         CommentAdapter = new CommentAdapter(this);
@@ -94,6 +94,7 @@ public class DetailActivity extends BaseActivity {
         selectCollect.setAdapter(listDataMenuAdapter);
 
         initData();
+        setTab();
 
         GlideUtil.setGlideImage(this, ImgDatasUtils.getUrl(),imagePoster);
 
@@ -108,21 +109,31 @@ public class DetailActivity extends BaseActivity {
 
 
         CommentAdapter.repaceDatas(listData);
-
-        listData.clear();
-        for (int i =0 ;i< 20; i++){
-            listData.add(new ListData());
-        }
-        listDataMenuAdapter.repaceDatas(listData);
+//
+//        listData.clear();
+//        for (int i =0 ;i< 20; i++){
+//            listData.add(new ListData());
+//        }
+//        listDataMenuAdapter.repaceDatas(listData);
 
     }
 
     private void setTab(){
+
+      final  List<String> stringList = new ArrayList<>();
+
+        for(int i=0; i<50; i++){
+            stringList.add(""+(i+1));
+        }
+
+      //  NLog.e(NLog.TAGOther,"分割大小---》"+splitList(stringList,20).size());
+
         tabLayout.setScaleValue(1.1f);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
+                listDataMenuAdapter.repaceDatas(splitList(stringList,20).get(tab.getPosition()));
             }
 
             @Override
@@ -231,6 +242,31 @@ public class DetailActivity extends BaseActivity {
         });*/
     }
 
+    /**
+     * 按指定大小，分隔集合，将集合按规定个数分为n个部分
+     *
+     * @param list
+     * @param len
+     * @return
+     */
+    private   List<List<?>> splitList(List<?> list, int len) {
+        if (list == null || list.size() == 0 || len < 1) {
+            return null;
+        }
+
+        List<List<?>> result = new ArrayList<List<?>>();
+
+
+        int size = list.size();
+        int count = (size + len - 1) / len;
+
+
+        for (int i = 0; i < count; i++) {
+            List<?> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
+            result.add(subList);
+        }
+        return result;
+    }
 
 
     //初始化滚动

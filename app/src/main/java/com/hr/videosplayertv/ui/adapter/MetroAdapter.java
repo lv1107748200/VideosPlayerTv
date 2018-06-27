@@ -38,6 +38,7 @@ public class MetroAdapter extends CommonRecyclerViewAdapter<ListData>
         MetroGridLayoutManager.LayoutParams lp = (MetroGridLayoutManager.LayoutParams) itemView.getLayoutParams();
 
         if(position >=7){
+            lp.sectionIndex = 1;
             lp.rowSpan = 6;
             lp.colSpan = 7;
         }else if(position < 7) {

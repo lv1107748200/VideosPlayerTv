@@ -17,11 +17,15 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.hr.videosplayertv.R;
+import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.NLog;
 
 import java.util.List;
 
 import static com.hr.videosplayertv.utils.NLog.KEY;
+import static com.hr.videosplayertv.utils.NLog.e;
+
 import com.hr.videosplayertv.widget.keyboard.SoftKey.SaveSoftKey;
 /**
  * 软键盘绘制控件.(主软键盘，弹出键盘)
@@ -67,8 +71,17 @@ public class SoftKeyboardView extends View {
 
 	public void clearCacheBitmap() {
 		mCacheBitmap = null;
+		requestLayout();
 		invalidate();
 	}
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+		getsize();
+	}
+
 
 	@Override
 	protected void onDraw(Canvas rootCanvas) {
@@ -101,6 +114,37 @@ public class SoftKeyboardView extends View {
 		drawSoftKey(rootCanvas, key, true);
 	}
 
+	/**
+	 * 获取布局大小
+	 */
+	private void getsize(){
+		if (mSoftKeyboard == null)
+			return;
+
+		int rowNum = this.mSoftKeyboard.getRowNum();
+
+		int j ;
+		int w ;
+		int high;
+		int width;
+		if(rowNum == 7){
+			 j =	DisplayUtils.getDimen(R.dimen.x15);
+			 w =	DisplayUtils.getDimen(R.dimen.x80);
+
+			 high = 8*j + w*7;
+			 width = high;
+
+		}else {
+			j =	DisplayUtils.getDimen(R.dimen.x20);
+			w =	DisplayUtils.getDimen(R.dimen.x200);
+		int	w1 = DisplayUtils.getDimen(R.dimen.x100);
+
+			high = 6*j + w1*5;
+			width = 4*j + w*3;
+		}
+
+		setMeasuredDimension(width, high);
+	}
 	/**
 	 * Bitmap.Config ARGB_8888：<br>
 	 * 每个像素占四位，即A=8，R=8，G=8，B=8，<br>
@@ -143,6 +187,7 @@ public class SoftKeyboardView extends View {
 			NLog.e(KEY,"softKey is null...");
 			return;
 		}
+
 		// 绘制按键背景.
 		drawSoftKeyBg(canvas, softKey);
 		// 绘制选中状态.

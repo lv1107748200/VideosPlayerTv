@@ -519,5 +519,6 @@
    <dimen name="x498">498.0px</dimen>
    <dimen name="x499">499.0px</dimen>
    <dimen name="x500">500.0px</dimen>
+   <dimen name="x680">680.0px</dimen>
 
 </resources>

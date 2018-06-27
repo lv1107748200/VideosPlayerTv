@@ -104,242 +104,28 @@ public class MultipleFragment extends BaseFragment {
     class HomeLayout{
         @BindView(R.id.tv_list)
         TvRecyclerView tvList;
-        private DelegateAdapter delegateAdapter;
+        private MetroAdapter metroAdapter;
 
         public HomeLayout(View view) {
             ButterKnife.bind(this,view);
 
             setListener();
-
-            final VirtualLayoutManager layoutManager = new VirtualLayoutManager(MultipleFragment.this.getContext());
-            tvList.setLayoutManager(layoutManager);
-            RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
-                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                    int position = ((LayoutParams) view.getLayoutParams()).getViewPosition();
-                    outRect.set(4, 4, 4, 4);
-                }
-            };
-            final RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
-            tvList.setRecycledViewPool(viewPool);
-           // tvList.addItemDecoration(itemDecoration);
-            viewPool.setMaxRecycledViews(0, 20);
-           // tvList.setNestedScrollingEnabled(false);
-            delegateAdapter = new DelegateAdapter(layoutManager, true);
-            tvList.setAdapter(delegateAdapter);
-
+            metroAdapter = new MetroAdapter(mContext);
+            tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
+            tvList.setAdapter(metroAdapter);
 
 
             initData();
         }
 
         private void initData(){
-            List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
+            List<ListData> listData = new ArrayList<>();
 
-
-            if (true) {
-                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
-
-
-                    @Override
-                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        if (viewType == 1)
-                            return new MainViewHolder(
-                                    LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
-
-                        return super.onCreateViewHolder(parent, viewType);
-                    }
-
-                    @Override
-                    public int getItemViewType(int position) {
-                        return 1;
-                    }
-
-                    @Override
-                    protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                    }
-
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                    }
-                });
+            for (int i =0 ;i< 60; i++){
+                listData.add(new ListData());
             }
 
-            if(true){
-                final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(7, 10);
-              //  helper.setMargin(20, 10, 10, 10);
-            //    helper.setPadding(10, 10, 20, 10);
-              //  helper.setBgColor(0xFF86345A);
-                adapters.add(new SubAdapter(mContext, helper, 7) {
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
-                       // super.onBindViewHolder(holder, position);
-                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
-                        holder.itemView.setLayoutParams(layoutParams);
-                    }
-                });
-            }
-
-            if (true) {
-                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
-
-
-                    @Override
-                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        if (viewType == 1)
-                            return new MainViewHolder(
-                                    LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
-
-                        return super.onCreateViewHolder(parent, viewType);
-                    }
-
-                    @Override
-                    public int getItemViewType(int position) {
-                        return 1;
-                    }
-
-                    @Override
-                    protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                    }
-
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                    }
-                });
-            }
-
-            if(true){
-                final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 10);
-                //  helper.setMargin(20, 10, 10, 10);
-                //    helper.setPadding(10, 10, 20, 10);
-                //  helper.setBgColor(0xFF86345A);
-                adapters.add(new SubAdapter(mContext, helper, 12) {
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
-                        //super.onBindViewHolder(holder, position);
-                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
-                         holder.itemView.setLayoutParams(layoutParams);
-                    }
-                });
-            }
-
-            if (true) {
-                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
-
-
-                    @Override
-                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        if (viewType == 1)
-                            return new MainViewHolder(
-                                    LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
-
-                        return super.onCreateViewHolder(parent, viewType);
-                    }
-
-                    @Override
-                    public int getItemViewType(int position) {
-                        return 1;
-                    }
-
-                    @Override
-                    protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                    }
-
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                    }
-                });
-            }
-
-            if(true){
-                final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 10);
-                //  helper.setMargin(20, 10, 10, 10);
-                //    helper.setPadding(10, 10, 20, 10);
-                //  helper.setBgColor(0xFF86345A);
-                adapters.add(new SubAdapter(mContext, helper, 12) {
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
-                        //super.onBindViewHolder(holder, position);
-                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
-                        holder.itemView.setLayoutParams(layoutParams);
-                    }
-                });
-            }
-
-            delegateAdapter.setAdapters(adapters);
-        }
-
-         class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
-
-            private Context contextontext;
-
-            private LayoutHelper mLayoutHelper;
-
-
-            private LayoutParams mLayoutParams;
-            private int mCount = 0;
-
-
-            public SubAdapter(Context context, LayoutHelper layoutHelper, int count) {
-                this(context, layoutHelper, count, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150));
-            }
-
-            public SubAdapter(Context context, LayoutHelper layoutHelper, int count, @NonNull LayoutParams layoutParams) {
-                this.contextontext = context;
-                this.mLayoutHelper = layoutHelper;
-                this.mCount = count;
-                this.mLayoutParams = layoutParams;
-            }
-
-            @Override
-            public LayoutHelper onCreateLayoutHelper() {
-                return mLayoutHelper;
-            }
-
-            @Override
-            public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_home_grid, parent, false));
-            }
-
-            @Override
-            public void onBindViewHolder(MainViewHolder holder, int position) {
-                // only vertical
-                holder.itemView.setLayoutParams(
-                        new LayoutParams(mLayoutParams));
-            }
-
-
-            @Override
-            protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                GlideUtil.setGlideImage(mContext
-                        , ImgDatasUtils.getUrl()
-                ,(ImageView) holder.itemView.findViewById(R.id.image));
-
-            }
-
-            @Override
-            public int getItemCount() {
-                return mCount;
-            }
-        }
-
-
-         class MainViewHolder extends RecyclerView.ViewHolder {
-
-            public MainViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
-            }
+            metroAdapter.repaceDatas(listData);
         }
 
         private void setListener() {
@@ -402,13 +188,6 @@ public class MultipleFragment extends BaseFragment {
 
         public ClassifyLayout(View view) {
             ButterKnife.bind(this,view);
-            mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
-                @Override
-                public FocusBorder.Options onFocus(View oldFocus, View newFocus) {
-                    return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
-                }
-            });
-
             setListener();
             tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
             gridAdapter = new GridAdapter(MultipleFragment.this.getContext());
