@@ -12,14 +12,18 @@
         android:layout_height="60dp"
         android:background="@drawable/hehe"
         />
-    <TextView
+    <com.hr.videosplayertv.widget.view.MarqueeText
         android:focusable="false"
         android:id="@+id/tv_notification"
         android:layout_weight="1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="公告"
+        android:text="公告 ：电视剧更新了，电视剧又更新了，证实了进了房间数量的就是老地方老时间老地方是来的反对反对反对"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
         />
 
     <Button
@@ -38,8 +42,9 @@
     <TextView
         android:focusable="false"
         android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_weight="1.5"
         />
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.hr.videosplayertv.ui.activity;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
@@ -23,6 +24,8 @@ import butterknife.BindView;
  */
 public class ListDataActivity extends BaseActivity {
 
+    @BindView(R.id.tv_title_child)
+    TextView tvTitleChild;
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
     @BindView(R.id.list_menu)
@@ -44,6 +47,7 @@ public class ListDataActivity extends BaseActivity {
     public void init() {
         super.init();
 
+        tvTitleChild.setText(getString(R.string.svp_list));
         setListener();
         tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
         gridAdapter = new GridAdapter(this);

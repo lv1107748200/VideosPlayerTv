@@ -248,7 +248,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
             }else if("7".equals(mWay)) {
                 mWay = "六";
             }
-     return mYear + "年" + mMonth + "月" + mDay+"日"+" "+"星期"+mWay+" "+mHour+":"+mMinute+":"+mSecond;
+     return mYear + "年" + mMonth + "月" + mDay+"日"+" "+"星期"+mWay+"\n"+mHour+":"+mMinute+":"+mSecond;
    }
 
 }

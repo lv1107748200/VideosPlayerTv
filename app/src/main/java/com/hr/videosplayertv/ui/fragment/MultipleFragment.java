@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.layout.EightLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
@@ -31,6 +32,8 @@ import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.adapter.HomeAdapter;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
 import com.hr.videosplayertv.ui.adapter.MetroAdapter;
+import com.hr.videosplayertv.ui.adapter.SubAdapter;
+import com.hr.videosplayertv.ui.adapter.viewholder.MainViewHolder;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
@@ -104,28 +107,175 @@ public class MultipleFragment extends BaseFragment {
     class HomeLayout{
         @BindView(R.id.tv_list)
         TvRecyclerView tvList;
-        private MetroAdapter metroAdapter;
+        private DelegateAdapter delegateAdapter;
 
         public HomeLayout(View view) {
             ButterKnife.bind(this,view);
 
             setListener();
-            metroAdapter = new MetroAdapter(mContext);
-            tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
-            tvList.setAdapter(metroAdapter);
+
+            final VirtualLayoutManager layoutManager = new VirtualLayoutManager(MultipleFragment.this.getContext());
+            tvList.setLayoutManager(layoutManager);
+//            final RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+//            tvList.setRecycledViewPool(viewPool);
+            //viewPool.setMaxRecycledViews(0, 20);
+            // tvList.setNestedScrollingEnabled(false);
+            delegateAdapter = new DelegateAdapter(layoutManager, true);
+            tvList.setAdapter(delegateAdapter);
+
 
 
             initData();
         }
 
         private void initData(){
-            List<ListData> listData = new ArrayList<>();
+            List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
+            if (true) {
+                EightLayoutHelper helper = new EightLayoutHelper(DisplayUtils.getDimen(R.dimen.x20));
+                  helper.setColWeights(new float[]{50f,20f,20f,20f,20f,20f,30f,30f});
+                LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x550));
+                adapters.add(new SubAdapter(mContext, helper, 8, lp) {
+                    @Override
+                    public void onBindViewHolder(MainViewHolder holder, int position) {
+                        super.onBindViewHolder(holder, position);
+                    }
+                });
+            }
+            if (true) {
+                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
 
-            for (int i =0 ;i< 60; i++){
-                listData.add(new ListData());
+
+                    @Override
+                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        if (viewType == 1)
+                            return new MainViewHolder(
+                                    LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
+
+                        return super.onCreateViewHolder(parent, viewType);
+                    }
+
+                    @Override
+                    public int getItemViewType(int position) {
+                        return 1;
+                    }
+
+                    @Override
+                    protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+                    }
+
+                    @Override
+                    public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                    }
+                });
             }
 
-            metroAdapter.repaceDatas(listData);
+            if(true){
+                final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(7, 20);
+                //  helper.setMargin(20, 10, 10, 10);
+                //    helper.setPadding(10, 10, 20, 10);
+                //  helper.setBgColor(0xFF86345A);
+                adapters.add(new SubAdapter(mContext, helper, 7) {
+                    @Override
+                    public void onBindViewHolder(MainViewHolder holder, int position) {
+                        // super.onBindViewHolder(holder, position);
+                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x180));
+                        holder.itemView.setLayoutParams(layoutParams);
+                    }
+                });
+            }
+
+            if (true) {
+                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
+
+
+                    @Override
+                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        if (viewType == 1)
+                            return new MainViewHolder(
+                                    LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
+
+                        return super.onCreateViewHolder(parent, viewType);
+                    }
+
+                    @Override
+                    public int getItemViewType(int position) {
+                        return 1;
+                    }
+
+                    @Override
+                    protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+                    }
+
+                    @Override
+                    public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                    }
+                });
+            }
+
+            if(true){
+                final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
+                //  helper.setMargin(20, 10, 10, 10);
+                //    helper.setPadding(10, 10, 20, 10);
+                //  helper.setBgColor(0xFF86345A);
+                adapters.add(new SubAdapter(mContext, helper, 12) {
+                    @Override
+                    public void onBindViewHolder(MainViewHolder holder, int position) {
+                        //super.onBindViewHolder(holder, position);
+                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x300));
+                        holder.itemView.setLayoutParams(layoutParams);
+                    }
+                });
+            }
+            if (true) {
+                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
+
+
+                    @Override
+                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        if (viewType == 1)
+                            return new MainViewHolder(
+                                    LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
+
+                        return super.onCreateViewHolder(parent, viewType);
+                    }
+
+                    @Override
+                    public int getItemViewType(int position) {
+                        return 1;
+                    }
+
+                    @Override
+                    protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+                    }
+
+                    @Override
+                    public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                    }
+                });
+            }
+
+            if(true){
+                final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
+                //  helper.setMargin(20, 10, 10, 10);
+                //    helper.setPadding(10, 10, 20, 10);
+                //  helper.setBgColor(0xFF86345A);
+                adapters.add(new SubAdapter(mContext, helper, 12) {
+                    @Override
+                    public void onBindViewHolder(MainViewHolder holder, int position) {
+                        //super.onBindViewHolder(holder, position);
+                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  DisplayUtils.getDimen(R.dimen.x300));
+                        holder.itemView.setLayoutParams(layoutParams);
+                    }
+                });
+            }
+
+            delegateAdapter.setAdapters(adapters);
         }
 
         private void setListener() {
@@ -135,7 +285,16 @@ public class MultipleFragment extends BaseFragment {
 
                 @Override
                 public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                    onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+
+                    NLog.e(NLog.TAGOther,"首页选中序号--->" + position);
+
+                    if(position < 8){
+                        onMoveFocusBorder(itemView, 1.05f, DisplayUtils.dip2px(3));
+                    }else {
+                        onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                    }
+
+
                 }
 
                 @Override
@@ -275,13 +434,21 @@ public class MultipleFragment extends BaseFragment {
 
         @OnClick({R.id.image_one})
         public void Onclick(View view){
+            Intent intent = new Intent(MultipleFragment.this.getContext(),DetailActivity.class);
             switch (view.getId()){
                 case R.id.image_one:
-                    Intent intent = new Intent(MultipleFragment.this.getContext(),DetailActivity.class);
-                    startActivity(intent);
+                    break;
+                case R.id.image_two:
+                    break;
+                case R.id.image_three:
+                    break;
+                case R.id.image_four:
+                    break;
+                case R.id.image_five:
                     break;
 
             }
+            startActivity(intent);
         }
 
         public CommonLayout(View view) {

@@ -61,13 +61,13 @@ public class DisplayUtils {
      * @param spVal
      * @return
      */
-    public static int sp2px(Context context, float spVal)
+    public static int sp2px( float spVal)
 
     {
 
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
 
-                spVal, context.getResources().getDisplayMetrics());
+                spVal, BaseApplation.getBaseApp().getResources().getDisplayMetrics());
 
     }
 

@@ -3,6 +3,7 @@
     <string name="app_name">VideosPlayerTv</string>
 
     <string name="svp_search">搜索</string>
+    <string name="svp_list">列表</string>
     <string name="svp_personal_center">个人中心</string>
     <string name="svp_favorite">收藏夹</string>
     <string name="svp_histories">历史纪录</string>
@@ -11,6 +12,12 @@
     <string name="svp_empty">清空</string>
     <string name="svp_full_keyboard">全键盘</string>
     <string name="svp_T9">T9键盘</string>
+
+    <string name="svp_play">播放</string>
+    <string name="svp_collect">收藏</string>
+    <string name="svp_like">点赞</string>
+    <string name="svp_stamp">踩</string>
+
 
     <!-- 键盘自定义按键，这只是DEMO，你可以自定义自己的 -->
     <string name="keycode_space">62</string> <!-- 空格 -->

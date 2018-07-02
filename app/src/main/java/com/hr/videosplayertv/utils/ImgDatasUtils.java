@@ -50,7 +50,18 @@ public class ImgDatasUtils {
             "http://pic.58pic.com/58pic/15/75/37/33s58PICB4f_1024.jpg",
             "http://pic.58pic.com/58pic/13/70/52/92U58PICeXu_1024.jpg",
             "http://pic35.photophoto.cn/20150529/0040039509233850_b.jpg",
-            "http://pic.58pic.com/58pic/13/17/99/28J58PICjfB_1024.jpg"
+            "http://pic.58pic.com/58pic/13/17/99/28J58PICjfB_1024.jpg",
+            "http://pic.58pic.com/58pic/14/64/56/25h58PIC3eG_1024.jpg",
+            "http://img.zcool.cn/community/017fcc5535f1710000001e3101c50c.jpg",
+            "http://reso3.yiihuu.com/img_703568.jpg",
+            "http://img05.tooopen.com/images/20150520/tooopen_sy_125311226742.jpg",
+            "http://img5.imgtn.bdimg.com/it/u=332347801,3887651404&fm=27&gp=0.jpg",
+            "http://img2.imgtn.bdimg.com/it/u=3203805412,4179644444&fm=27&gp=0.jpg",
+            "http://img4.imgtn.bdimg.com/it/u=2470809667,933912309&fm=27&gp=0.jpg",
+            "http://img3.imgtn.bdimg.com/it/u=1748051475,3837428098&fm=27&gp=0.jpg",
+            "http://img4.imgtn.bdimg.com/it/u=132600321,3123081067&fm=27&gp=0.jpg",
+            "http://img3.imgtn.bdimg.com/it/u=1094595333,134359380&fm=27&gp=0.jpg",
+            "http://img2.imgtn.bdimg.com/it/u=2459584015,600700003&fm=27&gp=0.jpg"
     };
     
     public static String getUrl() {

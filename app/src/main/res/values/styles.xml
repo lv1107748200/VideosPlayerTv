@@ -60,4 +60,15 @@
         <item name="android:indeterminateDuration">1000</item>
     </style>
 
+    <style name="tv_paster_style">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@drawable/foc_tv_color_one</item>
+        <item name="android:background">@drawable/foc_back_one</item>
+    </style>
+
 </resources>

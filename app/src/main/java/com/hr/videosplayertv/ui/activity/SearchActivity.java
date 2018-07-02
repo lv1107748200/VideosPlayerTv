@@ -15,6 +15,7 @@ import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.widget.AffPasWindow;
 import com.hr.videosplayertv.widget.keyboard.SkbContainer;
 import com.hr.videosplayertv.widget.keyboard.SoftKey;
 import com.hr.videosplayertv.widget.keyboard.SoftKeyBoardListener;
@@ -30,16 +31,21 @@ import butterknife.OnClick;
 /**
  * 搜索页面
  */
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasWindowCallBack {
+
+    public static int pp = 0;
 
     @BindView(R.id.tv_show_message)
     TextView tv_show_message;
+    @BindView(R.id.tv_title_child)
+    TextView tvTitleChild;
     @BindView(R.id.skbContainer)
     SkbContainer skbContainer;
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
 
     private GridAdapter gridAdapter;
+    private AffPasWindow affPasWindow;
 
 
     @Override
@@ -50,8 +56,8 @@ public class SearchActivity extends BaseActivity {
     @Override
     public void init() {
         super.init();
-
-        skbContainer = findViewById(R.id.skbContainer);
+        tvTitleChild.setText(getString(R.string.svp_search));
+        affPasWindow = new AffPasWindow(this,this);
         skbContainer.setSkbLayout(R.xml.skb_all_key);
         skbContainer.setFocusable(true);
         skbContainer.setFocusableInTouchMode(true);
@@ -64,7 +70,7 @@ public class SearchActivity extends BaseActivity {
         skbContainer.setOnSoftKeyBoardListener(new SoftKeyBoardListener() {
             @Override
             public void onCommitText(SoftKey softKey) {
-                NLog.e(NLog.KEY,"获取view 坐标   :  "+skbContainer.getX());
+               // NLog.e(NLog.KEY,"获取view 坐标   :  "+skbContainer.getX());
 
 
                 int keyCode = softKey.getKeyCode();
@@ -120,7 +126,11 @@ public class SearchActivity extends BaseActivity {
 
             @Override
             public void onBack(SoftKey key) {
-               finish();
+                if(affPasWindow.isAdd()){
+                    affPasWindow.removeLayout();
+                }else {
+                    finish();
+                }
             }
 
             @Override
@@ -217,6 +227,27 @@ public class SearchActivity extends BaseActivity {
      */
     private void onCommitT9Text(SoftKey softKey) {
 
+        switch (softKey.getKeyCode()){
+            case 1251:
+                tv_show_message.setText(tv_show_message.getText()+"1");
+                break;
+            case 1250: ;
+                tv_show_message.setText(tv_show_message.getText()+"0");
+                break;
+                default:
+                    NLog.e(NLog.KEY,"获取view 坐标  x,y :  "+skbContainer.getX()+","+skbContainer.getY());
+                    NLog.e(NLog.KEY,"获取view 坐标  l,t :  "+softKey.getLeft()+","+softKey.getTop());
+
+                    int x  = (int) (softKey.getLeft() + skbContainer.getX());
+                    int y = (int) (softKey.getTop() + skbContainer.getY());
+
+                    NLog.e(NLog.KEY,"移动view 坐标  x,y :  "+x+","+y);
+
+                    affPasWindow.moveLyout(x - pp,y - pp,softKey.getKeyCode());
+                    break;
+        }
+
+
     }
     private void setSkbContainerMove() {
         mOldSoftKey = null;
@@ -261,6 +292,13 @@ public class SearchActivity extends BaseActivity {
         if (skbContainer.onSoftKeyUp(keyCode, event))
             return true;
         return super.onKeyDown(keyCode, event);
+    }
+    /**
+    *T9子选项
+    */
+    @Override
+    public void whatText(String s) {
+        tv_show_message.setText(tv_show_message.getText()+s);
     }
 
 

@@ -10,11 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         style="@style/ThreeWayView"
-        android:orientation="vertical"
-        app:tv_laneCountsStr="24,60,10"
-        app:tv_isIntelligentScroll="true"
-        app:tv_optimizeLayout="true"
-        app:tv_layoutManager="MetroGridLayoutManager"
         />
 
 </LinearLayout>

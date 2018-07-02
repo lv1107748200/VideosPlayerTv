@@ -37,27 +37,20 @@
     </LinearLayout>
 
     <FrameLayout
-        android:padding="10dp"
-        android:layout_weight="1.6"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         >
-
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:layout_gravity="center"
             android:id="@+id/common_menu"
-            android:background="#DDDD22"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/x60"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-
             app:tv_selectedItemIsCentered="true"
             android:orientation="horizontal"
             app:tv_isMenu="true"
             app:tv_layoutManager="V7LinearLayoutManager"/>
-
-
     </FrameLayout>
 
     <LinearLayout

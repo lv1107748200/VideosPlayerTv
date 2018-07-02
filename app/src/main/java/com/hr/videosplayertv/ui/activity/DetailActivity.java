@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
@@ -18,6 +19,7 @@ import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.SpanUtils;
 import com.hr.videosplayertv.widget.focus.FocusBorder;
 import com.hr.videosplayertv.widget.tablayout.TabLayout;
 import com.hr.videosplayertv.widget.tablayout.TvTabLayout;
@@ -52,24 +54,46 @@ public class DetailActivity extends BaseActivity {
     @BindView(R.id.image_poster)
     ImageView imagePoster;
 
+    @BindView(R.id.tv_video_introduction)
+    TextView tv_video_introduction;
+    @BindView(R.id.tv_data)
+    TextView tv_data;
+
     private ListDataMenuAdapter listDataMenuAdapter;
     private CommentAdapter CommentAdapter;
 
     private BottomSheetBehavior behavior;
 
-    @OnClick({R.id.btn_player,R.id.btn_collect})
+    @OnClick({R.id.btn_player,R.id.btn_collect,R.id.image_poster})
     public void Onclick(View view){
         switch (view.getId()){
             case R.id.btn_player:
                // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if(true){
+                    Intent intent = new Intent();
+                    intent.setClass(this,PlayerActivity.class);
+                    startActivity(intent);
+                }
 
-                Intent intent = new Intent();
-                intent.setClass(this,PlayerActivity.class);
-                startActivity(intent);
                 break;
             case R.id.btn_collect:
                 //behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
                 break;
+            case R.id.btn_like:
+
+                break;
+            case R.id.btn_stamp:
+
+                break;
+            case R.id.image_poster:
+                if(true){
+                    Intent intent = new Intent();
+                    intent.setClass(this,PlayerActivity.class);
+                    startActivity(intent);
+                }
+                break;
+
         }
     }
 
@@ -81,6 +105,40 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void init() {
         super.init();
+
+        SpanUtils spanUtils = new SpanUtils();
+
+        tv_video_introduction.setText(
+                spanUtils.append("亮剑")
+                        .setFontSize(DisplayUtils.sp2px(32))
+                        .appendSpace(200)
+                        .append("评分：4.8")
+                        .setFontSize(DisplayUtils.sp2px(18))
+                        .appendLine()
+                        .appendLine("更新至45集，周一至周五每天更新两集")
+                        .setFontSize(DisplayUtils.sp2px(16))
+                        .appendLine()
+                        .appendLine("主演：李幼斌、何政军")
+                        .appendLine("导演：何政军")
+                        .appendLine("简介：")
+                        .appendLine("李云龙是八路军独立团的团长，在他的独特指挥下，山崎大队全部消灭。李云龙又会同国军团长楚云飞闯进日军重兵把守的县城，守备部队全军覆灭，李云龙和楚云飞在晋西北因此名声大噪，李楚成为好友")
+                        .create()
+        );
+
+        spanUtils.setMText();
+        tv_data.setText("收藏：209     点赞：443     踩：21");
+
+
+        mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
+            @Override
+            public FocusBorder.Options onFocus(View oldFocus, View newFocus) {
+                if(newFocus.getId() == R.id.tab_layout){
+                    return null;
+                }
+                return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
+            }
+        });
+
         setBottomSheetBehavior();
 
 
@@ -89,7 +147,7 @@ public class DetailActivity extends BaseActivity {
         tvList.setSpacingWithMargins(DisplayUtils.dip2px(10), 0);
         tvList.setAdapter(CommentAdapter);
 
-        selectCollect.setSpacingWithMargins(10, 10);
+        selectCollect.setSpacingWithMargins(DisplayUtils.dip2px(10), DisplayUtils.dip2px(15));
         listDataMenuAdapter = new ListDataMenuAdapter(this);
         selectCollect.setAdapter(listDataMenuAdapter);
 

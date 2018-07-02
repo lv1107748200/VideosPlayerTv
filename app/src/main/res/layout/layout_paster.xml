@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/actionbar_color"
+    >
+
+    <TextView
+        android:id="@+id/tv_num"
+        android:text="A"
+        style="@style/tv_paster_style"
+        />
+    <TextView
+        android:id="@+id/tv_p_one"
+        android:text="A"
+        style="@style/tv_paster_style"
+        />
+
+    <TextView
+        android:id="@+id/tv_p_two"
+        android:text="A"
+        style="@style/tv_paster_style"
+        />
+    <TextView
+        android:id="@+id/tv_P_three"
+        android:text="A"
+        style="@style/tv_paster_style"
+        />
+
+</LinearLayout>

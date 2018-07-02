@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,7 +20,7 @@
                 >
 
                 <ImageView
-                    android:layout_margin="20dp"
+                    android:layout_margin="@dimen/x40"
                     android:focusable="true"
                     android:clickable="true"
                     android:id="@+id/image_poster"
@@ -38,27 +36,64 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:paddingLeft="@dimen/x60"
+                android:layout_marginTop="@dimen/x40"
+                android:layout_marginRight="@dimen/x40"
                 >
 
-                <Button
-                    android:id="@+id/btn_player"
-                    android:text="播放"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-                <Button
-                    android:id="@+id/btn_collect"
-                    android:text="收藏"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    <TextView
+                        android:id="@+id/tv_video_introduction"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
 
+                    <TextView
+                        android:id="@+id/tv_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    >
+                    <Button
+                        android:layout_weight="1"
+                        android:id="@+id/btn_player"
+                        android:text="@string/svp_play"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                    <Button
+                        android:layout_weight="1"
+                        android:id="@+id/btn_collect"
+                        android:text="@string/svp_collect"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                    <Button
+                        android:layout_weight="1"
+                        android:id="@+id/btn_like"
+                        android:text="@string/svp_like"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                    <Button
+                        android:layout_weight="1"
+                        android:id="@+id/btn_stamp"
+                        android:text="@string/svp_stamp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
-
-
-
 
         <LinearLayout
             android:id="@+id/com_layout"
@@ -73,13 +108,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x40"
+                android:layout_marginRight="@dimen/x40"
                 android:background="@color/titlestrip_background_color"
                 >
                 <com.hr.videosplayertv.widget.tablayout.TvTabLayout
                     android:id="@+id/tab_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/actionbar_color"
+                    android:layout_height="@dimen/x50"
                     app:tabIndicatorResId="@color/green_bright"
                     app:tabIndicatorGravity="bottom"
                     app:tabIndicatorHeight="4px"
@@ -90,12 +126,14 @@
 
             </LinearLayout>
             <com.owen.tvrecyclerview.widget.TvRecyclerView
+                android:paddingTop="@dimen/x20"
+                android:paddingBottom="@dimen/x20"
+                android:paddingLeft="@dimen/x40"
+                android:paddingRight="@dimen/x40"
                 android:layout_gravity="center"
                 android:id="@+id/select_collect"
-                android:background="#DDDD22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20px"
                 app:tv_selectedItemIsCentered="true"
                 android:orientation="vertical"
                 app:tv_isMenu="true"
@@ -103,6 +141,9 @@
                 app:tv_layoutManager="V7GridLayoutManager"/>
 
             <com.owen.tvrecyclerview.widget.TvRecyclerView
+                android:paddingBottom="@dimen/x20"
+                android:paddingLeft="@dimen/x40"
+                android:paddingRight="@dimen/x40"
                 android:id="@+id/tv_list"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
