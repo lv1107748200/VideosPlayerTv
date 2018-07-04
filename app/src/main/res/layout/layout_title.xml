@@ -10,7 +10,10 @@
         android:id="@+id/image_log"
         android:layout_width="150dp"
         android:layout_height="@dimen/x100"
-        android:background="@drawable/hehe"
+        android:background="@drawable/tv"
+        android:scaleType="fitXY"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
         />
     <com.hr.videosplayertv.widget.view.MarqueeText
         android:focusable="false"
@@ -24,26 +27,23 @@
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
-        android:textColor="@color/c_ded"
+        android:textColor="@color/c_f0f"
         />
 
-    <Button
-        android:layout_marginRight="@dimen/x10"
+    <ImageButton
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginRight="@dimen/x20"
         android:id="@+id/btn_search"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/x45"
-        android:background="@drawable/foc_back_two"
-        android:textColor="@drawable/foc_tv_two"
-        android:text="@string/svp_search"
+        android:layout_width="@dimen/x50"
+        android:layout_height="@dimen/x50"
+        android:background="@drawable/foc_image_one"
         />
-    <Button
-        android:layout_marginLeft="@dimen/x10"
+    <ImageButton
+        android:layout_marginLeft="@dimen/x20"
         android:id="@+id/btn_personal_center"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/x45"
-        android:background="@drawable/foc_back_two"
-        android:textColor="@drawable/foc_tv_two"
-        android:text="@string/svp_personal_center"
+        android:layout_width="@dimen/x50"
+        android:layout_height="@dimen/x50"
+        android:background="@drawable/foc_image_two"
         />
 
     <TextView
@@ -53,6 +53,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_weight="1.5"
-        android:textColor="@color/c_5c6"
+        android:textColor="@color/c_96a"
         />
 </LinearLayout>

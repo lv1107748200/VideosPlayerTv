@@ -39,6 +39,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter.FOUR;
 import static com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter.THREE;
 
 /**
@@ -47,7 +48,8 @@ import static com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter.THREE;
 public class DetailActivity extends BaseActivity {
 
 
-
+    @BindView(R.id.tv_title_child)
+    TextView tvTitleChild;
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
 
@@ -57,7 +59,7 @@ public class DetailActivity extends BaseActivity {
     @BindView(R.id.com_layout)
     LinearLayout comLayout;
     @BindView(R.id.layout_select)
-    LinearLayout layoutSelect;
+    RelativeLayout layoutSelect;
 
     @BindView(R.id.tab_layout)
     TvTabLayout tabLayout;
@@ -77,11 +79,11 @@ public class DetailActivity extends BaseActivity {
 
     private boolean isSild = false;//判断是否已滑动
 
+
     @OnClick({R.id.btn_player,R.id.btn_collect,R.id.btn_like,R.id.btn_stamp,R.id.image_poster})
     public void Onclick(View view){
         switch (view.getId()){
             case R.id.btn_player:
-               // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 if(true){
                     Intent intent = new Intent();
                     intent.setClass(this,PlayerActivity.class);
@@ -90,7 +92,6 @@ public class DetailActivity extends BaseActivity {
 
                 break;
             case R.id.btn_collect:
-                //behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                 break;
             case R.id.btn_like:
@@ -118,6 +119,8 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void init() {
         super.init();
+        tvTitleChild.setText(getString(R.string.svp_details));
+        layoutSelect.setSelected(true);
 
         SpanUtils spanUtils = new SpanUtils();
 
@@ -139,6 +142,7 @@ public class DetailActivity extends BaseActivity {
         );
 
         spanUtils.setMText();
+
         tv_data.setText("收藏：209     点赞：443     踩：21");
 
 
@@ -163,8 +167,8 @@ public class DetailActivity extends BaseActivity {
         tvList.setSpacingWithMargins(DisplayUtils.dip2px(10), 0);
         tvList.setAdapter(CommentAdapter);
 
-        selectCollect.setSpacingWithMargins(DisplayUtils.dip2px(10), DisplayUtils.dip2px(15));
-        listDataMenuAdapter = new ListDataMenuAdapter(this,THREE);
+        selectCollect.setSpacingWithMargins(DisplayUtils.dip2px(5), DisplayUtils.dip2px(15));
+        listDataMenuAdapter = new ListDataMenuAdapter(this,FOUR);
         selectCollect.setAdapter(listDataMenuAdapter);
 
         initData();
@@ -196,11 +200,14 @@ public class DetailActivity extends BaseActivity {
       //  NLog.e(NLog.TAGOther,"分割大小---》"+splitList(stringList,20).size());
 
         tabLayout.setScaleValue(1.1f);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
+                listDataMenuAdapter.setSelectView(null);
                 listDataMenuAdapter.repaceDatas(splitList(stringList,20).get(tab.getPosition()));
+
             }
 
             @Override
@@ -217,17 +224,14 @@ public class DetailActivity extends BaseActivity {
         tabLayout.addTab(
                 tabLayout.newTab()
                         .setText("1-20")
-//                        .setIcon(R.drawable.ic_staggered)
                 , true);
         tabLayout.addTab(
                 tabLayout.newTab()
                         .setText("21-40")
-//                        .setIcon(R.drawable.ic_list)
         );
         tabLayout.addTab(
                 tabLayout.newTab()
                         .setText("40-50")
-//                        .setIcon(R.drawable.ic_grid)
         );
     }
 
@@ -237,13 +241,21 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+
+                if(null != listDataMenuAdapter.getSelectView()){
+                    listDataMenuAdapter.getSelectView().setActivated(true);
+                }
                 onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
             }
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
 
+                listDataMenuAdapter.setSelectData(listDataMenuAdapter.getItem(position).toString());
+                listDataMenuAdapter.setSelectView(itemView);
+
             }
+
         });
 
         tvList.setOnItemListener(new SimpleOnItemListener() {
@@ -365,7 +377,7 @@ public class DetailActivity extends BaseActivity {
 
     private void sildAnimina(){
 
-      final  float distance = DisplayUtils.getDimen(R.dimen.x300);
+      final  float distance = DisplayUtils.getDimen(R.dimen.x400);
 
 
        // NLog.e(NLog.TAGOther,"获取评论的测量高度---》"+layoutSelect.getMeasuredHeight());
@@ -380,7 +392,7 @@ public class DetailActivity extends BaseActivity {
 
             AnimatorSet animatorSet = new AnimatorSet();  //组合动画
             animatorSet.playTogether(translationY); //设置动画
-            animatorSet.setDuration(300);  //设置动画时间
+            animatorSet.setDuration(200);  //设置动画时间
             translationY.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -388,19 +400,20 @@ public class DetailActivity extends BaseActivity {
                    // NLog.e(NLog.TAGOther,"平移动画结束---》");
                     layoutParams.height = MATCH_PARENT;
                     layoutSelect.setLayoutParams(layoutParams);
+                    layoutSelect.setSelected(true);
                 }
             });
             animatorSet.start(); //启动
         }else {
             isSild = !isSild;
-            layoutSelect.setLayoutAnimationListener(null);
            // ObjectAnimator translationX = new ObjectAnimator().ofFloat(layoutSelect,"translationX",0,0);
             ObjectAnimator translationY = new ObjectAnimator().ofFloat(layoutSelect,"translationY",0,-distance);
 
             AnimatorSet animatorSet = new AnimatorSet();  //组合动画
             animatorSet.playTogether(translationY); //设置动画
-            animatorSet.setDuration(300);  //设置动画时间
+            animatorSet.setDuration(200);  //设置动画时间
             animatorSet.start(); //启动
+            layoutSelect.setSelected(false);
             layoutParams.height = (int) (hight + distance);
             layoutSelect.setLayoutParams(layoutParams);
         }

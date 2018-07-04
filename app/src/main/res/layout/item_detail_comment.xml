@@ -8,20 +8,24 @@
     android:clickable="true"
     android:gravity="center_vertical"
     app:rfl_radius="0dp"
+    android:background="@drawable/foc_back_six"
     >
 
     <ImageView
+        android:id="@+id/image_tou"
         android:background="@drawable/hehe"
         android:layout_gravity="center_vertical"
         android:layout_width="30dp"
         android:layout_height="30dp" />
 
     <TextView
+        android:duplicateParentState="true"
         android:id="@+id/title"
         android:layout_marginLeft="40dp"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@drawable/foc_tv_two"
         android:text="好烂啊"
         />
 

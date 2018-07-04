@@ -9,5 +9,7 @@
     <item android:state_activated="true"
         android:drawable="@drawable/loop_color_one"/>
 
-    <item android:drawable="@drawable/loop_color_two"/>
+    <item android:drawable="@android:color/transparent"/>
+
+    <!--<item android:drawable="@drawable/loop_color_two"/>-->
 </selector>

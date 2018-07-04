@@ -8,6 +8,7 @@
     <string name="svp_favorite">收藏夹</string>
     <string name="svp_histories">历史纪录</string>
     <string name="svp_recently_played_videos">播放记录</string>
+    <string name="svp_details">详情</string>
     <string name="svp_delete">删除</string>
     <string name="svp_empty">清空</string>
     <string name="svp_full_keyboard">全键盘</string>

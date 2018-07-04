@@ -49,7 +49,7 @@
 
     <style name="tv">
         <item name="android:focusable">false</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/c_f0f</item>
         <item name="android:textSize">@dimen/sp_22</item>
     </style>
 
@@ -71,7 +71,7 @@
         <item name="android:background">@drawable/foc_back_one</item>
     </style>
     <style name="tv_title" parent="tv">
-        <item name="android:textColor">@color/c_566</item>
+        <item name="android:textColor">@color/c_96a</item>
         <item name="android:textSize">@dimen/sp_24</item>
         <item name="android:layout_marginLeft">@dimen/x60</item>
         <item name="android:layout_width">wrap_content</item>

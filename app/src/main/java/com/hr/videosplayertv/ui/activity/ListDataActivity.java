@@ -1,5 +1,7 @@
 package com.hr.videosplayertv.ui.activity;
 
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-
+import butterknife.OnClick;
 
 
 /**
@@ -53,9 +55,11 @@ public class ListDataActivity extends BaseActivity {
         gridAdapter = new GridAdapter(this);
         tvList.setAdapter(gridAdapter);
 
-        listMenu.setSpacingWithMargins(10, 0);
-        listDataMenuAdapter = new ListDataMenuAdapter(this,ListDataMenuAdapter.THREE);
+        listMenu.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x10), 0);
+        listDataMenuAdapter = new ListDataMenuAdapter(this,ListDataMenuAdapter.THREE,true);
         listMenu.setAdapter(listDataMenuAdapter);
+        listMenu.setmSelectedPosition(1);
+
 
         initData();
     }
@@ -63,13 +67,15 @@ public class ListDataActivity extends BaseActivity {
     private void initData(){
         List<ListData> listData = new ArrayList<>();
 
-        for (int i =0 ;i< 37; i++){
+        for (int i =0 ;i< 7; i++){
             listData.add(new ListData());
         }
 
         gridAdapter.repaceDatas(listData);
 
         listDataMenuAdapter.repaceDatas(listData);
+
+
     }
 
     private void setListener() {
@@ -78,11 +84,17 @@ public class ListDataActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
             }
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+
+                if(position == 0){
+                 Intent intent = new Intent();
+                intent.setClass(ListDataActivity.this, SearchActivity.class);
+                startActivity(intent);
+                }
 
             }
         });

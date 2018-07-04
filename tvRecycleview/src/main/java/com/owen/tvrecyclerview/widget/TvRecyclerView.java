@@ -454,8 +454,13 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
             setSelection(getFirstVisiblePosition());
         }
     }
-    
+
+    public void setmSelectedPosition(int mSelectedPosition) {
+        this.mSelectedPosition = mSelectedPosition;
+    }
+
     public void setSelection(int position) {
+        mSelectedPosition = position;
         if(null == getAdapter() || position < 0 || position >= getItemCount()) {
             return;
         }
