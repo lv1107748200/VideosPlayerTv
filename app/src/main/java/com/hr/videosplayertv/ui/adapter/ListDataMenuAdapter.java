@@ -15,18 +15,28 @@ import java.util.List;
 
 public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
 
-    private boolean isMainMenu;
+    private int isMainMenu;
 
-    public ListDataMenuAdapter(Context context) {
-        super(context);
-    }
-    public ListDataMenuAdapter(Context context,boolean isMainMenu) {
+    public final static int ONE = 1111;
+    public final static int TWO = 1112;
+    public final static int THREE = 1113;
+
+    public ListDataMenuAdapter(Context context,int isMainMenu) {
         super(context);
         this.isMainMenu = isMainMenu;
     }
     @Override
     public int getItemLayoutId(int viewType) {
-        return  isMainMenu ? R.layout.item_main_menu:R.layout.item_list_data_menu;
+
+        switch (isMainMenu){
+            case ONE:
+                return R.layout.item_main_menu;
+            case TWO:
+                return R.layout.item_classify_menu;
+            case THREE:
+                return R.layout.item_list_data_menu;
+        }
+        return R.layout.item_main_menu;
     }
 
     @Override

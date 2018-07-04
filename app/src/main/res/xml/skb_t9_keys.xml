@@ -3,6 +3,7 @@
     bg_res="@drawable/main_bg"
 -->
 <Keyboard
+    bg_res="@android:color/transparent"
     key_left_padding="@dimen/x20"
     key_bg_res="@drawable/key_bg_rectangle"
     key_press_res="@drawable/softkey_bg_press2"

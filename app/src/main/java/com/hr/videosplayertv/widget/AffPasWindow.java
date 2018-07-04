@@ -1,5 +1,6 @@
 package com.hr.videosplayertv.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
@@ -30,6 +31,8 @@ public class AffPasWindow implements View.OnKeyListener {
 
     private boolean isAdd = false;
 
+    private Activity mActivity;
+
     @BindView(R.id.tv_num)
     TextView tv_num;
     @BindView(R.id.tv_p_one)
@@ -46,8 +49,9 @@ public class AffPasWindow implements View.OnKeyListener {
 
     }
 
-    public AffPasWindow(Context context,AffPasWindowCallBack affPasWindowCallBack) {
+    public AffPasWindow(Activity context,AffPasWindowCallBack affPasWindowCallBack) {
 
+        mActivity = context;
         this.pasWindowCallBack = affPasWindowCallBack;
 
         linearLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.layout_paster, null);
@@ -157,6 +161,8 @@ public class AffPasWindow implements View.OnKeyListener {
         if (i == KeyEvent.KEYCODE_BACK) {
             if(isAdd){
                 removeLayout();
+            }else {
+
             }
             return true;
         }

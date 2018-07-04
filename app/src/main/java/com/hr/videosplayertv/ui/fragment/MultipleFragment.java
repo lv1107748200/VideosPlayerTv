@@ -432,7 +432,7 @@ public class MultipleFragment extends BaseFragment {
         @BindView(R.id.image_five)
         ImageView image_five;
 
-        @OnClick({R.id.image_one})
+        @OnClick({R.id.image_one,R.id.image_two,R.id.image_three,R.id.image_four,R.id.image_five})
         public void Onclick(View view){
             Intent intent = new Intent(MultipleFragment.this.getContext(),DetailActivity.class);
             switch (view.getId()){
@@ -460,16 +460,9 @@ public class MultipleFragment extends BaseFragment {
             GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),image_four);
             GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),image_five);
 
-            mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
-                @Override
-                public FocusBorder.Options onFocus(View oldFocus, View newFocus) {
-                    return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
-                }
-            });
-
             setListener();
-            listDataMenuAdapter = new ListDataMenuAdapter(MultipleFragment.this.getContext(),true);
-            mainMenu.setSpacingWithMargins(10, 30);
+            listDataMenuAdapter = new ListDataMenuAdapter(MultipleFragment.this.getContext(),ListDataMenuAdapter.TWO);
+            mainMenu.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x10), DisplayUtils.getDimen(R.dimen.x40));
             mainMenu.setAdapter(listDataMenuAdapter);
 
             initData();
@@ -478,7 +471,7 @@ public class MultipleFragment extends BaseFragment {
         private void initData(){
             List<ListData> listData = new ArrayList<>();
 
-            for (int i =0 ;i< 8; i++){
+            for (int i =0 ;i< 5; i++){
                 listData.add(new ListData());
             }
 
@@ -491,7 +484,7 @@ public class MultipleFragment extends BaseFragment {
 
                 @Override
                 public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                    //   onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(MainActivity.this,3));
+                       onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
 
                 }
 

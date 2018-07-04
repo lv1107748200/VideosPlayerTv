@@ -44,7 +44,6 @@
                 android:layout_width="@dimen/x680"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:background="@drawable/main_bg"
                 >
             </com.hr.videosplayertv.widget.keyboard.SkbContainer>
 

@@ -126,11 +126,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
             @Override
             public void onBack(SoftKey key) {
-                if(affPasWindow.isAdd()){
-                    affPasWindow.removeLayout();
-                }else {
                     finish();
-                }
             }
 
             @Override

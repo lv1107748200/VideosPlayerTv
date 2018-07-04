@@ -5,14 +5,14 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-
+import org.litepal.LitePalApplication;
 
 
 /**
  * Created by 吕 on 2017/10/26.
  */
 
-public class BaseApplation extends Application {
+public class BaseApplation extends LitePalApplication {
     private static BaseApplation baseApp = null;
     private AppComponent mAppComponent;
 

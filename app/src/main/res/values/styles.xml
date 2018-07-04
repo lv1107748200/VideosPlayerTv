@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:windowBackground">@drawable/gradient_back</item>
     </style>
     <style name="SplashTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:windowBackground">@drawable/gradient_back</item>
     </style>
 
     <style name="popup_hint_anim_one" parent="android:Animation">
@@ -27,7 +27,7 @@
     <style name="TwoWayView" parent="TwoWayViewBase">
         <item name="android:orientation">horizontal</item>
         <item name="android:scrollbars">none</item>
-        <item name="android:paddingTop">@dimen/x36</item>
+        <item name="android:paddingTop">@dimen/x30</item>
         <item name="android:paddingLeft">@dimen/x60</item>
         <item name="android:paddingRight">@dimen/x60</item>
         <item name="android:paddingBottom">@dimen/x60</item>
@@ -35,7 +35,7 @@
 
     <style name="ThreeWayView" parent="TwoWayViewBase">
         <item name="android:scrollbars">none</item>
-        <item name="android:paddingTop">@dimen/x36</item>
+        <item name="android:paddingTop">@dimen/x30</item>
         <item name="android:paddingLeft">@dimen/x60</item>
         <item name="android:paddingRight">@dimen/x60</item>
         <item name="android:paddingBottom">@dimen/x60</item>
@@ -70,5 +70,20 @@
         <item name="android:textColor">@drawable/foc_tv_color_one</item>
         <item name="android:background">@drawable/foc_back_one</item>
     </style>
+    <style name="tv_title" parent="tv">
+        <item name="android:textColor">@color/c_566</item>
+        <item name="android:textSize">@dimen/sp_24</item>
+        <item name="android:layout_marginLeft">@dimen/x60</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
+    <style name="btn_detail">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/x50</item>
+        <item name="android:layout_margin">@dimen/x10</item>
+        <item name="android:background">@drawable/foc_back_two</item>
+        <item name="android:textColor">@drawable/foc_tv_two</item>
+    </style>
 </resources>

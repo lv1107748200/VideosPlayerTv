@@ -54,7 +54,7 @@ public class ListDataActivity extends BaseActivity {
         tvList.setAdapter(gridAdapter);
 
         listMenu.setSpacingWithMargins(10, 0);
-        listDataMenuAdapter = new ListDataMenuAdapter(this);
+        listDataMenuAdapter = new ListDataMenuAdapter(this,ListDataMenuAdapter.THREE);
         listMenu.setAdapter(listDataMenuAdapter);
 
         initData();

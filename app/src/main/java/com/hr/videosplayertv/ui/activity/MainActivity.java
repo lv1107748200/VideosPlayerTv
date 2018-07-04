@@ -89,8 +89,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
     public void init() {
         super.init();
         setListener();
-        listDataMenuAdapter = new ListDataMenuAdapter(this,true);
-        mainMenu.setSpacingWithMargins(10, 30);
+        listDataMenuAdapter = new ListDataMenuAdapter(this,ListDataMenuAdapter.ONE);
+        mainMenu.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x10), DisplayUtils.getDimen(R.dimen.x30));
         mainMenu.setAdapter(listDataMenuAdapter);
 
         mainFragmentAdapter = new MainFragmentAdapter(getSupportFragmentManager());
@@ -105,11 +105,18 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
     }
     private void setListener() {
 
+        mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
+            @Override
+            public FocusBorder.Options onFocus(View oldFocus, View newFocus) {
+                return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
+            }
+        });
+
         mainMenu.setOnItemListener(new SimpleOnItemListener() {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-             //   onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(MainActivity.this,3));
+                onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
                 if(position == tvViewPager.getCurrentItem()){
 
                 }else {

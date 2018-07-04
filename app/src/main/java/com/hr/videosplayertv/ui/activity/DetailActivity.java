@@ -1,9 +1,15 @@
 package com.hr.videosplayertv.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,6 +38,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter.THREE;
+
 /**
  * 详情页
  */
@@ -47,6 +56,8 @@ public class DetailActivity extends BaseActivity {
 
     @BindView(R.id.com_layout)
     LinearLayout comLayout;
+    @BindView(R.id.layout_select)
+    LinearLayout layoutSelect;
 
     @BindView(R.id.tab_layout)
     TvTabLayout tabLayout;
@@ -64,7 +75,9 @@ public class DetailActivity extends BaseActivity {
 
     private BottomSheetBehavior behavior;
 
-    @OnClick({R.id.btn_player,R.id.btn_collect,R.id.image_poster})
+    private boolean isSild = false;//判断是否已滑动
+
+    @OnClick({R.id.btn_player,R.id.btn_collect,R.id.btn_like,R.id.btn_stamp,R.id.image_poster})
     public void Onclick(View view){
         switch (view.getId()){
             case R.id.btn_player:
@@ -132,14 +145,17 @@ public class DetailActivity extends BaseActivity {
         mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
             @Override
             public FocusBorder.Options onFocus(View oldFocus, View newFocus) {
-                if(newFocus.getId() == R.id.tab_layout){
-                    return null;
+                if(null != newFocus){
+                    if(newFocus.getId() == R.id.tab_layout){
+                        return FocusBorder.OptionsFactory.get(1.0f, 1.0f, 0);
+                    }
                 }
+
                 return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
             }
         });
 
-        setBottomSheetBehavior();
+        //setBottomSheetBehavior();
 
 
         setListener();
@@ -148,7 +164,7 @@ public class DetailActivity extends BaseActivity {
         tvList.setAdapter(CommentAdapter);
 
         selectCollect.setSpacingWithMargins(DisplayUtils.dip2px(10), DisplayUtils.dip2px(15));
-        listDataMenuAdapter = new ListDataMenuAdapter(this);
+        listDataMenuAdapter = new ListDataMenuAdapter(this,THREE);
         selectCollect.setAdapter(listDataMenuAdapter);
 
         initData();
@@ -167,13 +183,6 @@ public class DetailActivity extends BaseActivity {
 
 
         CommentAdapter.repaceDatas(listData);
-//
-//        listData.clear();
-//        for (int i =0 ;i< 20; i++){
-//            listData.add(new ListData());
-//        }
-//        listDataMenuAdapter.repaceDatas(listData);
-
     }
 
     private void setTab(){
@@ -262,16 +271,7 @@ public class DetailActivity extends BaseActivity {
         tvList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-
-                //                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tvList.getLayoutParams();
-//                if(hasFocus){
-//                    layoutParams.height =  DisplayUtils.dip2px(400);
-//                }else {
-//                    layoutParams.height =  DisplayUtils.dip2px(200);
-//                }
-//
-//                tvList.setLayoutParams(layoutParams);
-
+                sildAnimina();
                 if(selectCollect.hasFocus() && !hasFocus)
                     return;
                 mFocusBorder.setVisible(hasFocus);
@@ -361,5 +361,49 @@ public class DetailActivity extends BaseActivity {
 //                Log.d("MainActivity", "slideOffset:" + slideOffset);
             }
         });
+    }
+
+    private void sildAnimina(){
+
+      final  float distance = DisplayUtils.getDimen(R.dimen.x300);
+
+
+       // NLog.e(NLog.TAGOther,"获取评论的测量高度---》"+layoutSelect.getMeasuredHeight());
+
+     final   int hight = layoutSelect.getMeasuredHeight();
+     final   LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layoutSelect.getLayoutParams();
+
+        if(isSild){
+            isSild = !isSild;
+            //ObjectAnimator translationX = new ObjectAnimator().ofFloat(layoutSelect,"translationX",0,0);
+            ObjectAnimator translationY = new ObjectAnimator().ofFloat(layoutSelect,"translationY",-distance,0);
+
+            AnimatorSet animatorSet = new AnimatorSet();  //组合动画
+            animatorSet.playTogether(translationY); //设置动画
+            animatorSet.setDuration(300);  //设置动画时间
+            translationY.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                   // NLog.e(NLog.TAGOther,"平移动画结束---》");
+                    layoutParams.height = MATCH_PARENT;
+                    layoutSelect.setLayoutParams(layoutParams);
+                }
+            });
+            animatorSet.start(); //启动
+        }else {
+            isSild = !isSild;
+            layoutSelect.setLayoutAnimationListener(null);
+           // ObjectAnimator translationX = new ObjectAnimator().ofFloat(layoutSelect,"translationX",0,0);
+            ObjectAnimator translationY = new ObjectAnimator().ofFloat(layoutSelect,"translationY",0,-distance);
+
+            AnimatorSet animatorSet = new AnimatorSet();  //组合动画
+            animatorSet.playTogether(translationY); //设置动画
+            animatorSet.setDuration(300);  //设置动画时间
+            animatorSet.start(); //启动
+            layoutParams.height = (int) (hight + distance);
+            layoutSelect.setLayoutParams(layoutParams);
+        }
+
     }
 }

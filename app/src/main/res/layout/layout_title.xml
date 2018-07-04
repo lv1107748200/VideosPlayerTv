@@ -9,7 +9,7 @@
         android:focusable="false"
         android:id="@+id/image_log"
         android:layout_width="150dp"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/x100"
         android:background="@drawable/hehe"
         />
     <com.hr.videosplayertv.widget.view.MarqueeText
@@ -24,18 +24,25 @@
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
+        android:textColor="@color/c_ded"
         />
 
     <Button
+        android:layout_marginRight="@dimen/x10"
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/x45"
+        android:background="@drawable/foc_back_two"
+        android:textColor="@drawable/foc_tv_two"
         android:text="@string/svp_search"
         />
     <Button
+        android:layout_marginLeft="@dimen/x10"
         android:id="@+id/btn_personal_center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/x45"
+        android:background="@drawable/foc_back_two"
+        android:textColor="@drawable/foc_tv_two"
         android:text="@string/svp_personal_center"
         />
 
@@ -46,5 +53,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_weight="1.5"
+        android:textColor="@color/c_5c6"
         />
 </LinearLayout>
