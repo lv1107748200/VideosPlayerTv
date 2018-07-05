@@ -4,7 +4,10 @@
 
     <string name="svp_search">搜索</string>
     <string name="svp_list">列表</string>
-    <string name="svp_personal_center">个人中心</string>
+    <string name="svp_personal_center">用户中心</string>
+    <string name="svp_recharge_center">充值中心</string>
+    <string name="svp_help_center">帮助中心</string>
+    <string name="svp_about_men">关于我们</string>
     <string name="svp_favorite">收藏夹</string>
     <string name="svp_histories">历史纪录</string>
     <string name="svp_recently_played_videos">播放记录</string>

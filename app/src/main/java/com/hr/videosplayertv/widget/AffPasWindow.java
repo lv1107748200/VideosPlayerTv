@@ -41,7 +41,9 @@ public class AffPasWindow implements View.OnKeyListener {
     TextView tv_p_two;
     @BindView(R.id.tv_P_three)
     TextView tv_P_three;
-    @OnClick({R.id.tv_num,R.id.tv_p_one,R.id.tv_p_two,R.id.tv_P_three})
+    @BindView(R.id.tv_P_four)
+    TextView tv_P_four;
+    @OnClick({R.id.tv_num,R.id.tv_p_one,R.id.tv_p_two,R.id.tv_P_three,R.id.tv_P_four})
     public void Onclick(View view){
            if(null != pasWindowCallBack){
                pasWindowCallBack.whatText(""+((TextView)view).getText().toString());
@@ -60,7 +62,7 @@ public class AffPasWindow implements View.OnKeyListener {
 
         windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         params = new WindowManager.LayoutParams();
-        params.height = DisplayUtils.getDimen(R.dimen.x100) + SearchActivity.pp*2;
+        params.height = DisplayUtils.getDimen(R.dimen.x200) + SearchActivity.pp*2;
         params.width = DisplayUtils.getDimen(R.dimen.x200)+ SearchActivity.pp*2;
         params.format = PixelFormat.TRANSLUCENT;
         params.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
@@ -74,6 +76,7 @@ public class AffPasWindow implements View.OnKeyListener {
         tv_p_one.setOnKeyListener(this);
         tv_p_two.setOnKeyListener(this);
         tv_P_three.setOnKeyListener(this);
+        tv_P_four.setOnKeyListener(this);
     }
 
 
@@ -88,6 +91,9 @@ public class AffPasWindow implements View.OnKeyListener {
         }else {
             windowManager.updateViewLayout(linearLayout,params);
         }
+
+        if(tv_P_four.getVisibility() != View.GONE)
+        tv_P_four.setVisibility(View.GONE);
 
         switch (code){
             case 1252:
@@ -125,6 +131,8 @@ public class AffPasWindow implements View.OnKeyListener {
                 tv_p_one.setText("P");
                 tv_p_two.setText("Q");
                 tv_P_three.setText("R");
+                tv_P_four.setVisibility(View.VISIBLE);
+                tv_P_four.setText("S");
                 break;
             case 1258:
                 tv_num.setText("8");
@@ -137,6 +145,8 @@ public class AffPasWindow implements View.OnKeyListener {
                 tv_p_one.setText("W");
                 tv_p_two.setText("X");
                 tv_P_three.setText("Y");
+                tv_P_four.setVisibility(View.VISIBLE);
+                tv_P_four.setText("Z");
                 break;
         }
 

@@ -67,8 +67,10 @@
         <item name="android:gravity">center</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
-        <item name="android:textColor">@drawable/foc_tv_color_one</item>
-        <item name="android:background">@drawable/foc_back_one</item>
+        <item name="android:textSize">@dimen/sp_18</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/foc_tv_two</item>
+        <item name="android:background">@drawable/foc_back_two</item>
     </style>
     <style name="tv_title" parent="tv">
         <item name="android:textColor">@color/c_96a</item>
@@ -85,5 +87,34 @@
         <item name="android:layout_margin">@dimen/x10</item>
         <item name="android:background">@drawable/foc_back_two</item>
         <item name="android:textColor">@drawable/foc_tv_two</item>
+    </style>
+
+    <style name="round_layout_user_center">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">@dimen/x20</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/c_tttt</item>
+    </style>
+
+    <style name="image_user_center">
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:layout_marginBottom">@dimen/x10</item>
+        <item name="android:layout_width">@dimen/x80</item>
+        <item name="android:layout_height">@dimen/x80</item>
+    </style>
+
+    <style name="tv_user_center">
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@drawable/foc_tv_color_one</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/sp_18</item>
     </style>
 </resources>

@@ -46,6 +46,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
     private GridAdapter gridAdapter;
     private AffPasWindow affPasWindow;
+    private StringBuffer stringBuffer;//搜索字符
 
 
     @Override
@@ -76,9 +77,10 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
                 int keyCode = softKey.getKeyCode();
                 switch (keyCode){
                     case 67:
+                        addOrRemove(null,1);
                         break;
                     case 68:
-                        tv_show_message.setText("");
+                        addOrRemove(null,2);
                         break;
                     case 69:
                         setSkbContainerOther();
@@ -96,7 +98,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
                             NLog.e(NLog.KEY,"--->keycode   :  "+keyCode);
 
                             String keyLabel = softKey.getKeyLabel();
-                            tv_show_message.setText(tv_show_message.getText()+keyLabel);
+                            addOrRemove(keyLabel,0);
 
 //                    int keyCode = softKey.getKeyCode();
 //                    String keyLabel = softKey.getKeyLabel();
@@ -225,19 +227,19 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
         switch (softKey.getKeyCode()){
             case 1251:
-                tv_show_message.setText(tv_show_message.getText()+"1");
+                addOrRemove("1",0);
                 break;
-            case 1250: ;
-                tv_show_message.setText(tv_show_message.getText()+"0");
+            case 1250:
+                addOrRemove("0",0);
                 break;
                 default:
-                    NLog.e(NLog.KEY,"获取view 坐标  x,y :  "+skbContainer.getX()+","+skbContainer.getY());
-                    NLog.e(NLog.KEY,"获取view 坐标  l,t :  "+softKey.getLeft()+","+softKey.getTop());
+                   // NLog.e(NLog.KEY,"获取view 坐标  x,y :  "+skbContainer.getX()+","+skbContainer.getY());
+                   // NLog.e(NLog.KEY,"获取view 坐标  l,t :  "+softKey.getLeft()+","+softKey.getTop());
 
                     int x  = (int) (softKey.getLeft() + skbContainer.getX());
                     int y = (int) (softKey.getTop() + skbContainer.getY());
 
-                    NLog.e(NLog.KEY,"移动view 坐标  x,y :  "+x+","+y);
+                   // NLog.e(NLog.KEY,"移动view 坐标  x,y :  "+x+","+y);
 
                     affPasWindow.moveLyout(x - pp,y - pp,softKey.getKeyCode());
                     break;
@@ -280,6 +282,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (skbContainer.onSoftKeyDown(keyCode, event))
             return true;
+
         return super.onKeyDown(keyCode, event);
     }
 
@@ -287,14 +290,34 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (skbContainer.onSoftKeyUp(keyCode, event))
             return true;
-        return super.onKeyDown(keyCode, event);
+        return super.onKeyUp(keyCode, event);
     }
     /**
     *T9子选项
     */
     @Override
     public void whatText(String s) {
-        tv_show_message.setText(tv_show_message.getText()+s);
+        addOrRemove(s,0);
+    }
+
+    /**
+     * @param s 字符串处理
+     */
+    private void addOrRemove(String s,int type){
+        if(null == stringBuffer){
+                stringBuffer = new StringBuffer();
+        }
+        if(type == 0){//添加
+            if(null != s)
+                stringBuffer.append(s);
+        }else if(type == 1){//删除
+            if(stringBuffer.length()>0)
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+        }else if(type == 2){//清空
+            if(stringBuffer.length()>0)
+            stringBuffer.delete(0,stringBuffer.length());
+        }
+        tv_show_message.setText(stringBuffer);
     }
 
 

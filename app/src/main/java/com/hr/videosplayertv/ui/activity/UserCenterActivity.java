@@ -16,34 +16,39 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 个人中心
+ * 用户中心
  */
 public class UserCenterActivity extends BaseActivity {
 
     @BindView(R.id.tv_title_child)
     TextView tvTitleChild;
+    @BindView(R.id.tv_title_name)
+    TextView tv_title_name;
+    @BindView(R.id.tv_user_say_more)
+    TextView tv_user_say_more;
 
-    @OnClick({R.id.image_one,R.id.image_two,R.id.image_three})
+    @OnClick({R.id.layout_played_videos,R.id.layout_favorite,R.id.layout_recharge_center,
+            R.id.layout_help_center,R.id.layout_about_men})
     public void Onclick(View view){
         Intent intent = new Intent();
         switch (view.getId()){
-            case R.id.image_one:
+            case R.id.layout_played_videos:
                 intent.setClass(this,DiversityActivity.class);
                 intent.putExtra("DiversityType",DiversityActivity.PLAYERRECORD);
                 startActivity(intent);
                 break;
-            case R.id.image_two:
+            case R.id.layout_favorite:
                 intent.setClass(this,DiversityActivity.class);
                 intent.putExtra("DiversityType",DiversityActivity.FAVORITE);
                 startActivity(intent);
                 break;
-            case R.id.image_three:
+            case R.id.layout_recharge_center:
 
                 break;
-            case R.id.image_four:
+            case R.id.layout_help_center:
 
                 break;
-            case R.id.image_five:
+            case R.id.layout_about_men:
 
                 break;
         }
