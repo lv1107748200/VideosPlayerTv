@@ -14,7 +14,7 @@ public class Loger {
 
     private final static String customTagPrefix = "tvRecycleView";
     
-    public static boolean isDebug = true;
+    public static boolean isDebug = false;
 
     private Loger() {
     }

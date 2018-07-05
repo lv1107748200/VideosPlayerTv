@@ -105,7 +105,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
             }
 
         } else {
-            helper.getHolder().setText(R.id.title, ((ListData) item).getTitle()+"title");
+            helper.getHolder().setText(R.id.title, ((ListData) item).getTitle());
         }
 
 

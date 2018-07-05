@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.base.BaseFragment;
+import com.hr.videosplayertv.common.ImmobilizationData;
 import com.hr.videosplayertv.net.entry.ListData;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
 import com.hr.videosplayertv.ui.adapter.MainFragmentAdapter;
@@ -145,8 +146,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         List<ListData> listData = new ArrayList<>();
 
         for (int i =0 ;i< 8; i++){
-            listData.add(new ListData());
-            multipleFragments.add(MultipleFragment.getmultipleFragment().setType(i));
+            ListData listData1 = new ListData(i,ImmobilizationData.Tags.getNameByIndex(i));
+            listData.add(listData1);
+            multipleFragments.add(MultipleFragment.getmultipleFragment().setType(listData1));
         }
         listDataMenuAdapter.repaceDatas(listData);
         mainFragmentAdapter.upData(multipleFragments);

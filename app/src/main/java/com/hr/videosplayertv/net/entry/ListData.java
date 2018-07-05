@@ -13,6 +13,15 @@ public class ListData {
         this.type = type;
     }
 
+    public ListData(String title) {
+        this.title = title;
+    }
+
+    public ListData(int type, String title) {
+        this.type = type;
+        this.title = title;
+    }
+
     public int getType() {
         return type;
     }

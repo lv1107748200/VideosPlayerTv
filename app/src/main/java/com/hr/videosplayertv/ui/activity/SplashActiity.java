@@ -5,8 +5,17 @@ import android.util.DisplayMetrics;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.net.base.BaseDataRequest;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
+import com.hr.videosplayertv.net.entry.request.AutoLogin;
+import com.hr.videosplayertv.net.entry.response.InfoToken;
+import com.hr.videosplayertv.net.entry.response.UserInfo;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
+import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.NLog;
-
+import com.hr.videosplayertv.widget.single.UserInfoManger;
 
 
 /**
@@ -23,11 +32,49 @@ public class SplashActiity extends BaseActivity {
     @Override
     public void init() {
         super.init();
+        userAutoLogin();
+    }
 
-        Intent intent = new Intent();
-        intent.setClass(this,MainActivity.class);
-        startActivity(intent);
-        finish();
+    private void userAutoLogin(){
+        baseService.userAutoLogin(new AutoLogin("AtGukMyVscE54QkNx+QMEOfQpyJIg2T55EESZ589VySeHUW7AogBzBIFMEwrBHYa"),
+                new HttpCallback<BaseResponse<InfoToken>>() {
+            @Override
+            public void onError(HttpException e) {
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<InfoToken> infoTokenBaseResponse) {
+
+                if(!CheckUtil.isEmpty(infoTokenBaseResponse.getData().getInfo()))
+                UserInfoManger.getInstance().setToken(infoTokenBaseResponse.getData().getInfo().get(0));
+
+
+                validate();
+            }
+        });
+    }
+
+    private void validate(){
+
+        BaseDataRequest baseDataRequest = new BaseDataRequest();
+        baseDataRequest.setCID("1");
+        baseDataRequest.setToken(UserInfoManger.getInstance().getToken());
+
+        baseService.validate(baseDataRequest, new HttpCallback<BaseResponse<BaseDataResponse<UserInfo>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<UserInfo>> baseDataResponseBaseResponse) {
+                Intent intent = new Intent();
+                intent.setClass(SplashActiity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
 

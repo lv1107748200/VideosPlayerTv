@@ -3,6 +3,8 @@ package com.hr.videosplayertv.net.http;
 
 
 
+import com.hr.videosplayertv.net.Service.ComService;
+import com.hr.videosplayertv.net.Service.UserService;
 import com.hr.videosplayertv.net.base.BaseService;
 
 import javax.inject.Singleton;
@@ -21,7 +23,39 @@ public class HttpModule {
     protected static final String APP_CODE = "AppCode";
     protected static final String APP_CODE_VALUE = "ANDROID";
 
-    //
+    protected static final String BASEURLONE = "http://testapi.hwhrq.com/api/";
+
+    //用户服务
+    @Provides
+    @Singleton
+    public UserService userService(){
+        HttpServiceSetting httpServiceSetting = new HttpServiceSetting(BASEURLONE);
+        httpServiceSetting.builderCallback = new OkHttpRequestBuilderCallback() {
+            @Override
+            public void builder(Request.Builder builder) {
+                builder.addHeader(APP_CODE, APP_CODE_VALUE);    //设置请求头
+            }
+        };
+        httpServiceSetting.logLevel = HttpLoggingInterceptor.Level.BODY;
+        Retrofit retrofit = OkHttpClientUtils.buildRetrofit(httpServiceSetting);
+        return  retrofit.create(UserService.class);
+    }
+
+    @Provides
+    @Singleton
+    public ComService comService(){
+        HttpServiceSetting httpServiceSetting = new HttpServiceSetting(BASEURLONE);
+        httpServiceSetting.builderCallback = new OkHttpRequestBuilderCallback() {
+            @Override
+            public void builder(Request.Builder builder) {
+                builder.addHeader(APP_CODE, APP_CODE_VALUE);    //设置请求头
+            }
+        };
+        httpServiceSetting.logLevel = HttpLoggingInterceptor.Level.BODY;
+        Retrofit retrofit = OkHttpClientUtils.buildRetrofit(httpServiceSetting);
+        return  retrofit.create(ComService.class);
+    }
+
     @Provides
     @Singleton
     public BaseService baseService(){

@@ -6,25 +6,16 @@ package com.hr.videosplayertv.net.base;
 
 public class BaseResponse<T> {
 
-    private int status;
-    private int sysCode;
+    private int ret;
     private String msg;
     private T data;
 
-    public int getSysCode() {
-        return sysCode;
+    public int getRet() {
+        return ret;
     }
 
-    public void setSysCode(int sysCode) {
-        this.sysCode = sysCode;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
+    public void setRet(int ret) {
+        this.ret = ret;
     }
 
     public String getMsg() {
