@@ -1,6 +1,7 @@
 package com.hr.videosplayertv.net.subscriber;
 
 
+import com.hr.videosplayertv.net.base.BaseDataResponse;
 import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
@@ -12,7 +13,7 @@ import retrofit2.Response;
 
 /*
  */
-public class HttpSubscriber<T> implements Observer<Response<BaseResponse<T>>> {
+public class HttpSubscriber<T extends BaseDataResponse> implements Observer<Response<BaseResponse<T>>> {
     HttpCallback callback;
 
     public HttpSubscriber(HttpCallback callback) {
@@ -44,9 +45,18 @@ public class HttpSubscriber<T> implements Observer<Response<BaseResponse<T>>> {
         if(httpResultResponse.code()==200){
            BaseResponse<T> result = httpResultResponse.body();
             if(result.getRet() == 200 ){
-
-                if (callback != null) {
-                    callback.onSuccess(result);
+                BaseDataResponse baseDataResponse = result.getData();
+                //code为0表示没有错误，code为1表示有错误
+                if(null != baseDataResponse){
+                    if(baseDataResponse.getCode() == 0){
+                        if (callback != null) {
+                            callback.onSuccess(result);
+                        }
+                    }else if(baseDataResponse.getCode() == 1){
+                        if (callback != null) {
+                            callback.onError(new HttpException(1,baseDataResponse.getMsg()));
+                        }
+                    }
                 }
 
             } else {

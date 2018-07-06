@@ -1,24 +1,45 @@
 package com.hr.videosplayertv.ui.activity;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.UserToken;
+import com.hr.videosplayertv.net.entry.response.WhatList;
+import com.hr.videosplayertv.net.entry.response.WhatType;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
+import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.widget.dialog.LoadingDialog;
+import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.hr.videosplayertv.common.ImmobilizationData.ANIME;
+import static com.hr.videosplayertv.common.ImmobilizationData.FILM;
+import static com.hr.videosplayertv.common.ImmobilizationData.OVERSEAS;
+import static com.hr.videosplayertv.common.ImmobilizationData.SPORTS;
+import static com.hr.videosplayertv.common.ImmobilizationData.TELEPLAY;
+import static com.hr.videosplayertv.common.ImmobilizationData.VARIETY;
 
 
 /**
@@ -40,6 +61,9 @@ public class ListDataActivity extends BaseActivity {
     private GridAdapter gridAdapter;
     private ListDataMenuAdapter listDataMenuAdapter;
 
+    private ArrayList<WhatType> whatTypeList;
+    private String type;
+
     @Override
     public int getLayout() {
         return R.layout.activity_list_data;
@@ -49,7 +73,6 @@ public class ListDataActivity extends BaseActivity {
     public void init() {
         super.init();
 
-        tvTitleChild.setText(getString(R.string.svp_list));
         setListener();
         tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
         gridAdapter = new GridAdapter(this);
@@ -65,17 +88,18 @@ public class ListDataActivity extends BaseActivity {
     }
 
     private void initData(){
-        List<ListData> listData = new ArrayList<>();
 
-        for (int i =0 ;i< 7; i++){
-            listData.add(new ListData());
+        Intent intent = getIntent();
+
+        whatTypeList = intent.getParcelableArrayListExtra("WHATTYPELIST");
+        type = intent.getStringExtra("TYPE");
+        if(!CheckUtil.isEmpty(whatTypeList)){
+            listDataMenuAdapter.repaceDatas(whatTypeList);
         }
 
-        gridAdapter.repaceDatas(listData);
+        tvTitleChild.setText(type+getString(R.string.svp_list));
 
-        listDataMenuAdapter.repaceDatas(listData);
-
-
+        load();
     }
 
     private void setListener() {
@@ -130,24 +154,134 @@ public class ListDataActivity extends BaseActivity {
             }
         });
 
-        //边界监听
-//        mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
-//            @Override
-//            public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
-//                Log.i("zzzz", "onInBorderKeyEvent: ");
-//                return false;//需要拦截返回true,否则返回false
-//            }
-//        });
 
-        /*mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
+
+        tvList.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
             @Override
             public boolean onLoadMore() {
-                Log.i("@@@@", "onLoadMore: ");
-                mRecyclerView.setLoadingMore(true); //正在加载数据
-                mLayoutAdapter.appendDatas(); //加载数据
-                mRecyclerView.setLoadingMore(false); //加载数据完毕
-                return false; //是否还有更多数据
+
+                tvList.setLoadingMore(true); //正在加载数据
+                isLoadMore = true;
+                load();
+                return isMore; //是否还有更多数据
             }
-        });*/
+        });
+
     }
+
+    private void load(){
+        if(null != type){
+            switch (type){
+                case FILM:
+                    Film();
+                    break;
+                case TELEPLAY:
+                    TV();
+                    break;
+                case VARIETY:
+                    Film();
+                    break;
+                case ANIME:
+                    Film();
+                    break;
+                case SPORTS:
+                    Film();
+                    break;
+                case OVERSEAS:
+                    Film();
+                    break;
+            }
+        }
+    }
+
+    private void Film(){
+         UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        WhatCom data = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                "0,1",
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire(),
+                "20",
+                ""+pageNo
+                );
+        baseService.Film(data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(ListDataActivity.this,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
+
+                setTvList(baseDataResponseBaseResponse);
+            }
+        }, ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    private void TV(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        WhatCom data = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                "0,1",
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire(),
+                "20",
+                ""+pageNo
+        );
+        baseService.TV(data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(ListDataActivity.this,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
+                setTvList(baseDataResponseBaseResponse);
+
+            }
+        }, ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    private void setTvList(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse){
+        if(isLoadMore){
+            tvList.setLoadingMore(false);
+        }
+        BaseDataResponse<WhatList> baseDataResponse = baseDataResponseBaseResponse.getData();
+        List<WhatList> whatLists = baseDataResponse.getInfo();
+
+        if(!CheckUtil.isEmpty(whatLists)){
+
+            pageNo = pageNo+1;
+            if(isLoadMore){
+                gridAdapter.appendDatas(whatLists);
+            }else {
+                gridAdapter.repaceDatas(whatLists);
+            }
+
+
+        }else {
+            if(isLoadMore){
+                isMore = false;
+
+            }else {
+                gridAdapter.clearDatas();
+                gridAdapter.notifyDataSetChanged();
+
+            }
+
+        }
+    }
+
 }

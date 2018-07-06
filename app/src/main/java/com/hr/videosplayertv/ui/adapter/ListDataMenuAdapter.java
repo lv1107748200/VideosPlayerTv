@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
 
@@ -92,7 +93,9 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
             if(position == 0){
 
             }else {
-                helper.getHolder().setText(R.id.title, ((ListData) item).getTitle()+"title");
+                if(item instanceof WhatType){
+                    helper.getHolder().setText(R.id.title, ((WhatType) item).getClassName());
+                }
             }
 
         }else if(isMainMenu == FOUR){//选集
@@ -105,7 +108,12 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
             }
 
         } else {
-            helper.getHolder().setText(R.id.title, ((ListData) item).getTitle());
+            if(item instanceof ListData){
+                helper.getHolder().setText(R.id.title, ((ListData) item).getTitle());
+            }else if(item instanceof WhatType){
+                helper.getHolder().setText(R.id.title, ((WhatType) item).getClassName());
+            }
+
         }
 
 

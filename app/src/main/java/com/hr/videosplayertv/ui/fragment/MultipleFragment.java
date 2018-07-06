@@ -26,7 +26,13 @@ import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.base.BaseFragment;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.WhatList;
+import com.hr.videosplayertv.net.entry.response.WhatType;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.activity.DetailActivity;
 import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
@@ -42,6 +48,7 @@ import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.widget.dialog.LoadingDialog;
 import com.hr.videosplayertv.widget.focus.FocusBorder;
 import com.owen.tvrecyclerview.widget.MetroTitleItemDecoration;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -50,6 +57,7 @@ import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -60,14 +68,20 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static com.hr.videosplayertv.common.ImmobilizationData.ANIME;
+import static com.hr.videosplayertv.common.ImmobilizationData.FILM;
+import static com.hr.videosplayertv.common.ImmobilizationData.OVERSEAS;
+import static com.hr.videosplayertv.common.ImmobilizationData.SPORTS;
+import static com.hr.videosplayertv.common.ImmobilizationData.TELEPLAY;
+import static com.hr.videosplayertv.common.ImmobilizationData.VARIETY;
 
 /**
  * 通用版 根据数据不同来区分页面
  */
 public class MultipleFragment extends BaseFragment {
 
-    private static int type ;
-    private static ListData typeData;
+    private  int type ;
+    private  ListData typeData;
 
     private HomeLayout homeLayout;
     private ClassifyLayout classifyLayout;
@@ -113,13 +127,197 @@ public class MultipleFragment extends BaseFragment {
         }
 
     }
+
+    @Override
+    public void loadData() {
+        super.loadData();
+
+      //  LoadingDialog.showProgress(mContext);
+        switch (type){
+
+            case 0:
+
+                break;
+            case 1:
+
+                break;
+            default:
+                commonLayout.setType(typeData.getTitle());
+                switch (typeData.getTitle()){
+                    case FILM:
+                        FilmType();
+                        break;
+                    case TELEPLAY:
+                        TVType();
+                        break;
+                    case VARIETY:
+                        VarietyType();
+                        break;
+                    case ANIME:
+                        AnimeType();
+                        break;
+                    case SPORTS:
+                        SportType();
+                        break;
+                    case OVERSEAS:
+                        CircleType();
+                        break;
+                }
+                break;
+        }
+
+
+    }
+
+    @Override
+    public void stopLoad() {
+        super.stopLoad();
+    }
+
     //首页布局
+
 
     //分类试图
 
 
     //common
+    private void FilmType(){
+        baseService.FilmType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+            @Override
+            public void onError(HttpException e) {
 
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(mContext,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
 
+            }
 
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
+                LoadingDialog.disMiss();
+
+                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
+                List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                commonLayout.setListDataMenuAdapter(whatTypeList);
+            }
+        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
+    private void TVType(){
+        baseService.TVType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(mContext,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
+                LoadingDialog.disMiss();
+
+                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
+                List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                commonLayout.setListDataMenuAdapter(whatTypeList);
+            }
+        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
+    //综艺
+    private void VarietyType(){
+        baseService.VarietyType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(mContext,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
+                LoadingDialog.disMiss();
+
+                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
+                List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                commonLayout.setListDataMenuAdapter(whatTypeList);
+            }
+        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
+    private void AnimeType(){
+        baseService.AnimeType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(mContext,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
+                LoadingDialog.disMiss();
+
+                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
+                List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                commonLayout.setListDataMenuAdapter(whatTypeList);
+            }
+        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
+    private void SportType(){
+        baseService.SportType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(mContext,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
+                LoadingDialog.disMiss();
+
+                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
+                List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                commonLayout.setListDataMenuAdapter(whatTypeList);
+            }
+        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
+    private void CircleType(){
+        baseService.CircleType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(mContext,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
+                LoadingDialog.disMiss();
+
+                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
+                List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                commonLayout.setListDataMenuAdapter(whatTypeList);
+            }
+        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
 }

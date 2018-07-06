@@ -32,6 +32,10 @@ public class SplashActiity extends BaseActivity {
     @Override
     public void init() {
         super.init();
+//        Intent intent = new Intent();
+//        intent.setClass(SplashActiity.this,MainActivity.class);
+//        startActivity(intent);
+//        finish();
         userAutoLogin();
     }
 
@@ -69,6 +73,10 @@ public class SplashActiity extends BaseActivity {
 
             @Override
             public void onSuccess(BaseResponse<BaseDataResponse<UserInfo>> baseDataResponseBaseResponse) {
+                if(!CheckUtil.isEmpty(baseDataResponseBaseResponse.getData().getInfo()))
+                UserInfoManger.getInstance().setUserToken(baseDataResponseBaseResponse.getData().getInfo().get(0).getUserToken());
+
+
                 Intent intent = new Intent();
                 intent.setClass(SplashActiity.this,MainActivity.class);
                 startActivity(intent);

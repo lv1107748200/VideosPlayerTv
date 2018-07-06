@@ -22,12 +22,13 @@ import com.hr.videosplayertv.R;
 
 
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 
 
-public class GridAdapter extends CommonRecyclerViewAdapter<ListData> {
+public class GridAdapter extends CommonRecyclerViewAdapter {
     public GridAdapter(Context context) {
         super(context);
     }
@@ -38,8 +39,15 @@ public class GridAdapter extends CommonRecyclerViewAdapter<ListData> {
     }
 
     @Override
-    public void onBindItemHolder(CommonRecyclerViewHolder helper, ListData item, int position) {
-        helper.getHolder()
-        .showImage(R.id.image, ImgDatasUtils.getUrl());
+    public void onBindItemHolder(CommonRecyclerViewHolder helper, Object item, int position) {
+
+
+        if(item instanceof WhatList){
+            helper.getHolder()
+                    .showImage(R.id.image, ImgDatasUtils.getUrl()).setText(R.id.title,((WhatList) item).getTitle());
+        }else {
+            helper.getHolder()
+                    .showImage(R.id.image, ImgDatasUtils.getUrl());
+        }
     }
 }

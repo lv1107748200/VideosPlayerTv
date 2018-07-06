@@ -9,8 +9,11 @@ import com.hr.videosplayertv.base.BaseApplation;
 import com.hr.videosplayertv.net.Service.ComService;
 import com.hr.videosplayertv.net.Service.UserService;
 import com.hr.videosplayertv.net.entry.request.AutoLogin;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
 import com.hr.videosplayertv.net.entry.response.InfoToken;
 import com.hr.videosplayertv.net.entry.response.UserInfo;
+import com.hr.videosplayertv.net.entry.response.WhatList;
+import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpUtils;
 import com.hr.videosplayertv.net.subscriber.HttpSubscriber;
@@ -22,6 +25,10 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import okhttp3.RequestBody;
+import retrofit2.Response;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by 吕 on 2017/10/27.
@@ -42,7 +49,8 @@ public class BaseService {
     @SuppressWarnings("unchecked")
     public void userAutoLogin(
             AutoLogin data,
-            HttpCallback<BaseResponse<InfoToken>> httpCallback){
+            HttpCallback<BaseResponse<InfoToken>> httpCallback
+    ){
 
         RequestBody body = HttpUtils.buildRequestBody(data);
         Observable observable =  userService.userAutoLogin(body);
@@ -52,14 +60,12 @@ public class BaseService {
                 new HttpSubscriber<InfoToken>(httpCallback)
         );
     }
-
-
-
     ////获取用户信息，传入登录时获取的token，及影院id（固定为1）
     @SuppressWarnings("unchecked")
     public void validate(
             BaseDataRequest data,
-            HttpCallback<BaseResponse<BaseDataResponse<UserInfo>>> httpCallback){
+            HttpCallback<BaseResponse<BaseDataResponse<UserInfo>>> httpCallback
+    ){
 
         RequestBody body = HttpUtils.buildRequestBody(data);
         Observable observable =  userService.validate(body);
@@ -67,6 +73,269 @@ public class BaseService {
         HttpUtils.toSubscribe(
                 observable,
                 new HttpSubscriber<BaseDataResponse<UserInfo>>(httpCallback)
+        );
+    }
+
+    //1 所有分类
+    @SuppressWarnings("unchecked")
+    public void AllInOneType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.AllInOneType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //2 获取电影分类
+    @SuppressWarnings("unchecked")
+    public void FilmType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.FilmType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //3 获取电视剧分类
+    @SuppressWarnings("unchecked")
+    public void TVType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.TVType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //4 获取综艺分类
+    @SuppressWarnings("unchecked")
+    public void VarietyType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.VarietyType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //5 获取动漫分类
+    @SuppressWarnings("unchecked")
+    public void AnimeType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.AnimeType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //6 获取体育分类
+    @SuppressWarnings("unchecked")
+    public void SportType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.SportType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //7 获取记录片分类
+    @SuppressWarnings("unchecked")
+    public void DocumentaryType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.DocumentaryType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //8 获取华人圈分类
+    @SuppressWarnings("unchecked")
+    public void CircleType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.CircleType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //9 获取游戏分类
+    @SuppressWarnings("unchecked")
+    public void GameType(
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.GameType();
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //10 电影
+    @SuppressWarnings("unchecked")
+    public void Film(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Film(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //11 电视剧
+    @SuppressWarnings("unchecked")
+    public void TV(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.TV(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //12 综艺
+    @SuppressWarnings("unchecked")
+    public void Variety(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Variety(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //13 动漫
+    @SuppressWarnings("unchecked")
+    public void Anime(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Anime(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //14 体育
+    @SuppressWarnings("unchecked")
+    public void Sport(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Sport(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //15 记录片
+    @SuppressWarnings("unchecked")
+    public void Documentary(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Documentary(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //16 华人
+    @SuppressWarnings("unchecked")
+    public void Circle(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Circle(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //17 游戏
+    @SuppressWarnings("unchecked")
+    public void Game(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Game(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
         );
     }
 

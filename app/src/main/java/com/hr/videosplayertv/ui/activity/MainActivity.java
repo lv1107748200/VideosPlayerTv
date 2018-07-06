@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
@@ -52,6 +53,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
     private ListDataMenuAdapter listDataMenuAdapter;
     private Disposable mDisposable;//脉搏
 
+    private long firstTime=0;
 
     @BindView(R.id.tv_view_pager)
     TvViewPager tvViewPager;
@@ -183,7 +185,15 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
+        if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_DOWN){
+            if (System.currentTimeMillis()-firstTime>2000){
+                Toast.makeText(MainActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
+                firstTime=System.currentTimeMillis();
+            }else{
+                finish();
+            }
+            return true;
+        }
         return super.onKeyDown(keyCode, event);
     }
 

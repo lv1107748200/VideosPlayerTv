@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
  * Created by 吕 on 2018/3/7.
  */
 
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends AbstractBaseActivity {
     @Inject
     public BaseService baseService;
 
@@ -38,6 +38,7 @@ public class BaseActivity extends FragmentActivity {
     public int getLayout(){
         return 0;
     }
+
     public void init(){
         // 移动框
         if(null == mFocusBorder) {

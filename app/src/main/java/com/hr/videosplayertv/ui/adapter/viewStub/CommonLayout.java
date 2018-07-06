@@ -1,15 +1,19 @@
 package com.hr.videosplayertv.ui.adapter.viewStub;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.ui.activity.DetailActivity;
+import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
+import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
@@ -41,6 +45,9 @@ public class CommonLayout {
     ImageView image_five;
 
     private BaseActivity mContext;
+
+    private String type;
+    private ArrayList<WhatType> whatTypeList;
 
     @OnClick({R.id.image_one,R.id.image_two,R.id.image_three,R.id.image_four,R.id.image_five})
     public void Onclick(View view){
@@ -75,17 +82,23 @@ public class CommonLayout {
         mainMenu.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x10), DisplayUtils.getDimen(R.dimen.x40));
         mainMenu.setAdapter(listDataMenuAdapter);
 
-        initData();
     }
 
-    private void initData(){
-        List<ListData> listData = new ArrayList<>();
+    public void setType(String type) {
+        this.type = type;
+    }
 
-        for (int i =0 ;i< 5; i++){
-            listData.add(new ListData());
+    public void setListDataMenuAdapter(List<WhatType> whatTypeList){
+        this.whatTypeList = new ArrayList<>();
+        if(!CheckUtil.isEmpty(whatTypeList)){
+           this.whatTypeList.addAll(whatTypeList);
+
+            if(whatTypeList.size()>=5){
+                listDataMenuAdapter.repaceDatas(whatTypeList.subList(0, 5));
+            }else {
+                listDataMenuAdapter.repaceDatas(whatTypeList);
+            }
         }
-
-        listDataMenuAdapter.repaceDatas(listData);
     }
 
     private void setListener() {
@@ -100,7 +113,11 @@ public class CommonLayout {
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
-
+                Intent intent = new Intent(mContext, ListDataActivity.class);
+                if(!CheckUtil.isEmpty(whatTypeList))
+                intent.putParcelableArrayListExtra("WHATTYPELIST", whatTypeList);
+                intent.putExtra("TYPE",type);
+                mContext.startActivity(intent);
             }
         });
 

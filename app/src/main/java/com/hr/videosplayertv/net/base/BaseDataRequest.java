@@ -15,6 +15,18 @@ public class BaseDataRequest {
     private String Sign;
     private String Expire;
 
+    public BaseDataRequest() {
+    }
+
+    public BaseDataRequest(String token, String CID, String UID, String GID, String sign, String expire) {
+        Token = token;
+        this.CID = CID;
+        this.UID = UID;
+        this.GID = GID;
+        Sign = sign;
+        Expire = expire;
+    }
+
     public String getToken() {
         return Token;
     }
