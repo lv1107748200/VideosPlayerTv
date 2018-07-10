@@ -26,6 +26,9 @@ import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.base.BaseFragment;
+import com.hr.videosplayertv.db.DBResultCallback;
+import com.hr.videosplayertv.db.RealmDBManger;
+import com.hr.videosplayertv.db.TabsData;
 import com.hr.videosplayertv.net.base.BaseDataResponse;
 import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.entry.ListData;
@@ -44,6 +47,7 @@ import com.hr.videosplayertv.ui.adapter.viewStub.ClassifyLayout;
 import com.hr.videosplayertv.ui.adapter.viewStub.CommonLayout;
 import com.hr.videosplayertv.ui.adapter.viewStub.HomeLayout;
 import com.hr.videosplayertv.ui.adapter.viewholder.MainViewHolder;
+import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
@@ -59,6 +63,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +71,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.hr.videosplayertv.common.ImmobilizationData.ANIME;
@@ -82,6 +89,7 @@ public class MultipleFragment extends BaseFragment {
 
     private  int type ;
     private  ListData typeData;
+    private boolean isReady;
 
     private HomeLayout homeLayout;
     private ClassifyLayout classifyLayout;
@@ -131,8 +139,7 @@ public class MultipleFragment extends BaseFragment {
     @Override
     public void loadData() {
         super.loadData();
-
-      //  LoadingDialog.showProgress(mContext);
+        isReady = false;
         switch (type){
 
             case 0:
@@ -143,6 +150,8 @@ public class MultipleFragment extends BaseFragment {
                 break;
             default:
                 commonLayout.setType(typeData.getTitle());
+                LoadingDialog.showProgress(mContext);
+                huoqv();
                 switch (typeData.getTitle()){
                     case FILM:
                         FilmType();
@@ -166,7 +175,6 @@ public class MultipleFragment extends BaseFragment {
                 break;
         }
 
-
     }
 
     @Override
@@ -181,7 +189,58 @@ public class MultipleFragment extends BaseFragment {
 
 
     //common
+
+    private void baocun(List<WhatType> whatTypeList){
+        isReady = true;
+
+        TabsData tabsData = new TabsData();
+        tabsData.setTab(commonLayout.getType());
+
+        if(!CheckUtil.isEmpty(whatTypeList)){
+            RealmList<WhatType> whatTypeRealmList = new RealmList<>();
+            whatTypeRealmList.addAll(whatTypeList);
+            tabsData.setRealmList(whatTypeRealmList);
+        }
+        RealmDBManger.copyToRealmOrUpdate(tabsData, new DBResultCallback() {
+            @Override
+            public void onSuccess(Object o) {
+             //   NLog.e(NLog.DB,"数据库 保存成功--->");
+            }
+
+            @Override
+            public void onError(String errString) {
+             //   NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
+            }
+        });
+    }
+
+    private void huoqv(){
+        RealmDBManger.getTabsData(TabsData.class,"tab",commonLayout.getType(), new DBResultCallback<RealmResults<TabsData>>() {
+            @Override
+            public void onSuccess(RealmResults<TabsData> realmResults) {
+              //  NLog.e(NLog.DB,"数据库 查询成功------------");
+                if(!CheckUtil.isEmpty(realmResults)){
+//                    NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+realmResults.size());
+//                    NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+realmResults.get(0).getRealmList().size());
+                    if(!CheckUtil.isEmpty(realmResults.get(0).getRealmList())){
+                        if(!isReady){
+                           commonLayout.setListDataMenuAdapter(realmResults.get(0).getRealmList());
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(String errString) {
+              //  NLog.e(NLog.DB,"数据库 查询失败------------");
+              //  NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+errString);
+            }
+        });
+    }
+
     private void FilmType(){
+
         baseService.FilmType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
             @Override
             public void onError(HttpException e) {
@@ -197,9 +256,9 @@ public class MultipleFragment extends BaseFragment {
             @Override
             public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
                 LoadingDialog.disMiss();
-
                 BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
                 List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                baocun(whatTypeList);
                 commonLayout.setListDataMenuAdapter(whatTypeList);
             }
         },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
@@ -223,6 +282,7 @@ public class MultipleFragment extends BaseFragment {
 
                 BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
                 List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                baocun(whatTypeList);
                 commonLayout.setListDataMenuAdapter(whatTypeList);
             }
         },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
@@ -247,6 +307,7 @@ public class MultipleFragment extends BaseFragment {
 
                 BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
                 List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                baocun(whatTypeList);
                 commonLayout.setListDataMenuAdapter(whatTypeList);
             }
         },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
@@ -270,6 +331,7 @@ public class MultipleFragment extends BaseFragment {
 
                 BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
                 List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                baocun(whatTypeList);
                 commonLayout.setListDataMenuAdapter(whatTypeList);
             }
         },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
@@ -293,6 +355,7 @@ public class MultipleFragment extends BaseFragment {
 
                 BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
                 List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                baocun(whatTypeList);
                 commonLayout.setListDataMenuAdapter(whatTypeList);
             }
         },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
@@ -316,6 +379,7 @@ public class MultipleFragment extends BaseFragment {
 
                 BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
                 List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                baocun(whatTypeList);
                 commonLayout.setListDataMenuAdapter(whatTypeList);
             }
         },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));

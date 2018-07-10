@@ -13,6 +13,7 @@ import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.base.BaseFragment;
 import com.hr.videosplayertv.common.ImmobilizationData;
+import com.hr.videosplayertv.db.RealmDBManger;
 import com.hr.videosplayertv.net.entry.ListData;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
 import com.hr.videosplayertv.ui.adapter.MainFragmentAdapter;
@@ -201,6 +202,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
     protected void onDestroy() {
         super.onDestroy();
         dispose();
+        RealmDBManger.closed();
     }
 
     protected void getTimesPosable() {
@@ -269,5 +271,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
             }
      return mYear + "年" + mMonth + "月" + mDay+"日"+" "+"星期"+mWay+"\n"+mHour+":"+mMinute+":"+mSecond;
    }
+
+
 
 }

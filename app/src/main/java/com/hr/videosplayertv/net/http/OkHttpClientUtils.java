@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hr.videosplayertv.net.converter.FastJsonConverterFactory;
 
 import java.io.IOException;
 import java.security.KeyStore;
@@ -102,7 +103,7 @@ public class OkHttpClientUtils {
 
         Retrofit retrofit = new Retrofit.Builder()
                 //配置转化库，默认是Jackson
-                .addConverterFactory(JacksonConverterFactory.create(mapper))
+                .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(setting.baseURL)
                         //设置OKHttpClient为网络客户端

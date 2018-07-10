@@ -5,14 +5,15 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-import org.litepal.LitePalApplication;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 
 /**
  * Created by 吕 on 2017/10/26.
  */
 
-public class BaseApplation extends LitePalApplication {
+public class BaseApplation extends Application  {
     private static BaseApplation baseApp = null;
     private AppComponent mAppComponent;
 
@@ -29,8 +30,7 @@ public class BaseApplation extends LitePalApplication {
         mAppComponent = DaggerAppComponent.create();
 
         if (getApplicationInfo().packageName.equals(getCurProcessName(getApplicationContext()))) {
-
-
+            setInitRealm();
         }
 
 
@@ -54,6 +54,14 @@ public class BaseApplation extends LitePalApplication {
             }
         }
         return null;
+    }
+    private void setInitRealm(){
+        Realm.init(this);
+        RealmConfiguration myConfig = new RealmConfiguration.Builder()
+                .name("vpt.realm")
+                .schemaVersion(1)
+                .build();
+        Realm.setDefaultConfiguration(myConfig);
     }
 
 }

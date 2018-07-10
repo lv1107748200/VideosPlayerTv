@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'realm-android'
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -101,10 +101,10 @@ dependencies {
     // 资源注入
     implementation externaEventBus
     //
-    implementation('io.reactivex.rxjava2:rxandroid:2.0.1') {
+    implementation(externalRxjava2Rxandroid) {
         exclude module: 'rxjava2', group: 'io.reactivex'
     }
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.3'
+    implementation externalRxjava2Rxjava
     implementation externalOKHTTP
     implementation(externalOKHTTPloggingInterceptor) {
         exclude module: 'okhttp', group: 'com.squareup.okhttp3'
@@ -121,13 +121,15 @@ dependencies {
         exclude module: 'rxjava2', group: 'io.reactivex'
     }
     implementation externalAndroidMultiDex
-    implementation('com.github.bumptech.glide:glide:4.0.0') {
+    implementation(externalGlide) {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     //Rxjava 生命周期取消订阅
-    implementation('com.trello.rxlifecycle2:rxlifecycle-android:2.2.1') {
+    implementation(externalRxlifecycle2) {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+
+    api externalFastJsonForAndroid
 
     implementation project(':tvRecycleview')
     implementation project(':mylibrary')
@@ -135,5 +137,5 @@ dependencies {
 
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
-    implementation 'org.litepal.android:core:2.0.0'//数据库
+    //implementation 'org.litepal.android:core:2.0.0'//数据库
 }
