@@ -75,6 +75,8 @@
             android:layout_height="wrap_content"
             android:text="重新加载"
             android:textSize="@dimen/sp_17"
+            android:background="@drawable/foc_back_three"
+            android:textColor="@drawable/foc_tv_three"
             />
 
 

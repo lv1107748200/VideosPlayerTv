@@ -20,6 +20,8 @@ public class Formatter {
             timeStr += hours + ":";
         } else if (hours > 0) {
             timeStr += "0" + hours + ":";
+        }else {
+            timeStr += "00:";
         }
         if (minutes > 9) {
             timeStr += minutes + ":";

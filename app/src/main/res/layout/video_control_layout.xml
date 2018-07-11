@@ -28,7 +28,7 @@
                 android:text="命名主题"
                 android:gravity="center_vertical|left"
                 android:textSize="@dimen/sp_24"
-                android:textColor="@color/white"
+                android:textColor="@color/c_f0f"
                 />
 
         </LinearLayout>
@@ -52,6 +52,7 @@
                 android:text="开播"
                 android:focusable="false"
                 android:scaleType="fitXY"
+                android:background="@drawable/select_btn_one"
                 />
             <LinearLayout
                 android:layout_gravity="center_vertical"
@@ -61,14 +62,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-                <ProgressBar
+                <com.hr.videosplayertv.widget.seek.TvSeekBarView
                     android:id="@+id/progress"
                     android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_marginTop="@dimen/x40"
+                    android:layout_marginRight="@dimen/x40"
                     />
 
                 <RelativeLayout
@@ -90,14 +90,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:text="00:00"
-                            android:textColor="#ffffff" />
+                            android:textColor="@color/c_f0f" />
 
                         <TextView
                             android:focusable="false"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=" / "
-                            android:textColor="#ffffff" />
+                            android:textColor="@color/c_f0f" />
 
                         <TextView
                             android:focusable="false"
@@ -106,7 +106,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="16dp"
                             android:text="00:00"
-                            android:textColor="#ffffff" />
+                            android:textColor="@color/c_f0f" />
 
                     </LinearLayout>
 

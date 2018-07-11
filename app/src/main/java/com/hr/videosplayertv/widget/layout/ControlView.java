@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.utils.Formatter;
+import com.hr.videosplayertv.widget.seek.TvSeekBarView;
 import com.hr.videosplayertv.widget.single.IjkPlayerMger;
 
 import java.util.Timer;
@@ -49,7 +50,7 @@ implements LoadingLayout.LoadingCallBack
     private TextView current,total,tvFenJi,tvFunctionMenu,title_video;
 
     private ImageButton btnKaiBo;
-    private ProgressBar seekBar;
+    private TvSeekBarView seekBar;
 
     protected Timer seepOrBackTimer;//快进快退控制器
 
@@ -147,7 +148,7 @@ implements LoadingLayout.LoadingCallBack
 
                 long duration =  IjkPlayerMger.getInstance().getMediaPlayer().getDuration();
                 total.setText(Formatter.formatTime((int) duration));
-                seekBar.setMax((int)duration);
+                seekBar.setmMax((int)duration);
 
                 break;
             case PLAY_REPLAY:
@@ -269,7 +270,7 @@ implements LoadingLayout.LoadingCallBack
             current.setText(Formatter.formatTime((int) curPosition));
 
             if (!inSeek) {
-                seekBar.setProgress((int)curPosition);
+                seekBar.setProgress((int)curPosition,false);
             }
         }
     }
@@ -417,6 +418,8 @@ implements LoadingLayout.LoadingCallBack
      * 停止快进或快推
      */
     public void stopSeepOrBackTask(boolean is) {
+
+        seekBar.setShow(false);
 
 //        if(null != seepOrBackTimer){
 //            seepOrBackTimer.cancel();
