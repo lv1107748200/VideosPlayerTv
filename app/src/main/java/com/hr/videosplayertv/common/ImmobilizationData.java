@@ -101,7 +101,7 @@ public class ImmobilizationData {
         //通过名字得到 typeurl
         public static String getTypeUrlByName(String name) {
             for (Tags c : Tags.values()) {
-                if (c.getName() == name) {
+                if (c.getName().equals(name)) {
                     return c.typeurl;
                 }
             }
