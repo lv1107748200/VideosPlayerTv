@@ -39,9 +39,9 @@ public class SPUtils {
      * @param key
      * @param value
      */
-    public static void put(Context context, String key, Object value) {
+    public static void put( String key, Object value) {
         if(null == sp){
-            sp = context.getSharedPreferences(FILLNAME, Context.MODE_PRIVATE);
+            sp = BaseApplation.getBaseApp().getSharedPreferences(FILLNAME, Context.MODE_PRIVATE);
         }
         Editor edit = sp.edit();
         if (value instanceof String) {
@@ -82,9 +82,9 @@ public class SPUtils {
      * @param defValue
      * @return
      */
-    public static Object get(Context context, String key, Object defValue) {
+    public static Object get( String key, Object defValue) {
         if(null == sp){
-            sp = context.getSharedPreferences(FILLNAME, Context.MODE_PRIVATE);
+            sp = BaseApplation.getBaseApp().getSharedPreferences(FILLNAME, Context.MODE_PRIVATE);
         }
         if (defValue instanceof String) {
             return sp.getString(key, (String) defValue);

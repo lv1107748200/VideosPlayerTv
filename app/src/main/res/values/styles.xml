@@ -137,4 +137,41 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/sp_18</item>
     </style>
+
+    <style name="tag_flayout_one">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">@dimen/x40</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="tag_flayout_two">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">@dimen/x20</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="tag_tv_one">
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/x60</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:textColor">@drawable/foc_tv_two</item>
+        <item name="android:background">@drawable/foc_back_two</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">@dimen/x10</item>
+    </style>
+
+    <style name="tag_image_one">
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 </resources>

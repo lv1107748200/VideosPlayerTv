@@ -12,28 +12,33 @@
         android:orientation="horizontal"
         >
 
-        <ImageView
-            android:focusable="true"
-            android:clickable="true"
-            android:id="@+id/image_one"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:layout_margin="@dimen/x40"
-            android:background="@drawable/hehe"
-            />
-        <ImageView
-            android:focusable="true"
-            android:clickable="true"
-            android:id="@+id/image_two"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:background="@drawable/hehe"
-            android:layout_margin="@dimen/x40"
-            />
+        <com.hr.videosplayertv.widget.layout.RoundFrameLayout
+            android:id="@+id/tag_flayout_one"
+            app:rfl_radius="@dimen/rfl_radius"
+            style="@style/tag_flayout_one">
+            <ImageView
+                android:id="@+id/tag_image_one"
+                style="@style/tag_image_one" />
+
+            <TextView
+                android:id="@+id/tag_title_one"
+                style="@style/tag_tv_one" />
+
+        </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
+
+        <com.hr.videosplayertv.widget.layout.RoundFrameLayout
+            android:id="@+id/tag_flayout_two"
+            app:rfl_radius="@dimen/rfl_radius"
+            style="@style/tag_flayout_one">
+            <ImageView
+                android:id="@+id/tag_image_two"
+                style="@style/tag_image_one" />
+
+            <TextView
+                android:id="@+id/tag_title_two"
+                style="@style/tag_tv_one" />
+
+        </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
     </LinearLayout>
 
     <FrameLayout
@@ -60,39 +65,47 @@
         android:layout_height="match_parent"
         android:padding="@dimen/x20"
         >
-        <ImageView
-            android:focusable="true"
-            android:clickable="true"
-            android:id="@+id/image_three"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:layout_margin="@dimen/x20"
-            android:background="@drawable/hehe"
-            />
-        <ImageView
-            android:focusable="true"
-            android:clickable="true"
-            android:id="@+id/image_four"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:layout_margin="@dimen/x20"
-            android:background="@drawable/hehe"
-            />
-        <ImageView
-            android:focusable="true"
-            android:clickable="true"
-            android:layout_margin="@dimen/x20"
-            android:id="@+id/image_five"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:background="@drawable/hehe"
-            />
+
+
+        <com.hr.videosplayertv.widget.layout.RoundFrameLayout
+            android:id="@+id/tag_flayout_three"
+            app:rfl_radius="@dimen/rfl_radius"
+            style="@style/tag_flayout_two">
+            <ImageView
+                android:id="@+id/tag_image_three"
+                style="@style/tag_image_one" />
+
+            <TextView
+                android:id="@+id/tag_title_three"
+                style="@style/tag_tv_one" />
+
+        </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
+        <com.hr.videosplayertv.widget.layout.RoundFrameLayout
+            android:id="@+id/tag_flayout_four"
+            app:rfl_radius="@dimen/rfl_radius"
+            style="@style/tag_flayout_two">
+            <ImageView
+                android:id="@+id/tag_image_four"
+                style="@style/tag_image_one" />
+
+            <TextView
+                android:id="@+id/tag_title_four"
+                style="@style/tag_tv_one" />
+
+        </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
+        <com.hr.videosplayertv.widget.layout.RoundFrameLayout
+            android:id="@+id/tag_flayout_five"
+            app:rfl_radius="@dimen/rfl_radius"
+            style="@style/tag_flayout_two">
+            <ImageView
+                android:id="@+id/tag_image_five"
+                style="@style/tag_image_one" />
+
+            <TextView
+                android:id="@+id/tag_title_five"
+                style="@style/tag_tv_one" />
+
+        </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
     </LinearLayout>
 
 </LinearLayout>

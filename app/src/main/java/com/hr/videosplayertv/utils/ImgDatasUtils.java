@@ -61,7 +61,11 @@ public class ImgDatasUtils {
             "http://img3.imgtn.bdimg.com/it/u=1748051475,3837428098&fm=27&gp=0.jpg",
             "http://img4.imgtn.bdimg.com/it/u=132600321,3123081067&fm=27&gp=0.jpg",
             "http://img3.imgtn.bdimg.com/it/u=1094595333,134359380&fm=27&gp=0.jpg",
-            "http://img2.imgtn.bdimg.com/it/u=2459584015,600700003&fm=27&gp=0.jpg"
+            "http://img2.imgtn.bdimg.com/it/u=2459584015,600700003&fm=27&gp=0.jpg",
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531304677752&di=ff91b687a04238635bef3164d76d9e4d&imgtype=0&src=http%3A%2F%2Fimg5q.duitang.com%2Fuploads%2Fitem%2F201505%2F26%2F20150526212317_xN2cv.gif",
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531304827891&di=3c3fa3ee9221c29ddbc4cb8b82fb3e58&imgtype=0&src=http%3A%2F%2Fimg5q.duitang.com%2Fuploads%2Fitem%2F201505%2F24%2F20150524230953_KEjRw.gif",
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531304845611&di=8a91f5df7eff92276b58a559c66e74fc&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01605757d7cf370000018c1b018236.gif",
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531304911287&di=eb2fcd4a5ce28b2d1c0247763e9cfdf5&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201411%2F25%2F20141125205504_xTaSL.gif"
     };
     
     public static String getUrl() {

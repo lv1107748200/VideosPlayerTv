@@ -32,6 +32,8 @@ import com.hr.videosplayertv.db.TabsData;
 import com.hr.videosplayertv.net.base.BaseDataResponse;
 import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.UserToken;
 import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.net.http.HttpCallback;
@@ -54,6 +56,7 @@ import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.widget.dialog.LoadingDialog;
 import com.hr.videosplayertv.widget.focus.FocusBorder;
+import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.MetroTitleItemDecoration;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -61,6 +64,7 @@ import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
 
@@ -71,6 +75,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -95,6 +100,9 @@ public class MultipleFragment extends BaseFragment {
     private ClassifyLayout classifyLayout;
     private CommonLayout commonLayout;
 
+    private RealmResults realmResults;
+    private RealmChangeListener<RealmResults<TabsData>> realmResultsRealmChangeListener;
+
     public MultipleFragment setType(ListData typeData) {
         this.type = typeData.getType();
         this.typeData = typeData;
@@ -104,7 +112,6 @@ public class MultipleFragment extends BaseFragment {
     public static MultipleFragment getmultipleFragment(){
         return new MultipleFragment();
     }
-
 
     @BindView(R.id.view_stub)
     ViewStub viewStub;
@@ -150,28 +157,10 @@ public class MultipleFragment extends BaseFragment {
                 break;
             default:
                 commonLayout.setType(typeData.getTitle());
-                LoadingDialog.showProgress(mContext);
+                //LoadingDialog.showProgress(mContext);
                 huoqv();
-                switch (typeData.getTitle()){
-                    case FILM:
-                        FilmType();
-                        break;
-                    case TELEPLAY:
-                        TVType();
-                        break;
-                    case VARIETY:
-                        VarietyType();
-                        break;
-                    case ANIME:
-                        AnimeType();
-                        break;
-                    case SPORTS:
-                        SportType();
-                        break;
-                    case OVERSEAS:
-                        CircleType();
-                        break;
-                }
+                ComType();
+                ComList();
                 break;
         }
 
@@ -180,6 +169,9 @@ public class MultipleFragment extends BaseFragment {
     @Override
     public void stopLoad() {
         super.stopLoad();
+        if(null != realmResults && null != realmResultsRealmChangeListener){
+            realmResults.removeChangeListener(realmResultsRealmChangeListener);
+        }
     }
 
     //首页布局
@@ -189,82 +181,75 @@ public class MultipleFragment extends BaseFragment {
 
 
     //common
-
     private void baocun(List<WhatType> whatTypeList){
         isReady = true;
 
         TabsData tabsData = new TabsData();
-        tabsData.setTab(commonLayout.getType());
+        tabsData.setTab(typeData.getTitle());
 
         if(!CheckUtil.isEmpty(whatTypeList)){
             RealmList<WhatType> whatTypeRealmList = new RealmList<>();
             whatTypeRealmList.addAll(whatTypeList);
             tabsData.setRealmList(whatTypeRealmList);
         }
+        NLog.e(NLog.DB,"数据库"+typeData.getTitle()+" 保存--->");
         RealmDBManger.copyToRealmOrUpdate(tabsData, new DBResultCallback() {
             @Override
             public void onSuccess(Object o) {
-             //   NLog.e(NLog.DB,"数据库 保存成功--->");
+                NLog.e(NLog.DB,"数据库 保存成功--->");
             }
 
             @Override
             public void onError(String errString) {
-             //   NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
+                NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
             }
         });
     }
 
     private void huoqv(){
-        RealmDBManger.getTabsData(TabsData.class,"tab",commonLayout.getType(), new DBResultCallback<RealmResults<TabsData>>() {
+
+        NLog.e(NLog.DB,"数据库 " +typeData.getTitle()+"  查询 ------------");
+                realmResults = RealmDBManger.getMyRealm()
+                        .where(TabsData.class)
+                        .equalTo("tab",typeData.getTitle())
+                        .findAllAsync();
+        realmResultsRealmChangeListener = new RealmChangeListener<RealmResults<TabsData>>() {
             @Override
-            public void onSuccess(RealmResults<TabsData> realmResults) {
-              //  NLog.e(NLog.DB,"数据库 查询成功------------");
-                if(!CheckUtil.isEmpty(realmResults)){
-//                    NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+realmResults.size());
-//                    NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+realmResults.get(0).getRealmList().size());
-                    if(!CheckUtil.isEmpty(realmResults.get(0).getRealmList())){
-                        if(!isReady){
-                           commonLayout.setListDataMenuAdapter(realmResults.get(0).getRealmList());
+            public void onChange(RealmResults<TabsData> realmResults) {
+
+                new DBResultCallback<RealmResults<TabsData>>(){
+                    @Override
+                    public void onSuccess(RealmResults<TabsData> realmResults) {
+                        if(!CheckUtil.isEmpty(realmResults)){
+                            NLog.e(NLog.DB,"数据库  "+typeData.getTitle()+" --->"+realmResults.size());
+                            if(!CheckUtil.isEmpty(realmResults.get(0).getRealmList())){
+                                if(!isReady){
+                                    commonLayout.setListDataMenuAdapter(realmResults.get(0).getRealmList());
+                                }
+                            }
+
                         }
                     }
 
-                }
-            }
+                    @Override
+                    public void onError(String errString) {
 
-            @Override
-            public void onError(String errString) {
-              //  NLog.e(NLog.DB,"数据库 查询失败------------");
-              //  NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+errString);
+                    }
+                }.onCallback(realmResults);
+
             }
-        });
+        };
+            realmResults.addChangeListener(realmResultsRealmChangeListener);
+
     }
 
-    private void FilmType(){
-
-        baseService.FilmType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
-            @Override
-            public void onError(HttpException e) {
-
-                if(e.getCode() == 1){
-                    LoadingDialog.showText(mContext,e.getMsg());
-                }else {
-                    LoadingDialog.disMiss();
-                }
-
-            }
-
-            @Override
-            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
-                LoadingDialog.disMiss();
-                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
-                List<WhatType> whatTypeList = baseDataResponse.getInfo();
-                baocun(whatTypeList);
-                commonLayout.setListDataMenuAdapter(whatTypeList);
-            }
-        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
-    }
-    private void TVType(){
-        baseService.TVType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+    /**
+     * 获取类型
+     */
+    private void ComType(){
+        if(null == typeData.getTags())
+            return;
+        baseService.ComType(typeData.getTags().getTypeurl(),new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
             @Override
             public void onError(HttpException e) {
 
@@ -287,101 +272,46 @@ public class MultipleFragment extends BaseFragment {
             }
         },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
     }
-    //综艺
-    private void VarietyType(){
-        baseService.VarietyType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+
+    /**
+     * 获取列表数据
+     */
+    private void ComList(){
+        if(null == typeData.getTags())
+            return;
+
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        WhatCom data = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                "0,1",
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire(),
+                "5",
+                ""+1
+        );
+        baseService.ComList(typeData.getTags().getUrl(),data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
             @Override
             public void onError(HttpException e) {
-
                 if(e.getCode() == 1){
                     LoadingDialog.showText(mContext,e.getMsg());
                 }else {
                     LoadingDialog.disMiss();
                 }
-
             }
 
             @Override
-            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
-                LoadingDialog.disMiss();
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
 
-                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
-                List<WhatType> whatTypeList = baseDataResponse.getInfo();
-                baocun(whatTypeList);
-                commonLayout.setListDataMenuAdapter(whatTypeList);
-            }
-        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
-    }
-    private void AnimeType(){
-        baseService.AnimeType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
-            @Override
-            public void onError(HttpException e) {
+                if(baseDataResponseBaseResponse.getData() != null){
+                    BaseDataResponse<WhatList> whatListBaseDataResponse = baseDataResponseBaseResponse.getData();
 
-                if(e.getCode() == 1){
-                    LoadingDialog.showText(mContext,e.getMsg());
-                }else {
-                    LoadingDialog.disMiss();
+                    List<WhatList> whatListList = whatListBaseDataResponse.getInfo();
+                    commonLayout.setView(whatListList);
                 }
 
             }
-
-            @Override
-            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
-                LoadingDialog.disMiss();
-
-                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
-                List<WhatType> whatTypeList = baseDataResponse.getInfo();
-                baocun(whatTypeList);
-                commonLayout.setListDataMenuAdapter(whatTypeList);
-            }
-        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
-    }
-    private void SportType(){
-        baseService.SportType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
-            @Override
-            public void onError(HttpException e) {
-
-                if(e.getCode() == 1){
-                    LoadingDialog.showText(mContext,e.getMsg());
-                }else {
-                    LoadingDialog.disMiss();
-                }
-
-            }
-
-            @Override
-            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
-                LoadingDialog.disMiss();
-
-                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
-                List<WhatType> whatTypeList = baseDataResponse.getInfo();
-                baocun(whatTypeList);
-                commonLayout.setListDataMenuAdapter(whatTypeList);
-            }
-        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
-    }
-    private void CircleType(){
-        baseService.CircleType(new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
-            @Override
-            public void onError(HttpException e) {
-
-                if(e.getCode() == 1){
-                    LoadingDialog.showText(mContext,e.getMsg());
-                }else {
-                    LoadingDialog.disMiss();
-                }
-
-            }
-
-            @Override
-            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
-                LoadingDialog.disMiss();
-
-                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
-                List<WhatType> whatTypeList = baseDataResponse.getInfo();
-                baocun(whatTypeList);
-                commonLayout.setListDataMenuAdapter(whatTypeList);
-            }
-        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+        }, MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
     }
 }

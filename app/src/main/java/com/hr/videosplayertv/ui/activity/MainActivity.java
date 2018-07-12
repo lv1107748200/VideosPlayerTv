@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         mainMenu.setAdapter(listDataMenuAdapter);
 
         mainFragmentAdapter = new MainFragmentAdapter(getSupportFragmentManager());
-        tvViewPager.setOffscreenPageLimit(3);
+        tvViewPager.setOffscreenPageLimit(2);
         tvViewPager.setScrollerDuration(200);
         tvViewPager.setAdapter(mainFragmentAdapter);
         multipleFragments = new ArrayList<>();
@@ -149,7 +149,11 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         List<ListData> listData = new ArrayList<>();
 
         for (int i =0 ;i< 8; i++){
-            ListData listData1 = new ListData(i,ImmobilizationData.Tags.getNameByIndex(i));
+            ListData listData1 = new ListData(
+                    i,
+                    ImmobilizationData.Tags.getNameByIndex(i),
+                    ImmobilizationData.Tags.getColorByIndex(i)
+            );
             listData.add(listData1);
             multipleFragments.add(MultipleFragment.getmultipleFragment().setType(listData1));
         }

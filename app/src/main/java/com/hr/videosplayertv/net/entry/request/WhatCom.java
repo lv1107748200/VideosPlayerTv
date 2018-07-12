@@ -10,7 +10,6 @@ public class WhatCom extends BaseDataRequest {
     public WhatCom() {
 
     }
-
     public WhatCom(
             String token,
             String CID,
@@ -25,6 +24,22 @@ public class WhatCom extends BaseDataRequest {
         Size = size;
         Page = page;
     }
+    public WhatCom(
+            String token,
+            String CID,
+            String UID,
+            String GID,
+            String sign,
+            String expire,
+            String size,
+            String page,
+            String tags
+    ) {
+        super(token, CID, UID, GID, sign, expire);
+        Size = size;
+        Page = page;
+        Tags = tags;
+    }
 
     /**
      * Size : 20
@@ -34,6 +49,7 @@ public class WhatCom extends BaseDataRequest {
 
     private String Size;
     private String Page;
+    private String Tags;
 
     public String getSize() {
         return Size;
@@ -49,5 +65,13 @@ public class WhatCom extends BaseDataRequest {
 
     public void setPage(String Page) {
         this.Page = Page;
+    }
+
+    public String getTags() {
+        return Tags;
+    }
+
+    public void setTags(String tags) {
+        Tags = tags;
     }
 }

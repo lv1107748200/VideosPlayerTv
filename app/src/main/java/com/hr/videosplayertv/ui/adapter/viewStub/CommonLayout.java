@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.ui.activity.DetailActivity;
 import com.hr.videosplayertv.ui.activity.ListDataActivity;
@@ -33,34 +35,50 @@ public class CommonLayout {
     @BindView(R.id.common_menu)
     TvRecyclerView mainMenu;
 
-    @BindView(R.id.image_one)
-    ImageView image_one;
-    @BindView(R.id.image_two)
-    ImageView image_two;
-    @BindView(R.id.image_three)
-    ImageView image_three;
-    @BindView(R.id.image_four)
-    ImageView image_four;
-    @BindView(R.id.image_five)
-    ImageView image_five;
+    @BindView(R.id.tag_title_one)
+    TextView tag_title_one;
+    @BindView(R.id.tag_title_two)
+    TextView tag_title_two;
+    @BindView(R.id.tag_title_three)
+    TextView tag_title_three;
+    @BindView(R.id.tag_title_four)
+    TextView tag_title_four;
+    @BindView(R.id.tag_title_five)
+    TextView tag_title_five;
+
+    @BindView(R.id.tag_image_one)
+    ImageView tag_image_one;
+    @BindView(R.id.tag_image_two)
+    ImageView tag_image_two;
+    @BindView(R.id.tag_image_three)
+    ImageView tag_image_three;
+    @BindView(R.id.tag_image_four)
+    ImageView tag_image_four;
+    @BindView(R.id.tag_image_five)
+    ImageView tag_image_five;
 
     private BaseActivity mContext;
 
     private String type;
 
-    @OnClick({R.id.image_one,R.id.image_two,R.id.image_three,R.id.image_four,R.id.image_five})
+    @OnClick({R.id.tag_flayout_one,R.id.tag_flayout_two,R.id.tag_flayout_three,R.id.tag_flayout_four,R.id.tag_flayout_five})
     public void Onclick(View view){
         Intent intent = new Intent(mContext,DetailActivity.class);
         switch (view.getId()){
-            case R.id.image_one:
+            case R.id.tag_flayout_one:
+
                 break;
-            case R.id.image_two:
+            case R.id.tag_flayout_two:
+
                 break;
-            case R.id.image_three:
+            case R.id.tag_flayout_three:
+
                 break;
-            case R.id.image_four:
+            case R.id.tag_flayout_four:
+
                 break;
-            case R.id.image_five:
+            case R.id.tag_flayout_five:
+
                 break;
 
         }
@@ -70,12 +88,6 @@ public class CommonLayout {
     public CommonLayout(View view,BaseActivity context) {
         ButterKnife.bind(this,view);
         mContext = context;
-        GlideUtil.setGlideImage(mContext, ImgDatasUtils.getUrl(),image_one);
-        GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),image_two);
-        GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),image_three);
-        GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),image_four);
-        GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),image_five);
-
         setListener();
         listDataMenuAdapter = new ListDataMenuAdapter(mContext,ListDataMenuAdapter.TWO);
         mainMenu.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x10), DisplayUtils.getDimen(R.dimen.x40));
@@ -97,6 +109,33 @@ public class CommonLayout {
                 listDataMenuAdapter.repaceDatas(whatTypeList.subList(0, 5));
             }else {
                 listDataMenuAdapter.repaceDatas(whatTypeList);
+            }
+        }
+    }
+    public void setView(List<WhatList> whatListList){
+        for(int i = 0,j = whatListList.size(); i<j; i++){
+            WhatList whatList = whatListList.get(i);
+            switch (i){
+                case 0:
+                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_one);
+                    tag_title_one.setText(whatList.getTitle());
+                    break;
+                case 1:
+                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_two);
+                    tag_title_two.setText(whatList.getTitle());
+                    break;
+                case 2:
+                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_three);
+                    tag_title_three.setText(whatList.getTitle());
+                    break;
+                case 3:
+                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_four);
+                    tag_title_four.setText(whatList.getTitle());
+                    break;
+                case 4:
+                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_five);
+                    tag_title_five.setText(whatList.getTitle());
+                    break;
             }
         }
     }

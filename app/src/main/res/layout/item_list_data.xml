@@ -9,7 +9,7 @@
     android:clickable="true">
     <ImageView
         android:id="@+id/image"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -21,7 +21,7 @@
         android:layout_gravity="bottom"
         android:textColor="@drawable/foc_tv_two"
         android:background="@drawable/foc_back_two"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:paddingLeft="@dimen/x10"
         />
 

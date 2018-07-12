@@ -3,7 +3,11 @@ package com.hr.videosplayertv.db;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.hr.videosplayertv.utils.NLog;
+
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
@@ -24,7 +28,7 @@ public class RealmDBManger {
     private  Handler mainHandler;
     private static RealmDBManger realmDBManger = null;
 
-    private static RealmDBManger getRealmSingle(){
+    public static RealmDBManger getRealmSingle(){
         if(null == realmDBManger){
             synchronized (RealmDBManger.class){
                 if(null == realmDBManger){
@@ -35,11 +39,11 @@ public class RealmDBManger {
         return realmDBManger;
     }
 
-    private  Realm getMyRealm(){
-        if(null == myRealm){
-            myRealm = Realm.getDefaultInstance();
+    public  static  Realm getMyRealm(){
+        if(null == getRealmSingle().myRealm){
+            getRealmSingle().myRealm = Realm.getDefaultInstance();
         }
-        return myRealm;
+        return getRealmSingle().myRealm;
     }
 
     public static Handler getMainHandler(){
@@ -110,22 +114,15 @@ public class RealmDBManger {
             ,String what
             ,final DBResultCallback<RealmResults<TabsData>> callback
     ){
-        getRealmSingle().getMyRealm()
+        RealmResults realmResults =  getRealmSingle().getMyRealm()
                 .where(cfff)
                 .equalTo(key,what)
-                .findAllAsync().addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
-            @Override
-            public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
-                if(callback != null){
-                    if(changeSet.getState() == ERROR){
-                        callback.onFail(changeSet.getError().getMessage());
-                    }else {
-                        callback.onCallback(realmResults);
-                    }
-                }
-            }
-        });
+                .findAll();
+        if(null != callback){
+            callback.onCallback(realmResults);
+        }
     }
+
 
     public static Object getTabsData(final Class cfff,String key,String what){
         try {
@@ -138,6 +135,23 @@ public class RealmDBManger {
 
 
     public static void closed(){
+        getRealmSingle().getMyRealm().removeAllChangeListeners();
         getRealmSingle().getMyRealm().close();
+    }
+
+
+    public static class ChagListener<T> implements  RealmChangeListener<T>{
+
+        private DBResultCallback<T> callback;
+        public ChagListener(DBResultCallback<T> callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public void onChange(T t) {
+            if(null != callback){
+                callback.onCallback(t);
+            }
+        }
     }
 }

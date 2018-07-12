@@ -2,6 +2,8 @@ package com.hr.videosplayertv.net.Service;
 
 import com.hr.videosplayertv.net.base.BaseDataResponse;
 import com.hr.videosplayertv.net.base.BaseResponse;
+import com.hr.videosplayertv.net.entry.response.FavoriteList;
+import com.hr.videosplayertv.net.entry.response.VideoDisLike;
 import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 
@@ -14,6 +16,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface ComService {
 
@@ -85,5 +88,47 @@ public interface ComService {
     @POST("List/Game")
     Observable<Response<BaseResponse<BaseDataResponse<WhatList>>>>
     Game(@Body RequestBody route);
+
+    //18 踩影片
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST("Video/VideoDisLike")
+    Observable<Response<BaseResponse<BaseDataResponse<VideoDisLike>>>>
+    VideoDisLike(@Body RequestBody route);
+    //19点赞影片
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST("Video/VideoLike")
+    Observable<Response<BaseResponse<BaseDataResponse<VideoDisLike>>>>
+    VideoLike(@Body RequestBody route);
+    //20收藏影片
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST("Video/AddToScj")
+    Observable<Response<BaseResponse<BaseDataResponse<VideoDisLike>>>>
+    AddToScj(@Body RequestBody route);
+    //21删除收藏夹
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST("List/RemoveFavorite")
+    Observable<Response<BaseResponse<BaseDataResponse<String>>>>
+    RemoveFavorite(@Body RequestBody route);
+    //22查询收藏夹
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST("List/FavoriteList")
+    Observable<Response<BaseResponse<BaseDataResponse<FavoriteList>>>>
+    FavoriteList(@Body RequestBody route);
+    //23搜索服务
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST("List/Search")
+    Observable<Response<BaseResponse<BaseDataResponse<FavoriteList>>>>
+    Search(@Body RequestBody route);
+
+    // FIXME: 2018/7/12   突然发现可以动态 改变 URL 因此加以修改
+    //24 通用分类 （可以传url）
+    @GET
+    Observable<Response<BaseResponse<BaseDataResponse<WhatType>>>>
+    ComType(@Url String url);
+    //25 通用列表
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST
+    Observable<Response<BaseResponse<BaseDataResponse<WhatList>>>>
+    ComList(@Body RequestBody route,@Url String url);
 
 }

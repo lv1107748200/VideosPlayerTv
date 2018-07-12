@@ -25,8 +25,9 @@ public class GlideUtil {
     }
     public static void setGlideImage(Context context, String url, ImageView imageView, int id){
         RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
+                .skipMemoryCache(false)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .fitCenter()
                 .placeholder(id)
                 .error(0)
                 .priority(Priority.HIGH);

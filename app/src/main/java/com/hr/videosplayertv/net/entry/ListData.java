@@ -1,10 +1,14 @@
 package com.hr.videosplayertv.net.entry;
 
+import com.hr.videosplayertv.common.ImmobilizationData;
+
 public class ListData {
 
     private int type = 1;
 
     private String title;
+
+    private ImmobilizationData.Tags tags;
 
     public ListData() {
     }
@@ -22,6 +26,12 @@ public class ListData {
         this.title = title;
     }
 
+    public ListData(int type, String title, ImmobilizationData.Tags tags) {
+        this.type = type;
+        this.title = title;
+        this.tags = tags;
+    }
+
     public int getType() {
         return type;
     }
@@ -36,5 +46,13 @@ public class ListData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public ImmobilizationData.Tags getTags() {
+        return tags;
+    }
+
+    public void setTags(ImmobilizationData.Tags tags) {
+        this.tags = tags;
     }
 }

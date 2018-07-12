@@ -2,6 +2,10 @@ package com.hr.videosplayertv.widget.single;
 
 
 import com.hr.videosplayertv.net.entry.response.UserToken;
+import com.hr.videosplayertv.utils.CheckUtil;
+import com.hr.videosplayertv.utils.JsonMananger;
+import com.hr.videosplayertv.utils.SPUtils;
+import com.hr.videosplayertv.utils.SpanUtils;
 
 /**
  * Created by 吕 on 2018/2/6.
@@ -9,37 +13,56 @@ import com.hr.videosplayertv.net.entry.response.UserToken;
 
 public class UserInfoManger {
 
+    public static final String TOKEN = "token";
+    public static final String USERTOKEN = "UserToken";
+
+
     volatile private static UserInfoManger instance = null;
 
     private String token;
-    private UserToken UserToken;
+    private UserToken userToken;
 
     public static UserInfoManger getInstance(){
         if(instance == null){
             synchronized (UserInfoManger.class) {
                 if(instance == null){
                     instance = new UserInfoManger();
-
                 }
             }
         }
-
         return instance;
     }
 
     public UserToken getUserToken() {
-        return UserToken;
+        if(CheckUtil.isEmpty(userToken)){
+            String j = (String) SPUtils.get(USERTOKEN,"");
+            if(!CheckUtil.isEmpty(j)) {
+                userToken = JsonMananger.jsonToBean(j,UserToken.class);
+            }
+        }
+
+        return userToken;
     }
 
     public void setUserToken(UserToken userToken) {
-        UserToken = userToken;
+        if(null == userToken){
+            return;
+        }
+        SPUtils.put(USERTOKEN, JsonMananger.beanToJson(userToken));
+        this.userToken = userToken;
     }
 
     public String getToken() {
+        if(CheckUtil.isEmpty(token)){
+            token = (String) SPUtils.get(TOKEN,"");
+        }
         return token;
     }
 
     public void setToken(String token) {
+        if(CheckUtil.isEmpty(token))
+            return;
+        SPUtils.put(TOKEN,token);
         this.token = token;
     }
 

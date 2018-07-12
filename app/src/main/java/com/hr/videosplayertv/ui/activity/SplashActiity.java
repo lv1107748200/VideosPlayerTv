@@ -32,11 +32,16 @@ public class SplashActiity extends BaseActivity {
     @Override
     public void init() {
         super.init();
-//        Intent intent = new Intent();
-//        intent.setClass(SplashActiity.this,MainActivity.class);
-//        startActivity(intent);
-//        finish();
-        userAutoLogin();
+
+        if(CheckUtil.isEmpty(UserInfoManger.getInstance().getToken())){
+            userAutoLogin();
+        }else {
+                    Intent intent = new Intent();
+        intent.setClass(SplashActiity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+        }
+
     }
 
     private void userAutoLogin(){

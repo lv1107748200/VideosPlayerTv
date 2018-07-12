@@ -10,8 +10,10 @@ import com.hr.videosplayertv.net.Service.ComService;
 import com.hr.videosplayertv.net.Service.UserService;
 import com.hr.videosplayertv.net.entry.request.AutoLogin;
 import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.FavoriteList;
 import com.hr.videosplayertv.net.entry.response.InfoToken;
 import com.hr.videosplayertv.net.entry.response.UserInfo;
+import com.hr.videosplayertv.net.entry.response.VideoDisLike;
 import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.net.http.HttpCallback;
@@ -339,4 +341,139 @@ public class BaseService {
         );
     }
 
+    //18 踩影片
+    @SuppressWarnings("unchecked")
+    public void VideoDisLike(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<VideoDisLike>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.VideoDisLike(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<VideoDisLike>>(httpCallback)
+                ,transformer
+        );
+    }
+    //19点赞影片
+    @SuppressWarnings("unchecked")
+    public void VideoLike(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<VideoDisLike>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.VideoLike(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<VideoDisLike>>(httpCallback)
+                ,transformer
+        );
+    }
+    //20收藏影片
+    @SuppressWarnings("unchecked")
+    public void AddToScj(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<VideoDisLike>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.AddToScj(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<VideoDisLike>>(httpCallback)
+                ,transformer
+        );
+    }
+    //21删除收藏夹
+    @SuppressWarnings("unchecked")
+    public void RemoveFavorite(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<String>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.RemoveFavorite(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<String>>(httpCallback)
+                ,transformer
+        );
+    }
+    //22查询收藏夹
+    @SuppressWarnings("unchecked")
+    public void FavoriteList(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<FavoriteList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.FavoriteList(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<FavoriteList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //23搜索服务
+    @SuppressWarnings("unchecked")
+    public void Search(
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<FavoriteList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.Search(body);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<FavoriteList>>(httpCallback)
+                ,transformer
+        );
+    }
+    //24 通用分类 （可以传url）
+    @SuppressWarnings("unchecked")
+    public void ComType(
+            String url,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatType>>> httpCallback,
+            ObservableTransformer transformer
+    ) {
+
+        Observable observable =  comService.ComType(url);
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatType>>(httpCallback),
+                transformer
+        );
+    }
+    //25 通用列表
+    @SuppressWarnings("unchecked")
+    public void ComList(
+            String url,
+            WhatCom data,
+            HttpCallback<BaseResponse<BaseDataResponse<WhatList>>> httpCallback,
+            ObservableTransformer transformer
+    ){
+
+        RequestBody body = HttpUtils.buildRequestBody(data);
+        Observable observable =  comService.ComList(body,url);
+
+        HttpUtils.toSubscribe(
+                observable,
+                new HttpSubscriber<BaseDataResponse<WhatList>>(httpCallback)
+                ,transformer
+        );
+    }
 }

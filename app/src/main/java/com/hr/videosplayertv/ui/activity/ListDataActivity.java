@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.google.android.exoplayer2.C;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.common.ImmobilizationData;
 import com.hr.videosplayertv.db.DBResultCallback;
 import com.hr.videosplayertv.db.RealmDBManger;
 import com.hr.videosplayertv.db.TabsData;
@@ -202,28 +203,28 @@ public class ListDataActivity extends BaseActivity {
         if(null != type){
             switch (type){
                 case FILM:
-                    Film();
+                    ComList();
                     break;
                 case TELEPLAY:
-                    TV();
+                    ComList();
                     break;
                 case VARIETY:
-                    Film();
+                    ComList();
                     break;
                 case ANIME:
-                    Film();
+                    ComList();
                     break;
                 case SPORTS:
-                    Film();
+                    ComList();
                     break;
                 case OVERSEAS:
-                    Film();
+                    ComList();
                     break;
             }
         }
     }
 
-    private void Film(){
+    private void ComList(){
          UserToken userToken = UserInfoManger.getInstance().getUserToken();
         WhatCom data = new WhatCom(
                 UserInfoManger.getInstance().getToken(),
@@ -235,7 +236,8 @@ public class ListDataActivity extends BaseActivity {
                 "20",
                 ""+pageNo
                 );
-        baseService.Film(data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
+
+        baseService.ComList( ImmobilizationData.Tags.getUrlByName(type),data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
             @Override
             public void onError(HttpException e) {
                 if(e.getCode() == 1){
@@ -249,36 +251,6 @@ public class ListDataActivity extends BaseActivity {
             public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
 
                 setTvList(baseDataResponseBaseResponse);
-            }
-        }, ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
-    }
-
-    private void TV(){
-        UserToken userToken = UserInfoManger.getInstance().getUserToken();
-        WhatCom data = new WhatCom(
-                UserInfoManger.getInstance().getToken(),
-                "0,1",
-                userToken.getUID(),
-                userToken.getGID(),
-                userToken.getSign(),
-                userToken.getExpire(),
-                "20",
-                ""+pageNo
-        );
-        baseService.TV(data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
-            @Override
-            public void onError(HttpException e) {
-                if(e.getCode() == 1){
-                    LoadingDialog.showText(ListDataActivity.this,e.getMsg());
-                }else {
-                    LoadingDialog.disMiss();
-                }
-            }
-
-            @Override
-            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
-                setTvList(baseDataResponseBaseResponse);
-
             }
         }, ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }
@@ -298,8 +270,6 @@ public class ListDataActivity extends BaseActivity {
             }else {
                 gridAdapter.repaceDatas(whatLists);
             }
-
-
         }else {
             if(isLoadMore){
                 isMore = false;
