@@ -1,6 +1,7 @@
 package com.hr.videosplayertv.net.http;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,6 +50,8 @@ public class HttpUtils {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static String getStringValue(Object obj) {
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         if(obj==null)
             return null;
 

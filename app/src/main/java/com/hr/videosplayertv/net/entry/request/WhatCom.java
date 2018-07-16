@@ -1,5 +1,6 @@
 package com.hr.videosplayertv.net.entry.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hr.videosplayertv.net.base.BaseDataRequest;
 
 /**
@@ -71,8 +72,6 @@ public class WhatCom extends BaseDataRequest {
      * Size : 20
      * Page : 1
      */
-
-
     private String Size;
     private String Page;
     private String Tags;
