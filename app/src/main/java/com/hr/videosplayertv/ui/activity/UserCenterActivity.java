@@ -106,7 +106,7 @@ public class UserCenterActivity extends BaseActivity {
             @Override
             public void onError(HttpException e) {
 
-                NLog.e(NLog.TAG,"GetUserInfo --->" + e.getMsg());
+                NLog.e(NLog.TAG,"GetUserInfo --->" +e.getCode()+ e.getMsg());
 
             }
 
@@ -115,23 +115,23 @@ public class UserCenterActivity extends BaseActivity {
 
                 GetUserInfo getUserInfo = baseDataResponseBaseResponse.getData().getInfo().get(0);
 
-//                SpanUtils spanUtils = new SpanUtils();
-//                tv_title_name.setText(
-//                        spanUtils.append("账号：" + getUserInfo.getNickName())
-//                                .appendLine()
-//                                .create()
-//                );
-//                spanUtils.setMText();
-//
-//                tv_user_say_more.setText(
-//                        spanUtils.append("VIP到期：" + getUserInfo.getEndDate())
-//                                .appendLine()
-//                                .appendLine("VIP剩余时间："+getUserInfo.getEndDays())
-//                                .appendLine("账号登录次数："+getUserInfo.getLoginNumber())
-//                                .appendLine("上次登录IP："+getUserInfo.getLastIP())
-//                                .appendLine("上次登录时间："+getUserInfo.getLastTime())
-//                                .create()
-//                );
+                SpanUtils spanUtils = new SpanUtils();
+                tv_title_name.setText(
+                        spanUtils.append("账号：" + getUserInfo.getNickName())
+                                .appendLine()
+                                .create()
+                );
+                spanUtils.setMText();
+
+                tv_user_say_more.setText(
+                        spanUtils.append("VIP到期：" + getUserInfo.getEndDate())
+                                .appendLine()
+                                .appendLine("VIP剩余时间："+getUserInfo.getEndDays())
+                                .appendLine("账号登录次数："+getUserInfo.getLoginNumber())
+                                .appendLine("上次登录IP："+getUserInfo.getLastIP())
+                                .appendLine("上次登录时间："+getUserInfo.getLastTime())
+                                .create()
+                );
             }
         });
     }

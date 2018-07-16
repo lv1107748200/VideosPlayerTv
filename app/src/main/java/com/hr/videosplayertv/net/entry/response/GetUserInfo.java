@@ -5,32 +5,6 @@ package com.hr.videosplayertv.net.entry.response;
  * lv   2018/7/13
  */
 public class GetUserInfo {
-
-    /**
-     * Sex : 1
-     * HeadImage : //static.dnvod.tv/upload/user/201709102154485467651.png
-     * Gold : 0
-     * Experience : 0
-     * UserLevel : 1
-     * EndDays : 224
-     * MessageNum : 0
-     * ScjNum : 0
-     * NextLevel : 200
-     * VIPImage : /assets/images/g-VIP.png
-     * EndDate : 2/26/2019
-     * LoginNumber : 7465
-     * LastIP : 84.1.108.82
-     * LastTime : 2018-06-11T11:40:00
-     * UID : 168887
-     * UserName : zw****1
-     * IsLogin : false
-     * NickName : Rich
-     * GID : 1
-     * UserToken : null
-     * From : 未知
-     * AutoLoginKey : null
-     */
-
     private int Sex;
     private String HeadImage;
     private int Gold;
