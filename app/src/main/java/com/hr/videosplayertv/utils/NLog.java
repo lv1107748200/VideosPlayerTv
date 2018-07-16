@@ -16,6 +16,7 @@ public class NLog {
     public static final String TAGOther = "other";
     public static final String KEY = "key";
     public static final String DB = "db";
+    public static final String PLAYER = "player";
 
     public static void d(String tag, Object... args) {
         log(Log.DEBUG, null, tag, args);

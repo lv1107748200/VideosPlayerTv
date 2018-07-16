@@ -122,7 +122,20 @@ public class RealmDBManger {
             callback.onCallback(realmResults);
         }
     }
-
+    public static void getPHData(
+            final Class cfff
+            ,String key
+            ,String what
+            ,final DBResultCallback<RealmResults<PHData>> callback
+    ){
+        RealmResults realmResults =  getRealmSingle().getMyRealm()
+                .where(cfff)
+                .equalTo(key,what)
+                .findAll();
+        if(null != callback){
+            callback.onCallback(realmResults);
+        }
+    }
 
     public static Object getTabsData(final Class cfff,String key,String what){
         try {

@@ -148,9 +148,8 @@ public class MultipleFragment extends BaseFragment {
         super.loadData();
         isReady = false;
         switch (type){
-
             case 0:
-
+                index();
                 break;
             case 1:
 
@@ -175,6 +174,41 @@ public class MultipleFragment extends BaseFragment {
     }
 
     //首页布局
+    private void index(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                "0",
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire(),
+                "13",
+                "1"
+        );
+        whatCom.setIsindex(true);
+
+        baseService.index(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
+
+                List<WhatList> whatLists = baseDataResponseBaseResponse.getData().getInfo();
+
+                if(!CheckUtil.isEmpty(whatLists)){
+
+                }
+
+            }
+        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
 
 
     //分类试图
@@ -281,6 +315,9 @@ public class MultipleFragment extends BaseFragment {
             return;
 
         UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken)
+            return;
+
         WhatCom data = new WhatCom(
                 UserInfoManger.getInstance().getToken(),
                 "0,1",

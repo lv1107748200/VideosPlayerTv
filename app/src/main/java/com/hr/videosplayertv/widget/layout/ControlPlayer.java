@@ -260,6 +260,12 @@ public class ControlPlayer extends FrameLayout implements
         this.videoUrl = videoUrl;
     }
 
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+
+
     public void setContext(Activity context) {
         this.contextPlayer = context;
     }
@@ -344,6 +350,16 @@ public class ControlPlayer extends FrameLayout implements
         }
     }
 
+    //获取当前进度
+    public long getJinDu(){
+        if(IjkPlayerMger.mediaPlayer.isPlaying())
+        return IjkPlayerMger.mediaPlayer.getCurrentPosition();
+        return -1;
+    }
+    //跳转到
+    public void setPass(long pass){
+        playProgress = (int) pass;
+    }
     /**
      * 初始化
      */
@@ -470,7 +486,9 @@ public class ControlPlayer extends FrameLayout implements
             functionMenuPopWindow = null;
         }
 
+        if(null != controlView)
         controlView.destroy();
+
 
         cusTomSurfaceView = null;
     }

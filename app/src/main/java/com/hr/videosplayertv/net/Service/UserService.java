@@ -2,6 +2,7 @@ package com.hr.videosplayertv.net.Service;
 
 import com.hr.videosplayertv.net.base.BaseDataResponse;
 import com.hr.videosplayertv.net.base.BaseResponse;
+import com.hr.videosplayertv.net.entry.response.GetUserInfo;
 import com.hr.videosplayertv.net.entry.response.InfoToken;
 import com.hr.videosplayertv.net.entry.response.UserInfo;
 
@@ -31,4 +32,11 @@ public interface UserService {
     @POST("User/Validate")
     Observable<Response<BaseResponse<BaseDataResponse<UserInfo>>>>
     validate(@Body RequestBody route);
+
+    //获取用户的基本信息，用于用户中心的显示
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @POST("User/GetUserInfo")
+    Observable<Response<BaseResponse<BaseDataResponse<GetUserInfo>>>>
+    GetUserInfo(@Body RequestBody route);
+
 }

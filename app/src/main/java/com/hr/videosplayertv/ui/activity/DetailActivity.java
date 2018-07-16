@@ -15,22 +15,43 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.common.Iddddd;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.CommHot;
+import com.hr.videosplayertv.net.entry.response.Comment;
+import com.hr.videosplayertv.net.entry.response.Detail;
+import com.hr.videosplayertv.net.entry.response.GuestSeries;
+import com.hr.videosplayertv.net.entry.response.UserToken;
+import com.hr.videosplayertv.net.entry.response.VL;
+import com.hr.videosplayertv.net.entry.response.VideoDisLike;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.CommentAdapter;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
+import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.utils.SpanUtils;
+import com.hr.videosplayertv.utils.UrlUtils;
+import com.hr.videosplayertv.widget.dialog.LoadingDialog;
 import com.hr.videosplayertv.widget.focus.FocusBorder;
+import com.hr.videosplayertv.widget.single.CollectManger;
+import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.hr.videosplayertv.widget.tablayout.TabLayout;
 import com.hr.videosplayertv.widget.tablayout.TvTabLayout;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +98,8 @@ public class DetailActivity extends BaseActivity {
 
     private BottomSheetBehavior behavior;
 
+    private Iddddd iddddd;//id 数据
+
     private boolean isSild = false;//判断是否已滑动
 
 
@@ -87,23 +110,32 @@ public class DetailActivity extends BaseActivity {
                 if(true){
                     Intent intent = new Intent();
                     intent.setClass(this,PlayerActivity.class);
+                    if(listDataMenuAdapter.getSelectData() != null){
+                        intent.putExtra("GUESTSERIES",listDataMenuAdapter.getSelectData());
+                    } else if(!CheckUtil.isEmpty(CollectManger.getInstance().getGuestSeriesList())){
+                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getGuestSeriesList().get(0));
+                    }
                     startActivity(intent);
                 }
-
                 break;
             case R.id.btn_collect:
-
+                AddToScj();
                 break;
             case R.id.btn_like:
-
+                VideoLike();
                 break;
             case R.id.btn_stamp:
-
+                VideoDisLike();
                 break;
             case R.id.image_poster:
                 if(true){
                     Intent intent = new Intent();
                     intent.setClass(this,PlayerActivity.class);
+                    if(listDataMenuAdapter.getSelectData() != null){
+                        intent.putExtra("GUESTSERIES",listDataMenuAdapter.getSelectData());
+                    } else  if(!CheckUtil.isEmpty(CollectManger.getInstance().getGuestSeriesList())){
+                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getGuestSeriesList().get(0));
+                    }
                     startActivity(intent);
                 }
                 break;
@@ -122,29 +154,11 @@ public class DetailActivity extends BaseActivity {
         tvTitleChild.setText(getString(R.string.svp_details));
         layoutSelect.setSelected(true);
 
-        SpanUtils spanUtils = new SpanUtils();
+        iddddd = getIntent().getParcelableExtra("Iddddd");
+        CollectManger.getInstance().setIddddd(iddddd);
 
-        tv_video_introduction.setText(
-                spanUtils.append("亮剑")
-                        .setFontSize(DisplayUtils.sp2px(32))
-                        .appendSpace(200)
-                        .append("评分：4.8")
-                        .setFontSize(DisplayUtils.sp2px(18))
-                        .appendLine()
-                        .appendLine("更新至45集，周一至周五每天更新两集")
-                        .setFontSize(DisplayUtils.sp2px(16))
-                        .appendLine()
-                        .appendLine("主演：李幼斌、何政军")
-                        .appendLine("导演：何政军")
-                        .appendLine("简介：")
-                        .appendLine("李云龙是八路军独立团的团长，在他的独特指挥下，山崎大队全部消灭。李云龙又会同国军团长楚云飞闯进日军重兵把守的县城，守备部队全军覆灭，李云龙和楚云飞在晋西北因此名声大噪，李楚成为好友")
-                        .create()
-        );
-
-        spanUtils.setMText();
-
-        tv_data.setText("收藏：209     点赞：443     踩：21");
-
+        //tv_data.setText("收藏：209     点赞：443     踩：21");
+        setTv_data("0","0","0");
 
         mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
             @Override
@@ -174,39 +188,23 @@ public class DetailActivity extends BaseActivity {
         initData();
         setTab();
 
-        GlideUtil.setGlideImage(this, ImgDatasUtils.getUrl(),imagePoster);
-
     }
 
     private void initData(){
-        List<ListData> listData = new ArrayList<>();
-
-        for (int i =0 ;i< 37; i++){
-            listData.add(new ListData());
-        }
-
-
-        CommentAdapter.repaceDatas(listData);
+        CommentList();
+        Play();
     }
 
     private void setTab(){
-
-      final  List<String> stringList = new ArrayList<>();
-
-        for(int i=0; i<50; i++){
-            stringList.add(""+(i+1));
-        }
-
       //  NLog.e(NLog.TAGOther,"分割大小---》"+splitList(stringList,20).size());
 
         tabLayout.setScaleValue(1.1f);
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
                 listDataMenuAdapter.setSelectView(null);
-                listDataMenuAdapter.repaceDatas(splitList(stringList,20).get(tab.getPosition()));
+                listDataMenuAdapter.repaceDatas(splitList(CollectManger.getInstance().getGuestSeriesList(),20).get(tab.getPosition()));
 
             }
 
@@ -220,19 +218,6 @@ public class DetailActivity extends BaseActivity {
 
             }
         });
-
-        tabLayout.addTab(
-                tabLayout.newTab()
-                        .setText("1-20")
-                , true);
-        tabLayout.addTab(
-                tabLayout.newTab()
-                        .setText("21-40")
-        );
-        tabLayout.addTab(
-                tabLayout.newTab()
-                        .setText("40-50")
-        );
     }
 
     private void setListener() {
@@ -246,15 +231,21 @@ public class DetailActivity extends BaseActivity {
                     listDataMenuAdapter.getSelectView().setActivated(true);
                 }
                 onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+
             }
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
 
-                listDataMenuAdapter.setSelectData(listDataMenuAdapter.getItem(position).toString());
+                listDataMenuAdapter.setSelectData((GuestSeries) listDataMenuAdapter.getItem(position));
                 listDataMenuAdapter.setSelectView(itemView);
 
-            }
+                Intent intent = new Intent();
+                intent.setClass(DetailActivity.this,PlayerActivity.class);
+                intent.putExtra("GUESTSERIES",(GuestSeries) listDataMenuAdapter.getItem(position));
+                startActivity(intent);
+
+                }
 
         });
 
@@ -311,7 +302,6 @@ public class DetailActivity extends BaseActivity {
             }
         });*/
     }
-
     /**
      * 按指定大小，分隔集合，将集合按规定个数分为n个部分
      *
@@ -336,6 +326,317 @@ public class DetailActivity extends BaseActivity {
             result.add(subList);
         }
         return result;
+    }
+
+    private void setListDataMenuAndTab(){
+
+        if(CheckUtil.isEmpty(CollectManger.getInstance().getGuestSeriesList()) || CollectManger.getInstance().getGuestSeriesList().size() == 1){
+
+            tabLayout.setVisibility(View.GONE);
+
+        }else {
+          //  tabLayout.setVisibility(View.VISIBLE);
+
+          int i = splitList(CollectManger.getInstance().getGuestSeriesList(),20).size();
+          switch (i){
+              case 1:
+
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("1-"+CollectManger.getInstance().getGuestSeriesList().size())
+                          , true);
+                  break;
+              case 2:
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("1-20")
+                          , true);
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("21-"+ CollectManger.getInstance().getGuestSeriesList().size())
+                  );
+                  break;
+              case 3:
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("1-20")
+                          , true);
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("21-40")
+                  );
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("21-"+ CollectManger.getInstance().getGuestSeriesList().size())
+                  );
+                      break;
+              case 4:
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("1-20")
+                          , true);
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("21-40")
+                  );
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("41-60")
+                  );
+                  tabLayout.addTab(
+                          tabLayout.newTab()
+                                  .setText("61-"+ CollectManger.getInstance().getGuestSeriesList().size())
+                  );
+                  break;
+          }
+        }
+
+    }
+
+    private String c;
+    private String d;
+    private String cc;
+    private void setTv_data(String c,String d,String cc){
+
+        if(!CheckUtil.isEmpty(c)){
+            this.c = c;
+        }
+        if(!CheckUtil.isEmpty(d)){
+            this.d = d;
+        }
+        if(!CheckUtil.isEmpty(cc)){
+            this.cc = cc;
+        }
+
+        tv_data.setText("收藏："+this.c+"     点赞："+this.d+"     踩："+this.cc);
+    }
+
+    //踩影片
+    private void  VideoDisLike(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+
+        if(!CheckUtil.isEmpty(iddddd)){
+            whatCom.setVideoID(iddddd.getId());
+        }
+
+        baseService.VideoDisLike(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<VideoDisLike>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<VideoDisLike>> baseDataResponseBaseResponse) {
+                VideoDisLike videoDisLike = baseDataResponseBaseResponse.getData().getInfo().get(0);
+                NToast.shortToastBaseApp(videoDisLike.getShowMsg());
+                setTv_data(null,null,""+videoDisLike.getNumber());//踩
+
+
+            }
+        },DetailActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+    //19点赞影片
+    private void  VideoLike(){
+
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+
+        if(!CheckUtil.isEmpty(iddddd)){
+            whatCom.setVideoID(iddddd.getId());
+        }
+
+        baseService.VideoLike(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<VideoDisLike>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<VideoDisLike>> baseDataResponseBaseResponse) {
+
+                VideoDisLike videoDisLike = baseDataResponseBaseResponse.getData().getInfo().get(0);
+                NToast.shortToastBaseApp(videoDisLike.getShowMsg());
+                setTv_data(null,""+videoDisLike.getNumber(),null);//点赞
+
+            }
+        },DetailActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+    //20收藏影片
+    private void  AddToScj(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+
+        if(!CheckUtil.isEmpty(iddddd)){
+            whatCom.setVideoID(iddddd.getId());
+        }
+        baseService.AddToScj(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<VideoDisLike>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<VideoDisLike>> baseDataResponseBaseResponse) {
+
+                VideoDisLike videoDisLike = baseDataResponseBaseResponse.getData().getInfo().get(0);
+                NToast.shortToastBaseApp(videoDisLike.getShowMsg());
+
+                setTv_data(""+videoDisLike.getNumber(),null,null);//收藏
+            }
+        },DetailActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    //获取评论列表
+    private void CommentList(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+        if(!CheckUtil.isEmpty(iddddd)){
+            whatCom.setID(iddddd.getId());
+        }
+
+        baseService.CommentList(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<Comment>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                  //  NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<Comment>> baseDataResponseBaseResponse) {
+
+                Comment comment = baseDataResponseBaseResponse.getData().getInfo().get(0);
+                List<CommHot> CommHot = comment.getCommHot();
+
+                if(!CheckUtil.isEmpty(CommHot)){
+                    CommentAdapter.repaceDatas(CommHot);
+                }
+
+
+            }
+        },DetailActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+    //获取影片播放地址
+    private void Play(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+        if(!CheckUtil.isEmpty(iddddd)){
+            whatCom.setID(iddddd.geteId());
+        }
+
+        baseService.Play(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<Detail>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<Detail>> baseDataResponseBaseResponse) {
+
+
+                Detail detail = baseDataResponseBaseResponse.getData().getInfo().get(0);
+
+                if(null != detail){
+                    VL VL = detail.getVL();
+                    SpanUtils spanUtils = new SpanUtils();
+                    tv_video_introduction.setText(
+                            spanUtils.append(VL.getTitle())
+                                    .setFontSize(DisplayUtils.sp2px(32))
+                                    .appendSpace(200)
+                                    .append("评分：4.8")
+                                    .setFontSize(DisplayUtils.sp2px(18))
+                                    .appendLine()
+                                    .appendLine(detail.getPost_Year()+"/"+detail.getChannel()+"/"+detail.getVideoType())
+                                    .setFontSize(DisplayUtils.sp2px(16))
+                                    .appendLine()
+                                    .appendLine("主演："+VL.getStarring())
+                                    .appendLine("导演："+VL.getDirector())
+                                    .appendLine("简介：")
+                                    .appendLine(detail.getContxt())
+                                    .create()
+                    );
+
+                    setTv_data(""+detail.getFavrateNumber(),"0","0");//播放详情
+                    GlideUtil.setGlideImage(DetailActivity.this, UrlUtils.getUrl(detail.getImgPath()),imagePoster);
+
+                    CollectManger.getInstance().setGuestSeriesList(detail.getGuestSeriesList());
+                    CollectManger.getInstance().setVipSeriesList(detail.getVipSeriesList());
+                    CollectManger.getInstance().setPlayRecordURL(detail.getPlayRecordURL());
+                    CollectManger.getInstance().setDetail(detail);
+
+                    setListDataMenuAndTab();
+                }
+            }
+        },DetailActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
 
@@ -418,5 +719,12 @@ public class DetailActivity extends BaseActivity {
             layoutSelect.setLayoutParams(layoutParams);
         }
 
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CollectManger.Clear();//清空
     }
 }

@@ -13,6 +13,7 @@ import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.net.entry.ListData;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
+import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.widget.AffPasWindow;
@@ -44,6 +45,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
 
+    private String type;
     private GridAdapter gridAdapter;
     private AffPasWindow affPasWindow;
     private StringBuffer stringBuffer;//搜索字符
@@ -57,7 +59,16 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     @Override
     public void init() {
         super.init();
-        tvTitleChild.setText(getString(R.string.svp_search));
+
+        Intent intent = getIntent();
+        type = intent.getStringExtra("TYPE");
+        if(!CheckUtil.isEmpty(type)){
+            tvTitleChild.setText(type+getString(R.string.svp_search));
+        }else {
+            tvTitleChild.setText(getString(R.string.svp_search));
+        }
+
+
         affPasWindow = new AffPasWindow(this,this);
         skbContainer.setSkbLayout(R.xml.skb_all_key);
         skbContainer.setFocusable(true);

@@ -36,10 +36,10 @@ public class SplashActiity extends BaseActivity {
         if(CheckUtil.isEmpty(UserInfoManger.getInstance().getToken())){
             userAutoLogin();
         }else {
-                    Intent intent = new Intent();
-        intent.setClass(SplashActiity.this,MainActivity.class);
-        startActivity(intent);
-        finish();
+            Intent intent = new Intent();
+            intent.setClass(SplashActiity.this,MainActivity.class);
+            startActivity(intent);
+            finish();
         }
 
     }

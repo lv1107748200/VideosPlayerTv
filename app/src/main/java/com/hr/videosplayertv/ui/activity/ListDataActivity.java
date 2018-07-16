@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.google.android.exoplayer2.C;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.common.Iddddd;
 import com.hr.videosplayertv.common.ImmobilizationData;
 import com.hr.videosplayertv.db.DBResultCallback;
 import com.hr.videosplayertv.db.RealmDBManger;
@@ -24,6 +25,7 @@ import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
+import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.NLog;
@@ -32,12 +34,14 @@ import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 import static com.hr.videosplayertv.common.ImmobilizationData.ANIME;
@@ -64,11 +68,15 @@ public class ListDataActivity extends BaseActivity {
     private boolean isLoadMore = false;
     private int pageNo = 1;
 
+    private boolean isStart;
+
     private GridAdapter gridAdapter;
     private ListDataMenuAdapter listDataMenuAdapter;
 
     private List<WhatType> whatTypeList;
     private String type;
+
+    private String CID;
 
     @Override
     public int getLayout() {
@@ -101,7 +109,8 @@ public class ListDataActivity extends BaseActivity {
             huoqv();
         }
         tvTitleChild.setText(type+getString(R.string.svp_list));
-        load();
+
+        load("0,1");
     }
 
     private void huoqv(){
@@ -119,9 +128,13 @@ public class ListDataActivity extends BaseActivity {
                         if(!CheckUtil.isEmpty(whatTypeList)){
                             listDataMenuAdapter.repaceDatas(whatTypeList);
                         }else {
-
+                            ComType();
                         }
+                    }else {
+                        ComType();
                     }
+                }else {
+                    ComType();
                 }
             }
             @Override
@@ -131,7 +144,28 @@ public class ListDataActivity extends BaseActivity {
             }
         });
     }
+    private void baocun(List<WhatType> whatTypeList){
+        TabsData tabsData = new TabsData();
+        tabsData.setTab(type);
 
+        if(!CheckUtil.isEmpty(whatTypeList)){
+            RealmList<WhatType> whatTypeRealmList = new RealmList<>();
+            whatTypeRealmList.addAll(whatTypeList);
+            tabsData.setRealmList(whatTypeRealmList);
+        }
+        NLog.e(NLog.DB,"数据库"+type+" 保存--->");
+        RealmDBManger.copyToRealmOrUpdate(tabsData, new DBResultCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                NLog.e(NLog.DB,"数据库 保存成功--->");
+            }
+
+            @Override
+            public void onError(String errString) {
+                NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
+            }
+        });
+    }
     private void setListener() {
 
         listMenu.setOnItemListener(new SimpleOnItemListener() {
@@ -139,6 +173,18 @@ public class ListDataActivity extends BaseActivity {
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
+
+                if(position > 0){
+                    if(listDataMenuAdapter.getItem(position) instanceof WhatType){
+
+                        isMore = true;
+                        isLoadMore = false;
+                        pageNo = 1;
+                        isStart = true;
+                        load(((WhatType) listDataMenuAdapter.getItem(position)).getPath());
+                    }
+
+                }
             }
 
             @Override
@@ -146,8 +192,9 @@ public class ListDataActivity extends BaseActivity {
 
                 if(position == 0){
                  Intent intent = new Intent();
-                intent.setClass(ListDataActivity.this, SearchActivity.class);
-                startActivity(intent);
+                 intent.setClass(ListDataActivity.this, SearchActivity.class);
+                 intent.putExtra("TYPE",type);
+                 startActivity(intent);
                 }
 
             }
@@ -162,6 +209,14 @@ public class ListDataActivity extends BaseActivity {
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+
+                Object o =  gridAdapter.getItem(position);
+
+                if(o instanceof WhatList){
+                    Intent intent = new Intent(ListDataActivity.this,DetailActivity.class);
+                    intent.putExtra("Iddddd",new Iddddd(((WhatList) o).getID(),((WhatList) o).getContxt()));
+                    startActivity(intent);
+                }
 
             }
         });
@@ -192,49 +247,62 @@ public class ListDataActivity extends BaseActivity {
 
                 tvList.setLoadingMore(true); //正在加载数据
                 isLoadMore = true;
-                load();
+                load(CID);
                 return isMore; //是否还有更多数据
             }
         });
 
     }
 
-    private void load(){
-        if(null != type){
-            switch (type){
-                case FILM:
-                    ComList();
-                    break;
-                case TELEPLAY:
-                    ComList();
-                    break;
-                case VARIETY:
-                    ComList();
-                    break;
-                case ANIME:
-                    ComList();
-                    break;
-                case SPORTS:
-                    ComList();
-                    break;
-                case OVERSEAS:
-                    ComList();
-                    break;
+    private void load(String s){
+          CID = s;
+          ComList();
+    }
+    /**
+     * 获取类型
+     */
+    private void ComType(){
+        if(null == type)
+            return;
+        baseService.ComType(ImmobilizationData.Tags.getTypeUrlByName(type),new HttpCallback<BaseResponse<BaseDataResponse<WhatType>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+                if(e.getCode() == 1){
+                    LoadingDialog.showText(ListDataActivity.this,e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+
             }
-        }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
+                LoadingDialog.disMiss();
+
+                BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
+                List<WhatType> whatTypeList = baseDataResponse.getInfo();
+                baocun(whatTypeList);
+                listDataMenuAdapter.repaceDatas(whatTypeList);
+            }
+        },ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     private void ComList(){
          UserToken userToken = UserInfoManger.getInstance().getUserToken();
+         if(null == userToken){
+             return;
+         }
         WhatCom data = new WhatCom(
                 UserInfoManger.getInstance().getToken(),
-                "0,1",
+                CID,
                 userToken.getUID(),
                 userToken.getGID(),
                 userToken.getSign(),
                 userToken.getExpire(),
                 "20",
-                ""+pageNo
+                ""+pageNo,
+                ""
                 );
 
         baseService.ComList( ImmobilizationData.Tags.getUrlByName(type),data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
@@ -251,6 +319,7 @@ public class ListDataActivity extends BaseActivity {
             public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
 
                 setTvList(baseDataResponseBaseResponse);
+                isStart = false;
             }
         }, ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }

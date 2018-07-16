@@ -59,7 +59,7 @@ public class BaseApplation extends Application  {
         Realm.init(this);
         RealmConfiguration myConfig = new RealmConfiguration.Builder()
                 .name("vpt.realm")
-                .schemaVersion(1)
+                .schemaVersion(2)
                 .build();
         Realm.setDefaultConfiguration(myConfig);
     }

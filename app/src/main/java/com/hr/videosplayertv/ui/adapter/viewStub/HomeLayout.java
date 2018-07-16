@@ -12,6 +12,7 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.SubAdapter;
 import com.hr.videosplayertv.ui.adapter.viewholder.MainViewHolder;
@@ -256,6 +257,12 @@ public class HomeLayout {
                 return false; //是否还有更多数据
             }
         });*/
+    }
+
+    public void setUpData(List<WhatList> whatLists){
+
+
+
     }
 
 }

@@ -7,9 +7,17 @@ import com.hr.videosplayertv.net.base.BaseDataRequest;
  */
 public class WhatCom extends BaseDataRequest {
 
-    public WhatCom() {
-
+    public WhatCom(
+            String token,
+            String CID,
+            String UID,
+            String GID,
+            String sign,
+            String expire
+    ) {
+        super(token, CID, UID, GID, sign, expire);
     }
+
     public WhatCom(
             String token,
             String CID,
@@ -41,6 +49,24 @@ public class WhatCom extends BaseDataRequest {
         Tags = tags;
     }
 
+    public WhatCom(
+            String token,
+            String CID,
+            String UID,
+            String GID,
+            String sign,
+            String expire,
+            String size,
+            String page,
+            String tags,
+            boolean isindex) {
+        super(token, CID, UID, GID, sign, expire);
+        Size = size;
+        Page = page;
+        Tags = tags;
+        Isindex = isindex;
+    }
+
     /**
      * Size : 20
      * Page : 1
@@ -50,6 +76,28 @@ public class WhatCom extends BaseDataRequest {
     private String Size;
     private String Page;
     private String Tags;
+    private String ID;
+    private String PageSize;
+    private String PageIndex;
+    private boolean Isindex;
+
+    private String VideoID;
+
+    public String getPageSize() {
+        return PageSize;
+    }
+
+    public void setPageSize(String pageSize) {
+        PageSize = pageSize;
+    }
+
+    public String getPageIndex() {
+        return PageIndex;
+    }
+
+    public void setPageIndex(String pageIndex) {
+        PageIndex = pageIndex;
+    }
 
     public String getSize() {
         return Size;
@@ -73,5 +121,29 @@ public class WhatCom extends BaseDataRequest {
 
     public void setTags(String tags) {
         Tags = tags;
+    }
+
+    public boolean isIsindex() {
+        return Isindex;
+    }
+
+    public void setIsindex(boolean isindex) {
+        Isindex = isindex;
+    }
+
+    public String getVideoID() {
+        return VideoID;
+    }
+
+    public void setVideoID(String videoID) {
+        VideoID = videoID;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 }

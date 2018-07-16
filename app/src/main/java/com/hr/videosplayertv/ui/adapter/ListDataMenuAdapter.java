@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.GuestSeries;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
@@ -24,7 +25,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
     public final static int THREE = 1113;
     public final static int FOUR = 1114;
     public boolean isHead = false;
-    private String selectData;
+    private GuestSeries selectData;
     private View selectView;
 
     private int layoutId;
@@ -99,12 +100,14 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
             }
 
         }else if(isMainMenu == FOUR){//选集
-            helper.getHolder().setText(R.id.title, item.toString());
-            if(item.toString().equals(selectData)){
-                helper.itemView.setActivated(true);
-                selectView = helper.itemView;
-            }else {
-                helper.itemView.setActivated(false);
+            if(item instanceof  GuestSeries){
+                helper.getHolder().setText(R.id.title, ((GuestSeries) item).getName());
+                if(((GuestSeries) item).getName().equals(selectData.getName())){
+                    helper.itemView.setActivated(true);
+                    selectView = helper.itemView;
+                }else {
+                    helper.itemView.setActivated(false);
+                }
             }
 
         } else {
@@ -120,7 +123,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
 
     }
 
-    public void setSelectData(String data){
+    public void setSelectData(GuestSeries data){
         selectData = data;
     }
 
@@ -135,7 +138,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
         this.selectView = selectView;
     }
 
-    public String getSelectData() {
+    public GuestSeries getSelectData() {
         return selectData;
     }
 }

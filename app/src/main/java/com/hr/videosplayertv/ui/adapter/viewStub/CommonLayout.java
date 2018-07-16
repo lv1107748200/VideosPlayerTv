@@ -8,7 +8,9 @@ import android.widget.TextView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.common.Iddddd;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.Result;
 import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.ui.activity.DetailActivity;
@@ -19,6 +21,7 @@ import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
+import com.hr.videosplayertv.utils.UrlUtils;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
@@ -61,24 +64,27 @@ public class CommonLayout {
 
     private String type;
 
+    private List<WhatList> whatList;
+
     @OnClick({R.id.tag_flayout_one,R.id.tag_flayout_two,R.id.tag_flayout_three,R.id.tag_flayout_four,R.id.tag_flayout_five})
     public void Onclick(View view){
         Intent intent = new Intent(mContext,DetailActivity.class);
+
         switch (view.getId()){
             case R.id.tag_flayout_one:
-
+                setIenten(0,intent);
                 break;
             case R.id.tag_flayout_two:
-
+                setIenten(1,intent);
                 break;
             case R.id.tag_flayout_three:
-
+                setIenten(2,intent);
                 break;
             case R.id.tag_flayout_four:
-
+                setIenten(3,intent);
                 break;
             case R.id.tag_flayout_five:
-
+                setIenten(4,intent);
                 break;
 
         }
@@ -112,28 +118,37 @@ public class CommonLayout {
             }
         }
     }
+
+    private void setIenten(int i,Intent intent){
+        if(whatList.size() >= (i+1)){
+            intent.putExtra("Iddddd",new Iddddd(whatList.get(i).getID(),whatList.get(i).getContxt()));
+        }
+    }
+
     public void setView(List<WhatList> whatListList){
+        whatList = whatListList;
+
         for(int i = 0,j = whatListList.size(); i<j; i++){
             WhatList whatList = whatListList.get(i);
             switch (i){
                 case 0:
-                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_one);
+                    GlideUtil.setGlideImage(mContext, UrlUtils.getUrl(whatList.getImgPath()),tag_image_one);
                     tag_title_one.setText(whatList.getTitle());
                     break;
                 case 1:
-                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_two);
+                    GlideUtil.setGlideImage(mContext, UrlUtils.getUrl(whatList.getImgPath()),tag_image_two);
                     tag_title_two.setText(whatList.getTitle());
                     break;
                 case 2:
-                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_three);
+                    GlideUtil.setGlideImage(mContext, UrlUtils.getUrl(whatList.getImgPath()),tag_image_three);
                     tag_title_three.setText(whatList.getTitle());
                     break;
                 case 3:
-                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_four);
+                    GlideUtil.setGlideImage(mContext, UrlUtils.getUrl(whatList.getImgPath()),tag_image_four);
                     tag_title_four.setText(whatList.getTitle());
                     break;
                 case 4:
-                    GlideUtil.setGlideImage(mContext,ImgDatasUtils.getUrl(),tag_image_five);
+                    GlideUtil.setGlideImage(mContext, UrlUtils.getUrl(whatList.getImgPath()),tag_image_five);
                     tag_title_five.setText(whatList.getTitle());
                     break;
             }

@@ -9,8 +9,8 @@
         android:id="@+id/tv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/TwoWayView"
+        style="@style/FourWayView"
         android:orientation="vertical"
-        app:spanCount="5"
+        app:spanCount="4"
         app:tv_layoutManager="V7GridLayoutManager"/>
 </FrameLayout>

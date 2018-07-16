@@ -4,25 +4,26 @@ package com.hr.videosplayertv.net.entry.response;
 import java.util.List;
 
 /*
- * lv   2018/7/12  22查询收藏夹
+ * lv   2018/7/16
  */
 public class FavoriteList {
-    private int recordcount;
-    private List<WhatList> result;
 
-    public int getRecordcount() {
-        return recordcount;
-    }
+    private List<Result> result;
+    private int  count;
 
-    public void setRecordcount(int recordcount) {
-        this.recordcount = recordcount;
-    }
-
-    public List<WhatList> getResult() {
+    public List<Result> getResult() {
         return result;
     }
 
-    public void setResult(List<WhatList> result) {
+    public void setResult(List<Result> result) {
         this.result = result;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

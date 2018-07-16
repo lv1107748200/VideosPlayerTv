@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.response.CommHot;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
+import com.hr.videosplayertv.utils.UrlUtils;
 
 /**
  * 评论适配器
@@ -27,9 +29,11 @@ public class CommentAdapter extends CommonRecyclerViewAdapter {
     @Override
     public void onBindItemHolder(CommonRecyclerViewHolder helper, Object item, int position) {
 
-        if(item instanceof ListData){
-            helper.getHolder().setText(R.id.title, ((ListData) item).getTitle()+"好烂好烂啊啊啊啊");
+        if(item instanceof CommHot){
+            helper.getHolder()
+                    .showImage(R.id.image_tou, UrlUtils.getUrl(((CommHot) item).getHeadImage()))
+                    .setText(R.id.tv_date,((CommHot) item).getPost_Date())
+                    .setText(R.id.title, ((CommHot) item).getComment().getNickName()+"：   "+ ((CommHot) item).getContext());
         }
-
     }
 }

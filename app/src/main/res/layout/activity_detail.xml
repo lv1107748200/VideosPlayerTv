@@ -119,6 +119,13 @@
         android:id="@+id/layout_select"
         android:background="@drawable/layout_back_two"
         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="评论："
+            android:textColor="@color/c_f0f"
+            android:layout_marginLeft="@dimen/x40"
+            />
         <ImageView
             android:duplicateParentState="true"
             android:layout_centerHorizontal="true"

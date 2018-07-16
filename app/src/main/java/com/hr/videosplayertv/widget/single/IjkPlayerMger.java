@@ -31,12 +31,8 @@ public class IjkPlayerMger {
         return instance;
     }
 
-    public IjkMediaPlayer getMediaPlayer() {
+    public static IjkMediaPlayer getMediaPlayer() {
         return mediaPlayer;
-    }
-
-    public void setMediaPlayer(IjkMediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
     }
 
     public IjkMediaPlayer initMediaPlayer(String url){

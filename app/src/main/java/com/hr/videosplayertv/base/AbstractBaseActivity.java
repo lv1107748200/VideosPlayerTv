@@ -37,7 +37,7 @@ import io.reactivex.subjects.BehaviorSubject;
 public abstract class AbstractBaseActivity extends FragmentActivity implements LifecycleProvider<ActivityEvent> {
     public static final int CODE = 222;
 
-    private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
+    public final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
 
     private static final  int PERMISSION_CODES = 1801;
     private boolean permissionGranted = true;

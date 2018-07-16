@@ -8,8 +8,19 @@ import android.widget.TextView;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.net.base.BaseDataRequest;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.GetUserInfo;
+import com.hr.videosplayertv.net.entry.response.UserToken;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.SpanUtils;
 import com.hr.videosplayertv.widget.focus.FocusBorder;
+import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.hr.videosplayertv.widget.single.WhatView;
 
 import butterknife.BindView;
@@ -72,6 +83,57 @@ public class UserCenterActivity extends BaseActivity {
             }
         });
 
+        GetUserInfo();
+
+    }
+
+    private void GetUserInfo(){
+
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+
+        baseService.GetUserInfo(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<GetUserInfo>>>() {
+            @Override
+            public void onError(HttpException e) {
+
+                NLog.e(NLog.TAG,"GetUserInfo --->" + e.getMsg());
+
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<GetUserInfo>> baseDataResponseBaseResponse) {
+
+                GetUserInfo getUserInfo = baseDataResponseBaseResponse.getData().getInfo().get(0);
+
+//                SpanUtils spanUtils = new SpanUtils();
+//                tv_title_name.setText(
+//                        spanUtils.append("账号：" + getUserInfo.getNickName())
+//                                .appendLine()
+//                                .create()
+//                );
+//                spanUtils.setMText();
+//
+//                tv_user_say_more.setText(
+//                        spanUtils.append("VIP到期：" + getUserInfo.getEndDate())
+//                                .appendLine()
+//                                .appendLine("VIP剩余时间："+getUserInfo.getEndDays())
+//                                .appendLine("账号登录次数："+getUserInfo.getLoginNumber())
+//                                .appendLine("上次登录IP："+getUserInfo.getLastIP())
+//                                .appendLine("上次登录时间："+getUserInfo.getLastTime())
+//                                .create()
+//                );
+            }
+        });
     }
 
 }

@@ -103,7 +103,7 @@ public class OkHttpClientUtils {
 
         Retrofit retrofit = new Retrofit.Builder()
                 //配置转化库，默认是Jackson
-                .addConverterFactory(FastJsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(mapper))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(setting.baseURL)
                         //设置OKHttpClient为网络客户端

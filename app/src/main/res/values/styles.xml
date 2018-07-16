@@ -60,7 +60,14 @@
         <item name="android:paddingRight">@dimen/x60</item>
         <item name="android:paddingBottom">@dimen/x60</item>
     </style>
-
+    <style name="FourWayView" parent="TwoWayViewBase">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:paddingTop">@dimen/x30</item>
+        <item name="android:paddingLeft">@dimen/x60</item>
+        <item name="android:paddingRight">@dimen/x60</item>
+        <item name="android:paddingBottom">@dimen/x60</item>
+    </style>
     <style name="TwomuewVideoView" parent="TwoWayViewBase">
         <item name="android:orientation">horizontal</item>
         <item name="android:scrollbars">none</item>
@@ -173,5 +180,6 @@
         <item name="android:scaleType">fitXY</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/hehe</item>
     </style>
 </resources>

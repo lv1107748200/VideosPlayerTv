@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.common.ImmobilizationData;
 import com.hr.videosplayertv.net.entry.ListData;
 import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
@@ -19,6 +20,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.hr.videosplayertv.ui.adapter.GridAdapter.CLASSIFYLAYOUT;
+
 public class ClassifyLayout {
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
@@ -30,8 +33,8 @@ public class ClassifyLayout {
         ButterKnife.bind(this,view);
         mContext = context;
         setListener();
-        tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
-        gridAdapter = new GridAdapter(mContext);
+        tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x40), DisplayUtils.getDimen(R.dimen.x40));
+        gridAdapter = new GridAdapter(mContext,CLASSIFYLAYOUT);
         tvList.setAdapter(gridAdapter);
 
         initData();
@@ -39,8 +42,14 @@ public class ClassifyLayout {
     private void initData(){
         List<ListData> listData = new ArrayList<>();
 
-        for (int i =0 ;i< 37; i++){
-            listData.add(new ListData());
+        for (int i = 0, j = ImmobilizationData.Tags.values().length; i< j; i++){
+
+            if(i==0 || i==1){
+
+            }else {
+                listData.add(new ListData(ImmobilizationData.Tags.getNameByIndex(i)));
+            }
+
         }
 
         gridAdapter.repaceDatas(listData);
@@ -60,7 +69,9 @@ public class ClassifyLayout {
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
                 Intent intent = new Intent(mContext,ListDataActivity.class);
 
-               mContext. startActivity(intent);
+                if(gridAdapter.getItem(position) instanceof ListData)
+                intent.putExtra("TYPE",((ListData) gridAdapter.getItem(position)).getTitle());
+                mContext. startActivity(intent);
             }
         });
 
