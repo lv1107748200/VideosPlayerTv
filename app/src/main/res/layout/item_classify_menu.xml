@@ -8,6 +8,7 @@
     android:clickable="true"
     android:background="@drawable/foc_back_two"
     app:rfl_radius="@dimen/rfl_radius"
+    android:id="@+id/common_layout"
     >
     <TextView
         android:duplicateParentState="true"

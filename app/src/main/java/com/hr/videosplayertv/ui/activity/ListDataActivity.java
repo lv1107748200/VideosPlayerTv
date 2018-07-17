@@ -153,16 +153,16 @@ public class ListDataActivity extends BaseActivity {
             whatTypeRealmList.addAll(whatTypeList);
             tabsData.setRealmList(whatTypeRealmList);
         }
-        NLog.e(NLog.DB,"数据库"+type+" 保存--->");
+        //NLog.e(NLog.DB,"数据库"+type+" 保存--->");
         RealmDBManger.copyToRealmOrUpdate(tabsData, new DBResultCallback() {
             @Override
             public void onSuccess(Object o) {
-                NLog.e(NLog.DB,"数据库 保存成功--->");
+               // NLog.e(NLog.DB,"数据库 保存成功--->");
             }
 
             @Override
             public void onError(String errString) {
-                NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
+             //   NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
             }
         });
     }
@@ -312,6 +312,9 @@ public class ListDataActivity extends BaseActivity {
                     LoadingDialog.showText(ListDataActivity.this,e.getMsg());
                 }else {
                     LoadingDialog.disMiss();
+                }
+                if(isLoadMore){
+                    tvList.setLoadingMore(false);
                 }
             }
 

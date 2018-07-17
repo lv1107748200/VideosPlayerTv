@@ -102,6 +102,7 @@ public class DetailActivity extends BaseActivity {
 
     private boolean isSild = false;//判断是否已滑动
 
+    private String type;
 
     @OnClick({R.id.btn_player,R.id.btn_collect,R.id.btn_like,R.id.btn_stamp,R.id.image_poster})
     public void Onclick(View view){
@@ -151,10 +152,16 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void init() {
         super.init();
+
+        Intent intent = getIntent();
+
+       // type = intent.getStringExtra("TYPE");
+
+
         tvTitleChild.setText(getString(R.string.svp_details));
         layoutSelect.setSelected(true);
 
-        iddddd = getIntent().getParcelableExtra("Iddddd");
+        iddddd = intent.getParcelableExtra("Iddddd");
         CollectManger.getInstance().setIddddd(iddddd);
 
         //tv_data.setText("收藏：209     点赞：443     踩：21");
@@ -624,7 +631,7 @@ public class DetailActivity extends BaseActivity {
                                     .appendLine(detail.getContxt())
                                     .create()
                     );
-
+                    tvTitleChild.setText(detail.getChannel()+getString(R.string.svp_details));
                     setTv_data(""+detail.getFavrateNumber(),"0","0");//播放详情
                     GlideUtil.setGlideImage(DetailActivity.this, UrlUtils.getUrl(detail.getImgPath()),imagePoster);
 

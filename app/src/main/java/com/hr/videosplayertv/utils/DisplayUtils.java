@@ -143,4 +143,19 @@ public class DisplayUtils {
         }
         context.getWindow().setAttributes(lp);
     }
+
+
+    /**
+     * @param ge
+     * @param pssding
+     * @param ether
+     * @return
+     */
+    public static int getWide(int ge,int pssding,int ether){
+
+      int weid = getDisplayWidth(BaseApplation.getBaseApp())  - ((ge-1)*pssding + 2 * ether);
+
+      return weid/ge;
+
+    }
 }

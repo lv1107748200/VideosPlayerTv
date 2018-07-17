@@ -8,6 +8,7 @@
     android:clickable="true"
     android:background="@drawable/selector_menu_main"
     app:rfl_radius="@dimen/rfl_radius"
+    android:id="@+id/main_layout"
     >
     <TextView
         android:duplicateParentState="true"

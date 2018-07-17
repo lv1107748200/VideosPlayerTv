@@ -73,6 +73,7 @@ public class DiversityActivity extends BaseActivity {
     @Override
     public void init() {
         super.init();
+
          type = getIntent().getIntExtra("DiversityType",-1);
         setListener();
         tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
@@ -155,7 +156,6 @@ public class DiversityActivity extends BaseActivity {
         tvList.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
             @Override
             public boolean onLoadMore() {
-
                 tvList.setLoadingMore(true); //正在加载数据
                 isLoadMore = true;
                 load();

@@ -39,6 +39,7 @@ public class BaseFragment extends AbstractBaseFragment {
     public View baseFgmView;
     Unbinder unbinder;
     public BaseActivity mContext;
+    public BaseFragment baseFragment;
     @Inject
     public BaseService baseService;
 
@@ -84,6 +85,7 @@ public class BaseFragment extends AbstractBaseFragment {
         baseFgmView = inflater.inflate(getLayout(), container, false);
         unbinder =  ButterKnife.bind(this, baseFgmView);
         mContext = (BaseActivity) this.getActivity();
+        baseFragment = this;
         init();
         return baseFgmView;
     }

@@ -26,6 +26,7 @@ import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.base.BaseFragment;
+import com.hr.videosplayertv.common.ImmobilizationData;
 import com.hr.videosplayertv.db.DBResultCallback;
 import com.hr.videosplayertv.db.RealmDBManger;
 import com.hr.videosplayertv.db.TabsData;
@@ -149,7 +150,6 @@ public class MultipleFragment extends BaseFragment {
         isReady = false;
         switch (type){
             case 0:
-                index();
                 break;
             case 1:
 
@@ -174,42 +174,6 @@ public class MultipleFragment extends BaseFragment {
     }
 
     //首页布局
-    private void index(){
-        UserToken userToken = UserInfoManger.getInstance().getUserToken();
-        if(null == userToken){
-            return;
-        }
-        WhatCom whatCom = new WhatCom(
-                UserInfoManger.getInstance().getToken(),
-                "0",
-                userToken.getUID(),
-                userToken.getGID(),
-                userToken.getSign(),
-                userToken.getExpire(),
-                "13",
-                "1"
-        );
-        whatCom.setIsindex(true);
-
-        baseService.index(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
-            @Override
-            public void onError(HttpException e) {
-
-            }
-
-            @Override
-            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
-
-                List<WhatList> whatLists = baseDataResponseBaseResponse.getData().getInfo();
-
-                if(!CheckUtil.isEmpty(whatLists)){
-
-                }
-
-            }
-        },MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
-    }
-
 
     //分类试图
 
@@ -226,23 +190,23 @@ public class MultipleFragment extends BaseFragment {
             whatTypeRealmList.addAll(whatTypeList);
             tabsData.setRealmList(whatTypeRealmList);
         }
-        NLog.e(NLog.DB,"数据库"+typeData.getTitle()+" 保存--->");
+      //  NLog.e(NLog.DB,"数据库"+typeData.getTitle()+" 保存--->");
         RealmDBManger.copyToRealmOrUpdate(tabsData, new DBResultCallback() {
             @Override
             public void onSuccess(Object o) {
-                NLog.e(NLog.DB,"数据库 保存成功--->");
+              //  NLog.e(NLog.DB,"数据库 保存成功--->");
             }
 
             @Override
             public void onError(String errString) {
-                NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
+              //  NLog.e(NLog.DB,"数据库 保存失败--->"+errString);
             }
         });
     }
 
     private void huoqv(){
 
-        NLog.e(NLog.DB,"数据库 " +typeData.getTitle()+"  查询 ------------");
+       // NLog.e(NLog.DB,"数据库 " +typeData.getTitle()+"  查询 ------------");
                 realmResults = RealmDBManger.getMyRealm()
                         .where(TabsData.class)
                         .equalTo("tab",typeData.getTitle())
@@ -255,7 +219,7 @@ public class MultipleFragment extends BaseFragment {
                     @Override
                     public void onSuccess(RealmResults<TabsData> realmResults) {
                         if(!CheckUtil.isEmpty(realmResults)){
-                            NLog.e(NLog.DB,"数据库  "+typeData.getTitle()+" --->"+realmResults.size());
+                           // NLog.e(NLog.DB,"数据库  "+typeData.getTitle()+" --->"+realmResults.size());
                             if(!CheckUtil.isEmpty(realmResults.get(0).getRealmList())){
                                 if(!isReady){
                                     commonLayout.setListDataMenuAdapter(realmResults.get(0).getRealmList());
@@ -351,4 +315,6 @@ public class MultipleFragment extends BaseFragment {
             }
         }, MultipleFragment.this.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
     }
+
+
 }

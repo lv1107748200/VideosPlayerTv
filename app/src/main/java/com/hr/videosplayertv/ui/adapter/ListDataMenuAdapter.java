@@ -2,6 +2,7 @@ package com.hr.videosplayertv.ui.adapter;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.net.entry.ListData;
@@ -9,6 +10,7 @@ import com.hr.videosplayertv.net.entry.response.GuestSeries;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
+import com.hr.videosplayertv.utils.DisplayUtils;
 
 import java.util.List;
 
@@ -110,13 +112,27 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
                 }
             }
 
+        }else if( isMainMenu == TWO){
+            if(item instanceof WhatType){
+                helper.getHolder().setText(R.id.title, ((WhatType) item).getClassName());
+            }
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.width = DisplayUtils.getWide(getmDatas().size(),DisplayUtils.getDimen(R.dimen.x40),DisplayUtils.getDimen(R.dimen.x60));
+            helper.getHolder().getView(R.id.common_layout).setLayoutParams(params);
+
+        } else if(isMainMenu == ONE){
+            if(item instanceof ListData){
+                helper.getHolder().setText(R.id.title, ((ListData) item).getTitle());
+            }
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.width = DisplayUtils.getWide(getmDatas().size(),DisplayUtils.getDimen(R.dimen.x30),DisplayUtils.getDimen(R.dimen.x60));
+            helper.getHolder().getView(R.id.main_layout).setLayoutParams(params);
         } else {
             if(item instanceof ListData){
                 helper.getHolder().setText(R.id.title, ((ListData) item).getTitle());
             }else if(item instanceof WhatType){
                 helper.getHolder().setText(R.id.title, ((WhatType) item).getClassName());
             }
-
         }
 
 

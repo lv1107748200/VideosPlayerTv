@@ -151,5 +151,65 @@ public class ImmobilizationData {
         }
     }
 
+    public enum HomePages{
+        HEAD("head",0),
+        REC("正在热播",1),
+        FILM(ImmobilizationData.FILM,2),
+        TELEPLAY(ImmobilizationData.TELEPLAY,3),
+//        VARIETY(ImmobilizationData.VARIETY,4),
+//        ANIME(ImmobilizationData.ANIME,5),
+//        SPORTS(ImmobilizationData.SPORTS,6),
+//        OVERSEAS(ImmobilizationData.OVERSEAS,7),
+//        DOCUMENTARY(ImmobilizationData.DOCUMENTARY,8),
+//        GAME(ImmobilizationData.GAME,9)
+        ;
+
+        private String key;
+        private int index;
+
+        HomePages(String key, int index) {
+            this.key = key;
+            this.index = index;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+
+        // 1.通过编号得到名字
+        public static String getKeyByIndex(int index) {
+            for (HomePages c : HomePages.values()) {
+                if (c.getIndex() == index) {
+                    return c.key;
+                }
+            }
+            return null;
+        }
+
+        // 通过名字得到枚举
+        public static HomePages getHomePagesByName(String key) {
+            for (HomePages c : HomePages.values()) {
+                if (c.getKey().equals(key)) {
+                    return c;
+                }
+            }
+            return null;
+        }
+
+    }
+
+
 
 }
