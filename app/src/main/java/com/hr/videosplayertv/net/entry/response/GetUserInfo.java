@@ -21,9 +21,12 @@ public class GetUserInfo {
     private String LastTime;
     private int UID;
     private String UserName;
+    private boolean IsLogin;
     private String NickName;
     private int GID;
+    private Object UserToken;
     private String From;
+    private Object AutoLoginKey;
 
     public int getSex() {
         return Sex;
@@ -153,6 +156,14 @@ public class GetUserInfo {
         this.UserName = UserName;
     }
 
+    public boolean isIsLogin() {
+        return IsLogin;
+    }
+
+    public void setIsLogin(boolean IsLogin) {
+        this.IsLogin = IsLogin;
+    }
+
     public String getNickName() {
         return NickName;
     }
@@ -169,6 +180,13 @@ public class GetUserInfo {
         this.GID = GID;
     }
 
+    public Object getUserToken() {
+        return UserToken;
+    }
+
+    public void setUserToken(Object UserToken) {
+        this.UserToken = UserToken;
+    }
 
     public String getFrom() {
         return From;
@@ -178,5 +196,11 @@ public class GetUserInfo {
         this.From = From;
     }
 
+    public Object getAutoLoginKey() {
+        return AutoLoginKey;
+    }
 
+    public void setAutoLoginKey(Object AutoLoginKey) {
+        this.AutoLoginKey = AutoLoginKey;
+    }
 }
