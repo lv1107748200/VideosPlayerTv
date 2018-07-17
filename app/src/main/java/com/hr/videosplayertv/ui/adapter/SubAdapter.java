@@ -3,8 +3,10 @@ package com.hr.videosplayertv.ui.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
@@ -12,6 +14,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.ui.adapter.viewholder.MainViewHolder;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
+import com.hr.videosplayertv.utils.ColorUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 
@@ -58,9 +61,25 @@ public class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
     @Override
     protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
 
-        GlideUtil.setGlideImage(contextontext
-                , ImgDatasUtils.getUrl()
-                ,(ImageView) holder.itemView.findViewById(R.id.image),R.drawable.hehe);
+        ImageView imageView = holder.itemView.findViewById(R.id.image);
+        TextView textView = holder.itemView.findViewById(R.id.title_sdfd);
+
+        textView.setText(offsetTotal);
+
+        if(position == 6){
+            imageView.setVisibility(View.GONE);
+
+        }if(position == 7){
+            imageView.setVisibility(View.GONE);
+
+        }else {
+
+            imageView.setVisibility(View.VISIBLE);
+            GlideUtil.setGlideImage(contextontext
+                    , ImgDatasUtils.getUrl()
+                    ,(ImageView) holder.itemView.findViewById(R.id.image),R.drawable.hehe);
+        }
+
 
     }
 

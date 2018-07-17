@@ -16,7 +16,7 @@
 
        <TextView
            android:duplicateParentState="true"
-           android:id="@+id/title"
+           android:id="@+id/title_sdfd"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_gravity="center"
@@ -24,7 +24,6 @@
            android:gravity="center"
            android:textSize="@dimen/sp_22"
            android:textStyle="bold"
-           android:visibility="gone"
            />
 </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
 

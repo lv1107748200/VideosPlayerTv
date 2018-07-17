@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -17,7 +18,10 @@ import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.SubAdapter;
 import com.hr.videosplayertv.ui.adapter.viewholder.MainViewHolder;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
+import com.hr.videosplayertv.utils.ColorUtils;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.GlideUtil;
+import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -47,9 +51,6 @@ public class HomeLayout {
         // tvList.setNestedScrollingEnabled(false);
         delegateAdapter = new DelegateAdapter(layoutManager, true);
         tvList.setAdapter(delegateAdapter);
-
-
-
         initData();
     }
 
@@ -64,6 +65,7 @@ public class HomeLayout {
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
                 }
+
             });
         }
         if (true) {
@@ -199,6 +201,50 @@ public class HomeLayout {
                 }
             });
         }
+        if (true) {
+            adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
+
+
+                @Override
+                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    if (viewType == 1)
+                        return new MainViewHolder(
+                                LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
+
+                    return super.onCreateViewHolder(parent, viewType);
+                }
+
+                @Override
+                public int getItemViewType(int position) {
+                    return 1;
+                }
+
+                @Override
+                protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+                }
+
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                }
+            });
+        }
+
+        if(true){
+            final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
+            //  helper.setMargin(20, 10, 10, 10);
+            //    helper.setPadding(10, 10, 20, 10);
+            //  helper.setBgColor(0xFF86345A);
+            adapters.add(new SubAdapter(mContext, helper, 12) {
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    //super.onBindViewHolder(holder, position);
+                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  DisplayUtils.getDimen(R.dimen.x300));
+                    holder.itemView.setLayoutParams(layoutParams);
+                }
+            });
+        }
 
         delegateAdapter.setAdapters(adapters);
     }
@@ -211,7 +257,7 @@ public class HomeLayout {
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
 
-                NLog.e(NLog.TAGOther,"首页选中序号--->" + position);
+               // NLog.e(NLog.TAGOther,"首页选中序号--->" + position);
 
                 if(position < 8){
                     mContext. onMoveFocusBorder(itemView, 1.05f, DisplayUtils.dip2px(3));
@@ -238,30 +284,15 @@ public class HomeLayout {
             }
         });
 
-        //边界监听
-//        mRecyclerView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
-//            @Override
-//            public boolean onInBorderKeyEvent(int direction, int keyCode, KeyEvent event) {
-//                Log.i("zzzz", "onInBorderKeyEvent: ");
-//                return false;//需要拦截返回true,否则返回false
-//            }
-//        });
-
-        /*mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
+        tvList.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
             @Override
             public boolean onLoadMore() {
-                Log.i("@@@@", "onLoadMore: ");
-                mRecyclerView.setLoadingMore(true); //正在加载数据
-                mLayoutAdapter.appendDatas(); //加载数据
-                mRecyclerView.setLoadingMore(false); //加载数据完毕
-                return false; //是否还有更多数据
+                return true; //是否还有更多数据
             }
-        });*/
+        });
     }
 
     public void setUpData(List<WhatList> whatLists){
-
-
 
     }
 
