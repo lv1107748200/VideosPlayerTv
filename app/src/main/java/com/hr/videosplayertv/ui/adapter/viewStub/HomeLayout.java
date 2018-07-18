@@ -1,12 +1,17 @@
 package com.hr.videosplayertv.ui.adapter.viewStub;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
+import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.EightLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
@@ -68,7 +73,7 @@ public class HomeLayout {
 
             });
         }
-        if (true) {
+        if (false) {
             adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
 
 
@@ -99,7 +104,7 @@ public class HomeLayout {
         }
 
         if(true){
-            final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(7, 20);
+             StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(7, 20);
             //  helper.setMargin(20, 10, 10, 10);
             //    helper.setPadding(10, 10, 20, 10);
             //  helper.setBgColor(0xFF86345A);
@@ -113,7 +118,7 @@ public class HomeLayout {
             });
         }
 
-        if (true) {
+        if (false) {
             adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
 
 
@@ -143,7 +148,7 @@ public class HomeLayout {
             });
         }
 
-        if(true){
+        if(false){
             final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
             //  helper.setMargin(20, 10, 10, 10);
             //    helper.setPadding(10, 10, 20, 10);
@@ -157,7 +162,7 @@ public class HomeLayout {
                 }
             });
         }
-        if (true) {
+        if (false) {
             adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
 
 
@@ -201,7 +206,7 @@ public class HomeLayout {
                 }
             });
         }
-        if (true) {
+        if (false) {
             adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
 
 
@@ -231,7 +236,7 @@ public class HomeLayout {
             });
         }
 
-        if(true){
+        if(false){
             final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
             //  helper.setMargin(20, 10, 10, 10);
             //    helper.setPadding(10, 10, 20, 10);
@@ -296,4 +301,90 @@ public class HomeLayout {
 
     }
 
+    static class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
+
+        private Context mContext;
+
+        private LayoutHelper mLayoutHelper;
+
+
+        private VirtualLayoutManager.LayoutParams mLayoutParams;
+        private int mCount = 0;
+
+
+        public SubAdapter(Context context, LayoutHelper layoutHelper, int count) {
+            this(context, layoutHelper, count, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
+        }
+
+        public SubAdapter(Context context, LayoutHelper layoutHelper, int count, @NonNull VirtualLayoutManager.LayoutParams layoutParams) {
+            this.mContext = context;
+            this.mLayoutHelper = layoutHelper;
+            this.mCount = count;
+            this.mLayoutParams = layoutParams;
+        }
+
+        @Override
+        public LayoutHelper onCreateLayoutHelper() {
+            return mLayoutHelper;
+        }
+
+        @Override
+        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_home_grid, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(MainViewHolder holder, int position) {
+            // only vertical
+            holder.itemView.setLayoutParams(
+                    new VirtualLayoutManager.LayoutParams(mLayoutParams));
+        }
+
+
+        @Override
+        protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+            ImageView imageView = holder.itemView.findViewById(R.id.image);
+            TextView textView = holder.itemView.findViewById(R.id.title_sdfd);
+
+            textView.setText(offsetTotal+"");
+
+            if(position == 6){
+                imageView.setVisibility(View.GONE);
+            }if(position == 7){
+                imageView.setVisibility(View.GONE);
+
+            }else {
+
+                imageView.setVisibility(View.VISIBLE);
+
+                GlideUtil.setGlideImage(mContext
+                        , ImgDatasUtils.getUrl()
+                        ,(ImageView) holder.itemView.findViewById(R.id.image),R.drawable.hehe);
+            }
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return mCount;
+        }
+    }
+    static class MainViewHolder extends RecyclerView.ViewHolder {
+
+        public static volatile int existing = 0;
+        public static int createdTimes = 0;
+
+        public MainViewHolder(View itemView) {
+            super(itemView);
+            createdTimes++;
+            existing++;
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            existing--;
+            super.finalize();
+        }
+    }
 }

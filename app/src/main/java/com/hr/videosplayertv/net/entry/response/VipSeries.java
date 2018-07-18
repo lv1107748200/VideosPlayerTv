@@ -1,10 +1,13 @@
 package com.hr.videosplayertv.net.entry.response;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * lv   2018/7/16
  */
-public class VipSeries {
+public class VipSeries implements Parcelable {
     /**
      * ID :
      * Key : RNwe5MJfB%2fo%3d
@@ -68,4 +71,43 @@ public class VipSeries {
     public void setIsNew(boolean IsNew) {
         this.IsNew = IsNew;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.ID);
+        dest.writeString(this.Key);
+        dest.writeString(this.Name);
+        dest.writeString(this.UpdateDate);
+        dest.writeByte(this.IsBought ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.IsNew ? (byte) 1 : (byte) 0);
+    }
+
+    public VipSeries() {
+    }
+
+    protected VipSeries(Parcel in) {
+        this.ID = in.readString();
+        this.Key = in.readString();
+        this.Name = in.readString();
+        this.UpdateDate = in.readString();
+        this.IsBought = in.readByte() != 0;
+        this.IsNew = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<VipSeries> CREATOR = new Parcelable.Creator<VipSeries>() {
+        @Override
+        public VipSeries createFromParcel(Parcel source) {
+            return new VipSeries(source);
+        }
+
+        @Override
+        public VipSeries[] newArray(int size) {
+            return new VipSeries[size];
+        }
+    };
 }

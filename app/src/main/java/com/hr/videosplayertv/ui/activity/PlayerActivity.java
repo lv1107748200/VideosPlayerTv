@@ -11,6 +11,7 @@ import com.hr.videosplayertv.db.PHData;
 import com.hr.videosplayertv.db.RealmDBManger;
 import com.hr.videosplayertv.db.TabsData;
 import com.hr.videosplayertv.net.entry.response.GuestSeries;
+import com.hr.videosplayertv.net.entry.response.VipSeries;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.NLog;
@@ -36,7 +37,7 @@ public class PlayerActivity extends BaseActivity {
     private String url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
     private long firstTime=0;
 
-    private GuestSeries guestSeries;
+    private VipSeries guestSeries;
 
     private String playId;
 

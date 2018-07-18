@@ -10,18 +10,32 @@ import android.widget.Toast;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.common.Iddddd;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.entry.ListData;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.Result;
+import com.hr.videosplayertv.net.entry.response.SearchList;
+import com.hr.videosplayertv.net.entry.response.UserToken;
+import com.hr.videosplayertv.net.entry.response.WhatList;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.widget.AffPasWindow;
+import com.hr.videosplayertv.widget.dialog.LoadingDialog;
 import com.hr.videosplayertv.widget.keyboard.SkbContainer;
 import com.hr.videosplayertv.widget.keyboard.SoftKey;
 import com.hr.videosplayertv.widget.keyboard.SoftKeyBoardListener;
+import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +64,11 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     private AffPasWindow affPasWindow;
     private StringBuffer stringBuffer;//搜索字符
 
+    private boolean isMore = true;
+    private boolean isLoadMore = false;
+    private int pageNo = 1;
+
+    private String Tags = "讨债人";
 
     @Override
     public int getLayout() {
@@ -171,6 +190,8 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
         tvList.setAdapter(gridAdapter);
 
         initData();
+
+        load(Tags);
     }
 
     private void initData(){
@@ -195,9 +216,14 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
-                Intent intent = new Intent(SearchActivity.this,ListDataActivity.class);
+                Object o =  gridAdapter.getItem(position);
 
-                startActivity(intent);
+                if(o instanceof WhatList){
+                    Intent intent = new Intent(SearchActivity.this,DetailActivity.class);
+                    intent.putExtra("Iddddd",new Iddddd(((WhatList) o).getID(),((WhatList) o).getContxt()));
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -218,18 +244,93 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 //            }
 //        });
 
-        /*mRecyclerView.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
+        tvList.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
             @Override
             public boolean onLoadMore() {
-                Log.i("@@@@", "onLoadMore: ");
-                mRecyclerView.setLoadingMore(true); //正在加载数据
-                mLayoutAdapter.appendDatas(); //加载数据
-                mRecyclerView.setLoadingMore(false); //加载数据完毕
-                return false; //是否还有更多数据
+
+                tvList.setLoadingMore(true); //正在加载数据
+                isLoadMore = true;
+                load(Tags);
+                return isMore; //是否还有更多数据
             }
-        });*/
+        });
     }
 
+    private void load(String T){
+
+        if(CheckUtil.isEmpty(T))
+            return;
+
+        Tags = T;
+
+        Search();
+    }
+
+    private void Search(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom data = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                "0",
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire(),
+                "20",
+                ""+pageNo,
+                Tags
+        );
+        baseService.Search(data, new HttpCallback<BaseResponse<BaseDataResponse<SearchList>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+                if(isLoadMore){
+                    tvList.setLoadingMore(false);
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<SearchList>> baseDataResponseBaseResponse) {
+
+
+                List<WhatList>  whatLists = baseDataResponseBaseResponse.getData().getInfo().get(0).getResult();
+                setTvList(whatLists);
+
+            }
+        },SearchActivity.this.bindUntilEvent(ActivityEvent.STOP));
+    }
+
+    private void setTvList(List<WhatList>  whatLists){
+        if(isLoadMore){
+            tvList.setLoadingMore(false);
+        }
+
+        if(!CheckUtil.isEmpty(whatLists)){
+
+            pageNo = pageNo+1;
+            if(isLoadMore){
+                gridAdapter.appendDatas(whatLists);
+            }else {
+                gridAdapter.repaceDatas(whatLists);
+            }
+        }else {
+            if(isLoadMore){
+                isMore = false;
+
+            }else {
+                gridAdapter.clearDatas();
+                gridAdapter.notifyDataSetChanged();
+
+            }
+
+        }
+    }
     /**
      * 处理T9键盘的按键.
      * @param softKey
@@ -329,6 +430,17 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
             stringBuffer.delete(0,stringBuffer.length());
         }
         tv_show_message.setText(stringBuffer);
+
+
+
+        lifecycleSubject.onNext(ActivityEvent.STOP);
+        lifecycleSubject.onNext(ActivityEvent.START);
+
+        isMore = true;
+        isLoadMore = false;
+        pageNo = 1;
+
+        load(stringBuffer.toString());
     }
 
 

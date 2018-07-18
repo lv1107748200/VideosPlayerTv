@@ -68,8 +68,6 @@ public class ListDataActivity extends BaseActivity {
     private boolean isLoadMore = false;
     private int pageNo = 1;
 
-    private boolean isStart;
-
     private GridAdapter gridAdapter;
     private ListDataMenuAdapter listDataMenuAdapter;
 
@@ -175,12 +173,20 @@ public class ListDataActivity extends BaseActivity {
                 onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
 
                 if(position > 0){
+
                     if(listDataMenuAdapter.getItem(position) instanceof WhatType){
 
                         isMore = true;
                         isLoadMore = false;
                         pageNo = 1;
-                        isStart = true;
+
+                        if(((WhatType) listDataMenuAdapter.getItem(position)).getPath().equals(CID)){
+                            return;
+                        }
+                        lifecycleSubject.onNext(ActivityEvent.STOP);
+
+                        lifecycleSubject.onNext(ActivityEvent.START);
+
                         load(((WhatType) listDataMenuAdapter.getItem(position)).getPath());
                     }
 
@@ -322,9 +328,9 @@ public class ListDataActivity extends BaseActivity {
             public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
 
                 setTvList(baseDataResponseBaseResponse);
-                isStart = false;
+
             }
-        }, ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+        }, ListDataActivity.this.bindUntilEvent(ActivityEvent.STOP));
     }
 
     private void setTvList(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse){

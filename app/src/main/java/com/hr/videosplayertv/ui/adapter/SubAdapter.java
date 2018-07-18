@@ -64,7 +64,7 @@ public class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
         ImageView imageView = holder.itemView.findViewById(R.id.image);
         TextView textView = holder.itemView.findViewById(R.id.title_sdfd);
 
-        textView.setText(offsetTotal);
+        textView.setText(offsetTotal+"");
 
         if(position == 6){
             imageView.setVisibility(View.GONE);

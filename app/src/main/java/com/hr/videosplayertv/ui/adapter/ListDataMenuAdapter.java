@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.net.entry.ListData;
 import com.hr.videosplayertv.net.entry.response.GuestSeries;
+import com.hr.videosplayertv.net.entry.response.VipSeries;
 import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
@@ -27,7 +28,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
     public final static int THREE = 1113;
     public final static int FOUR = 1114;
     public boolean isHead = false;
-    private GuestSeries selectData;
+    private Object selectData;
     private View selectView;
 
     private int layoutId;
@@ -104,7 +105,15 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
         }else if(isMainMenu == FOUR){//选集
             if(item instanceof  GuestSeries){
                 helper.getHolder().setText(R.id.title, ((GuestSeries) item).getName());
-                if(((GuestSeries) item).getName().equals(selectData.getName())){
+                if(((GuestSeries) item).getName().equals(((GuestSeries)selectData).getName())){
+                    helper.itemView.setActivated(true);
+                    selectView = helper.itemView;
+                }else {
+                    helper.itemView.setActivated(false);
+                }
+            }else if(item instanceof  VipSeries){
+                helper.getHolder().setText(R.id.title, ((VipSeries) item).getName());
+                if(((VipSeries) item).getName().equals(((VipSeries)selectData).getName())){
                     helper.itemView.setActivated(true);
                     selectView = helper.itemView;
                 }else {
@@ -139,7 +148,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
 
     }
 
-    public void setSelectData(GuestSeries data){
+    public void setSelectData(Object data){
         selectData = data;
     }
 
@@ -154,7 +163,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
         this.selectView = selectView;
     }
 
-    public GuestSeries getSelectData() {
+    public Object getSelectData() {
         return selectData;
     }
 }

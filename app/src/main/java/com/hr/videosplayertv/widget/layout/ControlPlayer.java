@@ -352,6 +352,9 @@ public class ControlPlayer extends FrameLayout implements
 
     //获取当前进度
     public long getJinDu(){
+        if(null == IjkPlayerMger.mediaPlayer){
+            return 0;
+        }
         if(IjkPlayerMger.mediaPlayer.isPlaying())
         return IjkPlayerMger.mediaPlayer.getCurrentPosition();
         return -1;

@@ -517,7 +517,6 @@ public class BaseService {
 
         RequestBody body = HttpUtils.buildRequestBody(data);
         Observable observable =  comService.CommentList(body);
-
         HttpUtils.toSubscribe(
                 observable,
                 new HttpSubscriber<BaseDataResponse<Comment>>(httpCallback)

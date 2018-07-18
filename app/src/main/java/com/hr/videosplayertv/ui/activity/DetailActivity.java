@@ -30,6 +30,7 @@ import com.hr.videosplayertv.net.entry.response.GuestSeries;
 import com.hr.videosplayertv.net.entry.response.UserToken;
 import com.hr.videosplayertv.net.entry.response.VL;
 import com.hr.videosplayertv.net.entry.response.VideoDisLike;
+import com.hr.videosplayertv.net.entry.response.VipSeries;
 import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.CommentAdapter;
@@ -112,11 +113,15 @@ public class DetailActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(this,PlayerActivity.class);
                     if(listDataMenuAdapter.getSelectData() != null){
-                        intent.putExtra("GUESTSERIES",listDataMenuAdapter.getSelectData());
-                    } else if(!CheckUtil.isEmpty(CollectManger.getInstance().getGuestSeriesList())){
-                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getGuestSeriesList().get(0));
+                        intent.putExtra("GUESTSERIES",(VipSeries)listDataMenuAdapter.getSelectData());
+                        startActivity(intent);
+                    } else if(!CheckUtil.isEmpty(CollectManger.getInstance().getVipSeriesList())){
+                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getVipSeriesList().get(0));
+                        startActivity(intent);
+                    }else {
+                        NToast.shortToastBaseApp("不能播放");
                     }
-                    startActivity(intent);
+
                 }
                 break;
             case R.id.btn_collect:
@@ -133,11 +138,15 @@ public class DetailActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(this,PlayerActivity.class);
                     if(listDataMenuAdapter.getSelectData() != null){
-                        intent.putExtra("GUESTSERIES",listDataMenuAdapter.getSelectData());
-                    } else  if(!CheckUtil.isEmpty(CollectManger.getInstance().getGuestSeriesList())){
-                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getGuestSeriesList().get(0));
+                        intent.putExtra("GUESTSERIES",(VipSeries)listDataMenuAdapter.getSelectData());
+                        startActivity(intent);
+                    } else  if(!CheckUtil.isEmpty(CollectManger.getInstance().getVipSeriesList())){
+                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getVipSeriesList().get(0));
+                        startActivity(intent);
+                    }else {
+                        NToast.shortToastBaseApp("不能播放");
                     }
-                    startActivity(intent);
+
                 }
                 break;
 
@@ -211,7 +220,7 @@ public class DetailActivity extends BaseActivity {
             public void onTabSelected(TabLayout.Tab tab) {
 
                 listDataMenuAdapter.setSelectView(null);
-                listDataMenuAdapter.repaceDatas(splitList(CollectManger.getInstance().getGuestSeriesList(),20).get(tab.getPosition()));
+                listDataMenuAdapter.repaceDatas(splitList(CollectManger.getInstance().getVipSeriesList(),20).get(tab.getPosition()));
 
             }
 
@@ -244,12 +253,18 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
 
-                listDataMenuAdapter.setSelectData((GuestSeries) listDataMenuAdapter.getItem(position));
+                listDataMenuAdapter.setSelectData(listDataMenuAdapter.getItem(position));
                 listDataMenuAdapter.setSelectView(itemView);
+
+                Object o = listDataMenuAdapter.getItem(position);
 
                 Intent intent = new Intent();
                 intent.setClass(DetailActivity.this,PlayerActivity.class);
-                intent.putExtra("GUESTSERIES",(GuestSeries) listDataMenuAdapter.getItem(position));
+                if(o instanceof VipSeries){
+                    intent.putExtra("GUESTSERIES",(VipSeries)o);
+                }else if(o instanceof GuestSeries){
+                    intent.putExtra("GUESTSERIES",(GuestSeries)o);
+                }
                 startActivity(intent);
 
                 }
@@ -344,13 +359,14 @@ public class DetailActivity extends BaseActivity {
         }else {
           //  tabLayout.setVisibility(View.VISIBLE);
 
-          int i = splitList(CollectManger.getInstance().getGuestSeriesList(),20).size();
-          switch (i){
+          int i = splitList(CollectManger.getInstance().getVipSeriesList(),20).size();
+
+            switch (i){
               case 1:
 
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("1-"+CollectManger.getInstance().getGuestSeriesList().size())
+                                  .setText("1-"+CollectManger.getInstance().getVipSeriesList().size())
                           , true);
                   break;
               case 2:
@@ -360,7 +376,7 @@ public class DetailActivity extends BaseActivity {
                           , true);
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("21-"+ CollectManger.getInstance().getGuestSeriesList().size())
+                                  .setText("21-"+ CollectManger.getInstance().getVipSeriesList().size())
                   );
                   break;
               case 3:
@@ -374,7 +390,7 @@ public class DetailActivity extends BaseActivity {
                   );
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("21-"+ CollectManger.getInstance().getGuestSeriesList().size())
+                                  .setText("21-"+ CollectManger.getInstance().getVipSeriesList().size())
                   );
                       break;
               case 4:
@@ -392,10 +408,11 @@ public class DetailActivity extends BaseActivity {
                   );
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("61-"+ CollectManger.getInstance().getGuestSeriesList().size())
+                                  .setText("61-"+ CollectManger.getInstance().getVipSeriesList().size())
                   );
                   break;
           }
+            listDataMenuAdapter.repaceDatas(splitList(CollectManger.getInstance().getVipSeriesList(),20).get(0));
         }
 
     }
@@ -552,6 +569,7 @@ public class DetailActivity extends BaseActivity {
         );
         if(!CheckUtil.isEmpty(iddddd)){
             whatCom.setID(iddddd.getId());
+           // whatCom.setID("16353");
         }
 
         baseService.CommentList(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<Comment>>>() {
@@ -594,6 +612,7 @@ public class DetailActivity extends BaseActivity {
         );
         if(!CheckUtil.isEmpty(iddddd)){
             whatCom.setID(iddddd.geteId());
+          //  whatCom.setID("RNwe5MJfB%2fo%3d");
         }
 
         baseService.Play(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<Detail>>>() {
