@@ -9,14 +9,15 @@
         android:clickable="true">
 
        <ImageView
-        android:id="@+id/image"
+        android:id="@+id/image_grid"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+           />
 
        <TextView
            android:duplicateParentState="true"
-           android:id="@+id/title_sdfd"
+           android:id="@+id/title_grid"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_gravity="center"

@@ -113,12 +113,17 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
                 }
             }else if(item instanceof  VipSeries){
                 helper.getHolder().setText(R.id.title, ((VipSeries) item).getName());
-                if(((VipSeries) item).getName().equals(((VipSeries)selectData).getName())){
-                    helper.itemView.setActivated(true);
-                    selectView = helper.itemView;
+                if(null != selectData){
+                    if(((VipSeries) item).getName().equals(((VipSeries)selectData).getName())){
+                        helper.itemView.setActivated(true);
+                        selectView = helper.itemView;
+                    }else {
+                        helper.itemView.setActivated(false);
+                    }
                 }else {
                     helper.itemView.setActivated(false);
                 }
+
             }
 
         }else if( isMainMenu == TWO){

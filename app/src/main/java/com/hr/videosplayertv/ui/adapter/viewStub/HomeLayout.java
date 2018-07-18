@@ -3,6 +3,7 @@ package com.hr.videosplayertv.ui.adapter.viewStub;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,25 +15,46 @@ import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.EightLayoutHelper;
+import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
+import com.hr.videosplayertv.base.BaseFragment;
+import com.hr.videosplayertv.common.Iddddd;
+import com.hr.videosplayertv.common.ImmobilizationData;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.Result;
+import com.hr.videosplayertv.net.entry.response.UserToken;
 import com.hr.videosplayertv.net.entry.response.WhatList;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
+import com.hr.videosplayertv.ui.activity.DetailActivity;
+import com.hr.videosplayertv.ui.activity.DiversityActivity;
 import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.SubAdapter;
 import com.hr.videosplayertv.ui.adapter.viewholder.MainViewHolder;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
+import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.ColorUtils;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.NToast;
+import com.hr.videosplayertv.utils.UrlUtils;
+import com.hr.videosplayertv.widget.dialog.LoadingDialog;
+import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,216 +64,31 @@ public class HomeLayout {
     TvRecyclerView tvList;
     private DelegateAdapter delegateAdapter;
     private BaseActivity mContext;
+    private BaseFragment baseFragment;
+    private Map<String,List> homePagesListMap;
 
-    public HomeLayout(View view , BaseActivity context) {
+    List<DelegateAdapter.Adapter> adapters;
+
+    private boolean isMore = true;
+    private boolean isLoadMore = false;
+    private int pageNo = 3;
+
+    public HomeLayout(View view , BaseFragment baseFragment) {
         ButterKnife.bind(this,view);
-        mContext = context;
+        mContext = (BaseActivity) baseFragment.getActivity();
+        this.baseFragment = baseFragment;
         setListener();
 
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(mContext);
         tvList.setLayoutManager(layoutManager);
-//            final RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
-//            tvList.setRecycledViewPool(viewPool);
-        //viewPool.setMaxRecycledViews(0, 20);
-        // tvList.setNestedScrollingEnabled(false);
         delegateAdapter = new DelegateAdapter(layoutManager, true);
         tvList.setAdapter(delegateAdapter);
         initData();
     }
 
     private void initData(){
-        List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
-        if (true) {
-            EightLayoutHelper helper = new EightLayoutHelper(DisplayUtils.getDimen(R.dimen.x20));
-            helper.setColWeights(new float[]{50f,20f,20f,20f,20f,20f,30f,30f});
-            VirtualLayoutManager.LayoutParams lp = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x550));
-            adapters.add(new SubAdapter(mContext, helper, 8, lp) {
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-                    super.onBindViewHolder(holder, position);
-                }
-
-            });
-        }
-        if (false) {
-            adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
-
-
-                @Override
-                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    if (viewType == 1)
-                        return new MainViewHolder(
-                                LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
-
-                    return super.onCreateViewHolder(parent, viewType);
-                }
-
-                @Override
-                public int getItemViewType(int position) {
-                    return 1;
-                }
-
-                @Override
-                protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                }
-
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                }
-            });
-        }
-
-        if(true){
-             StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(7, 20);
-            //  helper.setMargin(20, 10, 10, 10);
-            //    helper.setPadding(10, 10, 20, 10);
-            //  helper.setBgColor(0xFF86345A);
-            adapters.add(new SubAdapter(mContext, helper, 7) {
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-                    // super.onBindViewHolder(holder, position);
-                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x180));
-                    holder.itemView.setLayoutParams(layoutParams);
-                }
-            });
-        }
-
-        if (false) {
-            adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
-
-
-                @Override
-                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    if (viewType == 1)
-                        return new MainViewHolder(
-                                LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
-
-                    return super.onCreateViewHolder(parent, viewType);
-                }
-
-                @Override
-                public int getItemViewType(int position) {
-                    return 1;
-                }
-
-                @Override
-                protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                }
-
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                }
-            });
-        }
-
-        if(false){
-            final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
-            //  helper.setMargin(20, 10, 10, 10);
-            //    helper.setPadding(10, 10, 20, 10);
-            //  helper.setBgColor(0xFF86345A);
-            adapters.add(new SubAdapter(mContext, helper, 12) {
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-                    //super.onBindViewHolder(holder, position);
-                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x300));
-                    holder.itemView.setLayoutParams(layoutParams);
-                }
-            });
-        }
-        if (false) {
-            adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
-
-
-                @Override
-                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    if (viewType == 1)
-                        return new MainViewHolder(
-                                LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
-
-                    return super.onCreateViewHolder(parent, viewType);
-                }
-
-                @Override
-                public int getItemViewType(int position) {
-                    return 1;
-                }
-
-                @Override
-                protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                }
-
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                }
-            });
-        }
-
-        if(true){
-            final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
-            //  helper.setMargin(20, 10, 10, 10);
-            //    helper.setPadding(10, 10, 20, 10);
-            //  helper.setBgColor(0xFF86345A);
-            adapters.add(new SubAdapter(mContext, helper, 12) {
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-                    //super.onBindViewHolder(holder, position);
-                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  DisplayUtils.getDimen(R.dimen.x300));
-                    holder.itemView.setLayoutParams(layoutParams);
-                }
-            });
-        }
-        if (false) {
-            adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1) {
-
-
-                @Override
-                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    if (viewType == 1)
-                        return new MainViewHolder(
-                                LayoutInflater.from(mContext).inflate(R.layout.item_home_title, parent, false));
-
-                    return super.onCreateViewHolder(parent, viewType);
-                }
-
-                @Override
-                public int getItemViewType(int position) {
-                    return 1;
-                }
-
-                @Override
-                protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                }
-
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                }
-            });
-        }
-
-        if(false){
-            final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(6, 20);
-            //  helper.setMargin(20, 10, 10, 10);
-            //    helper.setPadding(10, 10, 20, 10);
-            //  helper.setBgColor(0xFF86345A);
-            adapters.add(new SubAdapter(mContext, helper, 12) {
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-                    //super.onBindViewHolder(holder, position);
-                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  DisplayUtils.getDimen(R.dimen.x300));
-                    holder.itemView.setLayoutParams(layoutParams);
-                }
-            });
-        }
-
-        delegateAdapter.setAdapters(adapters);
+         adapters = new LinkedList<>();
+        homePagesListMap = new HashMap<>();
     }
 
     private void setListener() {
@@ -292,35 +129,139 @@ public class HomeLayout {
         tvList.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
             @Override
             public boolean onLoadMore() {
-                return true; //是否还有更多数据
+                tvList.setLoadingMore(true); //正在加载数据
+                isLoadMore = true;
+                ComList();
+                return isMore; //是否还有更多数据
             }
         });
     }
+    public void load(){
+        isMore = true;
+        isLoadMore = false;
+         pageNo = 3;
 
-    public void setUpData(List<WhatList> whatLists){
+        index();
+        ComList();
+    }
+
+    private void setUpData(String key,List  whatLists){
+
+        NLog.e(NLog.TAGOther,"名字 --->" + key);
+
+        homePagesListMap.put(key,whatLists);
+    }
+    private void setDelegateAdapter(){
+
+        if(!CheckUtil.isEmpty(homePagesListMap)){
+            adapters.clear();
+
+            for (ImmobilizationData.HomePages c : ImmobilizationData.HomePages.values()) {
+                List list = homePagesListMap.get(c.getKey());
+
+                if(!CheckUtil.isEmpty(list)){
+                    switch (c){
+                        case HEAD:
+                            if (true) {
+                                EightLayoutHelper helper = new EightLayoutHelper(DisplayUtils.getDimen(R.dimen.x20));
+                                helper.setColWeights(new float[]{50f,20f,20f,20f,20f,20f,30f,30f});
+                                VirtualLayoutManager.LayoutParams lp = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x550));
+                                adapters.add(new SubAdapter(mContext, helper, 8, c.getKey(),list,lp){
+                                    @Override
+                                    public int getItemViewType(int position) {
+                                        return GRADONE;
+                                    }
+                                });
+                            }
+                            break;
+                        case REC:
+                            if(true){
+                                VirtualLayoutManager.LayoutParams lp = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x60));
+                                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1,c.getKey(),null,lp) {
+                                    @Override
+                                    public int getItemViewType(int position) {
+                                        return GRADTHREE;
+                                    }
+                                });
+
+                            }
+                            if(true){
+                                VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x180));
+                                 GridLayoutHelper helper = new GridLayoutHelper(7, list.size(),DisplayUtils.getDimen(R.dimen.x20));
+                                adapters.add(new SubAdapter(mContext, helper, 7,c.getKey(),list,layoutParams) {
+                                    @Override
+                                    public int getItemViewType(int position) {
+                                        return GRADTWO;
+                                    }
+
+                                });
+                            }
+                            break;
+                        default:
+                            if(true){
+                                VirtualLayoutManager.LayoutParams lp = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x60));
+                                adapters.add(new SubAdapter(mContext, new LinearLayoutHelper(), 1,c.getKey(),null,lp) {
+                                    @Override
+                                    public int getItemViewType(int position) {
+                                        return GRADTHREE;
+                                    }
+                                });
+
+                            }
+                            if(true){
+                                VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x280));
+                                GridLayoutHelper helper = new GridLayoutHelper(6, list.size(),DisplayUtils.getDimen(R.dimen.x20));
+                                adapters.add(new SubAdapter(mContext, helper, 7,c.getKey(),list,layoutParams) {
+                                    @Override
+                                    public int getItemViewType(int position) {
+                                        return GRADTWO;
+                                    }
+
+                                });
+                            }
+                            break;
+                    }
+                }
+            }
+            delegateAdapter.setAdapters(adapters);
+        }
+
 
     }
 
-    static class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
+  static   class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
 
-        private Context mContext;
+        public final static int GRADONE = 987;
+        public final static int GRADTWO = 789;
+        public final static int GRADTHREE = 787;
+
+
+        private Context contextontext;
 
         private LayoutHelper mLayoutHelper;
 
 
         private VirtualLayoutManager.LayoutParams mLayoutParams;
         private int mCount = 0;
+        private String type;
 
+        private List list;
 
-        public SubAdapter(Context context, LayoutHelper layoutHelper, int count) {
-            this(context, layoutHelper, count, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
+        public String getType() {
+            return type;
         }
 
-        public SubAdapter(Context context, LayoutHelper layoutHelper, int count, @NonNull VirtualLayoutManager.LayoutParams layoutParams) {
-            this.mContext = context;
+        public SubAdapter(Context context, LayoutHelper layoutHelper, int count) {
+            this(context, layoutHelper, count, "",null,new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180));
+        }
+
+        public SubAdapter(Context context, LayoutHelper layoutHelper, int count,String type, List list,@NonNull VirtualLayoutManager.LayoutParams layoutParams) {
+            this.contextontext = context;
             this.mLayoutHelper = layoutHelper;
             this.mCount = count;
             this.mLayoutParams = layoutParams;
+            this.type = type;
+            this.list = list;
         }
 
         @Override
@@ -330,7 +271,18 @@ public class HomeLayout {
 
         @Override
         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_home_grid, parent, false));
+            if(viewType == GRADONE){
+                return new MainViewHolder(LayoutInflater.from(contextontext).inflate(R.layout.item_home_grid, parent, false));
+
+            }else if(viewType == GRADTWO){
+                return new MainViewHolder(
+                        LayoutInflater.from(contextontext).inflate(R.layout.item_home_grid_stragg, parent, false));
+
+            }else if(viewType == GRADTHREE){
+                return new MainViewHolder(
+                        LayoutInflater.from(contextontext).inflate(R.layout.item_home_title, parent, false));
+            }
+            return new MainViewHolder(LayoutInflater.from(contextontext).inflate(R.layout.item_home_grid, parent, false));
         }
 
         @Override
@@ -344,47 +296,201 @@ public class HomeLayout {
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
 
-            ImageView imageView = holder.itemView.findViewById(R.id.image);
-            TextView textView = holder.itemView.findViewById(R.id.title_sdfd);
+        if( GRADONE ==  getItemViewType(position)){
+          final   Object o = list.get(position);
+            if(o instanceof WhatList){
 
-            textView.setText(offsetTotal+"");
+                ImageView imageView = holder.itemView.findViewById(R.id.image_grid);
+                TextView textView = holder.itemView.findViewById(R.id.title_grid);
 
-            if(position == 6){
-                imageView.setVisibility(View.GONE);
-            }if(position == 7){
-                imageView.setVisibility(View.GONE);
+             final    Intent intent = new Intent();
 
-            }else {
+                if(position == 6){
 
-                imageView.setVisibility(View.VISIBLE);
+                    textView.setText("收藏夹");
+                    textView.setVisibility(View.VISIBLE);
 
-                GlideUtil.setGlideImage(mContext
-                        , ImgDatasUtils.getUrl()
-                        ,(ImageView) holder.itemView.findViewById(R.id.image),R.drawable.hehe);
+                    intent.setClass(contextontext,DiversityActivity.class);
+                    intent.putExtra("DiversityType",DiversityActivity.FAVORITE);
+
+                    GlideUtil.setGlideImage(contextontext
+                            , ""
+                            ,imageView,R.drawable.foc_back_image);
+
+                }else if(position == 7){
+
+                    textView.setText("播放记录");
+                    textView.setVisibility(View.VISIBLE);
+
+                    intent.setClass(contextontext,DiversityActivity.class);
+                    intent.putExtra("DiversityType",DiversityActivity.PLAYERRECORD);
+
+                    GlideUtil.setGlideImage(contextontext
+                            , ""
+                            ,imageView,R.drawable.foc_image_three);
+
+                }else {
+                    textView.setVisibility(View.GONE);
+                    GlideUtil.setGlideImage(contextontext
+                            , UrlUtils.getUrl(((WhatList) o).getImgPath())
+                            ,imageView,R.drawable.hehe);
+
+                    intent.setClass(contextontext,DetailActivity.class);
+                    intent.putExtra("Iddddd",new Iddddd(((WhatList) o).getID(),((WhatList) o).getContxt()));
+
+                }
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        contextontext.startActivity(intent);
+                    }
+                });
+
             }
+        }else if( GRADTWO == getItemViewType(position)){
+          final   Object o = list.get(position);
+            if(o instanceof WhatList){
+                ImageView imageView = holder.itemView.findViewById(R.id.image_grid_stragg);
+                TextView textView = holder.itemView.findViewById(R.id.title_grid_stragg);
+
+                textView.setText(((WhatList) o).getTitle());
+                GlideUtil.setGlideImage(contextontext
+                        , UrlUtils.getUrl(((WhatList) o).getImgPath())
+                        ,imageView,R.drawable.hehe);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.setClass(contextontext,DetailActivity.class);
+                        intent.putExtra("Iddddd",new Iddddd(((WhatList) o).getID(),((WhatList) o).getContxt()));
+                        contextontext.startActivity(intent);
+                    }
+                });
+
+            }
+        }else if(GRADTHREE == getItemViewType(position)){
+
+            TextView textView = holder.itemView.findViewById(R.id.title);
+            textView.setText(getType());
+        }else {
+
+        }
 
         }
 
         @Override
         public int getItemCount() {
+            if(!CheckUtil.isEmpty(list)){
+                return list.size();
+            }
             return mCount;
         }
     }
-    static class MainViewHolder extends RecyclerView.ViewHolder {
 
-        public static volatile int existing = 0;
-        public static int createdTimes = 0;
+    private void index(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken)
+            return;
 
-        public MainViewHolder(View itemView) {
-            super(itemView);
-            createdTimes++;
-            existing++;
-        }
+        WhatCom data = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                "0",
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire(),
+                "13",
+                ""+1
+        );
+        data.setIsindex(true);
+        baseFragment.baseService.index(data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
+            @Override
+            public void onError(HttpException e) {
 
-        @Override
-        protected void finalize() throws Throwable {
-            existing--;
-            super.finalize();
-        }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
+
+                List<WhatList> whatLists = baseDataResponseBaseResponse.getData().getInfo();
+
+                if(!CheckUtil.isEmpty(whatLists)){
+                    if(whatLists.size() >= 8){
+                        setUpData(ImmobilizationData.HomePages.HEAD.getKey(),whatLists.subList(0, 8));
+
+                        setUpData(ImmobilizationData.HomePages.REC.getKey(),whatLists.subList(0, 7));
+
+                        setDelegateAdapter();
+                    }
+                }
+            }
+        },baseFragment.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
     }
+    /**
+     * 获取列表数据
+     */
+    private void ComList(){
+
+     final String type = ImmobilizationData.HomePages.getKeyByIndex(pageNo - 1);
+
+        if(null == baseFragment || type == null)
+            return;
+
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken)
+            return;
+
+        WhatCom data = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                "0,1",
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire(),
+                "12",
+                ""+1
+        );
+        baseFragment.baseService.ComList(ImmobilizationData.Tags.getUrlByName(type),data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+                if(isLoadMore){
+                    tvList.setLoadingMore(false);
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
+
+                if(isLoadMore){
+                    tvList.setLoadingMore(false);
+                }
+                if(pageNo < ImmobilizationData.HomePages.values().length){
+                    pageNo = pageNo +1;
+                }else {
+                    isMore = false;
+                }
+
+                if(baseDataResponseBaseResponse.getData() != null){
+                    BaseDataResponse<WhatList> whatListBaseDataResponse = baseDataResponseBaseResponse.getData();
+
+                    List<WhatList> whatListList = whatListBaseDataResponse.getInfo();
+
+                    if(!CheckUtil.isEmpty(whatListList)){
+                        setUpData(type,whatListList);
+                        setDelegateAdapter();
+                    }
+
+                }
+
+            }
+        }, baseFragment.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
+
 }

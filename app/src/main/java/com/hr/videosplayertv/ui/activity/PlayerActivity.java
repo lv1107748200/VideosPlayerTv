@@ -10,18 +10,34 @@ import com.hr.videosplayertv.db.DBResultCallback;
 import com.hr.videosplayertv.db.PHData;
 import com.hr.videosplayertv.db.RealmDBManger;
 import com.hr.videosplayertv.db.TabsData;
+import com.hr.videosplayertv.net.base.BaseDataResponse;
+import com.hr.videosplayertv.net.base.BaseResponse;
+import com.hr.videosplayertv.net.entry.request.WhatCom;
+import com.hr.videosplayertv.net.entry.response.Detail;
 import com.hr.videosplayertv.net.entry.response.GuestSeries;
+import com.hr.videosplayertv.net.entry.response.UserToken;
+import com.hr.videosplayertv.net.entry.response.VL;
 import com.hr.videosplayertv.net.entry.response.VipSeries;
 import com.hr.videosplayertv.net.entry.response.WhatType;
+import com.hr.videosplayertv.net.http.HttpCallback;
+import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.utils.CheckUtil;
+import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.NToast;
+import com.hr.videosplayertv.utils.SpanUtils;
 import com.hr.videosplayertv.utils.UrlUtils;
+import com.hr.videosplayertv.widget.dialog.LoadingDialog;
 import com.hr.videosplayertv.widget.layout.ControlPlayer;
 import com.hr.videosplayertv.widget.single.CollectManger;
 import com.hr.videosplayertv.widget.single.IjkPlayerMger;
+import com.hr.videosplayertv.widget.single.UserInfoManger;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -37,9 +53,8 @@ public class PlayerActivity extends BaseActivity {
     private String url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
     private long firstTime=0;
 
-    private VipSeries guestSeries;
-
     private String playId;
+    private Detail detail;
 
 
     @BindView(R.id.ControlPlayer)
@@ -52,28 +67,31 @@ public class PlayerActivity extends BaseActivity {
     public void init() {
         super.init();
 
-        guestSeries = getIntent().getParcelableExtra("GUESTSERIES");
         playId = getIntent().getStringExtra("PLAYID");
+//
+//        if(null != guestSeries){
+//
+//            String s = UrlUtils.getUrl(CollectManger.getInstance().getPlayRecordURL());
+//            String baseUrl = UrlUtils.UrlPage(s);
+//            Map<String,String> stringMap = UrlUtils.URLRequest(s);
+//            stringMap.put("key",);
+//
+//            try {
+//                url = UrlUtils.createLinkStringByGet(baseUrl,stringMap);
+//                NLog.e(NLog.PLAYER," 播放地址 --->" + url);
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//            controlPlayer.setContext(this);
+//            controlPlayer.setVideoUrl(url);
+//            controlPlayer.initConPlay();//
+//
+//        }else if(null != playId){
+//            huoqv();
+//        }
 
-        if(null != guestSeries){
-
-            String s = UrlUtils.getUrl(CollectManger.getInstance().getPlayRecordURL());
-            String baseUrl = UrlUtils.UrlPage(s);
-            Map<String,String> stringMap = UrlUtils.URLRequest(s);
-            stringMap.put("key",guestSeries.getKey());
-
-            try {
-                url = UrlUtils.createLinkStringByGet(baseUrl,stringMap);
-                NLog.e(NLog.PLAYER," 播放地址 --->" + url);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            controlPlayer.setContext(this);
-            controlPlayer.setVideoUrl(url);
-            controlPlayer.initConPlay();//
-
-        }else if(null != playId){
-            huoqv();
+        if(!CheckUtil.isEmpty(playId)){
+            Play();
         }
 
 
@@ -87,11 +105,9 @@ public class PlayerActivity extends BaseActivity {
                 if(!CheckUtil.isEmpty(realmResults)){
 //                    NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+realmResults.size());
 //                    NLog.e(NLog.DB,"数据库"+commonLayout.getType()+" --->"+realmResults.get(0).getRealmList().size());
-                    url = realmResults.get(0).getUrl();
-                    controlPlayer.setPass(realmResults.get(0).getPress());
-                    controlPlayer.setContext(PlayerActivity.this);
-                    controlPlayer.setVideoUrl(url);
-                    controlPlayer.initConPlay();//
+                  playId = "";
+                  Play();
+
                 }else {
 
                 }
@@ -103,6 +119,74 @@ public class PlayerActivity extends BaseActivity {
             }
         });
     }
+
+
+
+    //获取影片播放地址
+    private void Play(){
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+        if(!CheckUtil.isEmpty(playId)){
+            whatCom.setID(playId);
+            //  whatCom.setID("RNwe5MJfB%2fo%3d");
+        }
+
+        baseService.Play(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<Detail>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+                    NToast.shortToastBaseApp(e.getMsg());
+                }else {
+                    LoadingDialog.disMiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<Detail>> baseDataResponseBaseResponse) {
+
+
+                 detail = baseDataResponseBaseResponse.getData().getInfo().get(0);
+
+                if(null != detail){
+                    VL VL = detail.getVL();
+
+                    String PlayRecordURL = detail.getPlayRecordURL();
+
+                    List<VipSeries> vipSeriesList = detail.getVipSeriesList();
+                    if(!CheckUtil.isEmpty(vipSeriesList)){
+
+                        String u = vipSeriesList.get(0).getKey();
+                        String s = UrlUtils.getUrl(PlayRecordURL);
+                        String baseUrl = UrlUtils.UrlPage(s);
+                        Map<String,String> stringMap = UrlUtils.URLRequest(s);
+                        stringMap.put("key",u);
+
+            try {
+                url = UrlUtils.createLinkStringByGet(baseUrl,stringMap);
+                NLog.e(NLog.PLAYER," 播放地址 --->" + url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            controlPlayer.setContext(PlayerActivity.this);
+            controlPlayer.setVideoUrl(url);
+            controlPlayer.initConPlay();//
+                    }
+
+                }
+            }
+        },PlayerActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -249,19 +333,13 @@ public class PlayerActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(null != CollectManger.getInstance().getIddddd()){
+        if(null != detail){
             PHData phData = new PHData();
-            phData.setContxt(CollectManger.getInstance().getIddddd().geteId());
-            phData.setID(CollectManger.getInstance().getIddddd().getId());
-
-            if(null != CollectManger.getInstance().getDetail()){
-                phData.setTitle(CollectManger.getInstance().getDetail().getVL().getTitle());
-                phData.setImgPath(CollectManger.getInstance().getDetail().getImgPath());
-            }
-
+            phData.setContxt(playId);
+                phData.setTitle(detail.getVL().getTitle());
+                phData.setImgPath(detail.getImgPath());
             phData.setUrl(controlPlayer.getVideoUrl());
             phData.setPress(controlPlayer.getJinDu());
-
             RealmDBManger.copyToRealmOrUpdate(phData,null);
         }
 

@@ -104,6 +104,9 @@ public class DetailActivity extends BaseActivity {
     private boolean isSild = false;//判断是否已滑动
 
     private String type;
+    private Detail detail;
+    private List<VipSeries> VipSeriesList;
+    private List<GuestSeries> GuestSeriesList;
 
     @OnClick({R.id.btn_player,R.id.btn_collect,R.id.btn_like,R.id.btn_stamp,R.id.image_poster})
     public void Onclick(View view){
@@ -113,10 +116,10 @@ public class DetailActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(this,PlayerActivity.class);
                     if(listDataMenuAdapter.getSelectData() != null){
-                        intent.putExtra("GUESTSERIES",(VipSeries)listDataMenuAdapter.getSelectData());
+                        intent.putExtra("PLAYID",((VipSeries)listDataMenuAdapter.getSelectData()).getKey());
                         startActivity(intent);
-                    } else if(!CheckUtil.isEmpty(CollectManger.getInstance().getVipSeriesList())){
-                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getVipSeriesList().get(0));
+                    } else  if(!CheckUtil.isEmpty(VipSeriesList)){
+                        intent.putExtra("PLAYID",VipSeriesList.get(0).getKey());
                         startActivity(intent);
                     }else {
                         NToast.shortToastBaseApp("不能播放");
@@ -138,10 +141,10 @@ public class DetailActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(this,PlayerActivity.class);
                     if(listDataMenuAdapter.getSelectData() != null){
-                        intent.putExtra("GUESTSERIES",(VipSeries)listDataMenuAdapter.getSelectData());
+                        intent.putExtra("PLAYID",((VipSeries)listDataMenuAdapter.getSelectData()).getKey());
                         startActivity(intent);
-                    } else  if(!CheckUtil.isEmpty(CollectManger.getInstance().getVipSeriesList())){
-                        intent.putExtra("GUESTSERIES",CollectManger.getInstance().getVipSeriesList().get(0));
+                    } else  if(!CheckUtil.isEmpty(VipSeriesList)){
+                        intent.putExtra("PLAYID",VipSeriesList.get(0).getKey());
                         startActivity(intent);
                     }else {
                         NToast.shortToastBaseApp("不能播放");
@@ -171,7 +174,6 @@ public class DetailActivity extends BaseActivity {
         layoutSelect.setSelected(true);
 
         iddddd = intent.getParcelableExtra("Iddddd");
-        CollectManger.getInstance().setIddddd(iddddd);
 
         //tv_data.setText("收藏：209     点赞：443     踩：21");
         setTv_data("0","0","0");
@@ -208,7 +210,7 @@ public class DetailActivity extends BaseActivity {
 
     private void initData(){
         CommentList();
-        Play();
+        Detail();
     }
 
     private void setTab(){
@@ -220,7 +222,7 @@ public class DetailActivity extends BaseActivity {
             public void onTabSelected(TabLayout.Tab tab) {
 
                 listDataMenuAdapter.setSelectView(null);
-                listDataMenuAdapter.repaceDatas(splitList(CollectManger.getInstance().getVipSeriesList(),20).get(tab.getPosition()));
+                listDataMenuAdapter.repaceDatas(splitList(VipSeriesList,20).get(tab.getPosition()));
 
             }
 
@@ -261,9 +263,9 @@ public class DetailActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.setClass(DetailActivity.this,PlayerActivity.class);
                 if(o instanceof VipSeries){
-                    intent.putExtra("GUESTSERIES",(VipSeries)o);
+                    intent.putExtra("PLAYID",((VipSeries) o).getKey());
                 }else if(o instanceof GuestSeries){
-                    intent.putExtra("GUESTSERIES",(GuestSeries)o);
+                    intent.putExtra("PLAYID",((GuestSeries) o).getKey());
                 }
                 startActivity(intent);
 
@@ -352,21 +354,21 @@ public class DetailActivity extends BaseActivity {
 
     private void setListDataMenuAndTab(){
 
-        if(CheckUtil.isEmpty(CollectManger.getInstance().getGuestSeriesList()) || CollectManger.getInstance().getGuestSeriesList().size() == 1){
+        if(CheckUtil.isEmpty(GuestSeriesList) || GuestSeriesList.size() == 1){
 
             tabLayout.setVisibility(View.GONE);
 
         }else {
           //  tabLayout.setVisibility(View.VISIBLE);
 
-          int i = splitList(CollectManger.getInstance().getVipSeriesList(),20).size();
+          int i = splitList(VipSeriesList,20).size();
 
             switch (i){
               case 1:
 
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("1-"+CollectManger.getInstance().getVipSeriesList().size())
+                                  .setText("1-"+VipSeriesList.size())
                           , true);
                   break;
               case 2:
@@ -376,7 +378,7 @@ public class DetailActivity extends BaseActivity {
                           , true);
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("21-"+ CollectManger.getInstance().getVipSeriesList().size())
+                                  .setText("21-"+ VipSeriesList.size())
                   );
                   break;
               case 3:
@@ -390,7 +392,7 @@ public class DetailActivity extends BaseActivity {
                   );
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("21-"+ CollectManger.getInstance().getVipSeriesList().size())
+                                  .setText("21-"+ VipSeriesList.size())
                   );
                       break;
               case 4:
@@ -408,11 +410,11 @@ public class DetailActivity extends BaseActivity {
                   );
                   tabLayout.addTab(
                           tabLayout.newTab()
-                                  .setText("61-"+ CollectManger.getInstance().getVipSeriesList().size())
+                                  .setText("61-"+VipSeriesList.size())
                   );
                   break;
           }
-            listDataMenuAdapter.repaceDatas(splitList(CollectManger.getInstance().getVipSeriesList(),20).get(0));
+            listDataMenuAdapter.repaceDatas(splitList(VipSeriesList,20).get(0));
         }
 
     }
@@ -597,7 +599,7 @@ public class DetailActivity extends BaseActivity {
         },DetailActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }
     //获取影片播放地址
-    private void Play(){
+    private void Detail(){
         UserToken userToken = UserInfoManger.getInstance().getUserToken();
         if(null == userToken){
             return;
@@ -615,7 +617,7 @@ public class DetailActivity extends BaseActivity {
           //  whatCom.setID("RNwe5MJfB%2fo%3d");
         }
 
-        baseService.Play(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<Detail>>>() {
+        baseService.Detail(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<Detail>>>() {
             @Override
             public void onError(HttpException e) {
                 if(e.getCode() == 1){
@@ -632,6 +634,10 @@ public class DetailActivity extends BaseActivity {
                 Detail detail = baseDataResponseBaseResponse.getData().getInfo().get(0);
 
                 if(null != detail){
+
+                    VipSeriesList = detail.getVipSeriesList();
+                    GuestSeriesList = detail.getGuestSeriesList();
+
                     VL VL = detail.getVL();
                     SpanUtils spanUtils = new SpanUtils();
                     tv_video_introduction.setText(
@@ -654,10 +660,6 @@ public class DetailActivity extends BaseActivity {
                     setTv_data(""+detail.getFavrateNumber(),"0","0");//播放详情
                     GlideUtil.setGlideImage(DetailActivity.this, UrlUtils.getUrl(detail.getImgPath()),imagePoster);
 
-                    CollectManger.getInstance().setGuestSeriesList(detail.getGuestSeriesList());
-                    CollectManger.getInstance().setVipSeriesList(detail.getVipSeriesList());
-                    CollectManger.getInstance().setPlayRecordURL(detail.getPlayRecordURL());
-                    CollectManger.getInstance().setDetail(detail);
 
                     setListDataMenuAndTab();
                 }

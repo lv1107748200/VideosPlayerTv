@@ -9,7 +9,7 @@
     android:clickable="true">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/image_grid_stragg"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +17,7 @@
         />
     <TextView
         android:duplicateParentState="true"
-        android:id="@+id/title_one"
+        android:id="@+id/title_grid_stragg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

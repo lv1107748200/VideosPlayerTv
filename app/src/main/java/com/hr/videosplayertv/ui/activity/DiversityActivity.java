@@ -126,7 +126,7 @@ public class DiversityActivity extends BaseActivity {
                     case PLAYERRECORD:
                         if(o instanceof PHData){
                             intent.setClass(DiversityActivity.this,PlayerActivity.class);
-                            intent.putExtra("PLAYID",((PHData) o).getID());
+                            intent.putExtra("PLAYID",((PHData) o).getContxt());
                             startActivity(intent);
                         }
                         break;

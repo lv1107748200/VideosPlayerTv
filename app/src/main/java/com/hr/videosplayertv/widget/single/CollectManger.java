@@ -14,7 +14,7 @@ import java.util.List;
 public class CollectManger {
     volatile private static CollectManger instance = null;
 
-    public static CollectManger getInstance(){
+    private static CollectManger getInstance(){
         if(instance == null){
             synchronized (CollectManger.class) {
                 if(instance == null){

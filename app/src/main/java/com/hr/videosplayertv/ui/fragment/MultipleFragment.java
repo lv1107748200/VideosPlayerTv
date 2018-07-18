@@ -130,7 +130,7 @@ public class MultipleFragment extends BaseFragment {
 
             case 0:
                 viewStub.setLayoutResource(R.layout.item_multiple_home);
-                homeLayout = new HomeLayout(viewStub.inflate(),mContext);
+                homeLayout = new HomeLayout(viewStub.inflate(),this);
                 break;
             case 1:
                 viewStub.setLayoutResource(R.layout.item_multiple_classify);
@@ -150,6 +150,9 @@ public class MultipleFragment extends BaseFragment {
         isReady = false;
         switch (type){
             case 0:
+                if(null != homeLayout){
+                    homeLayout.load();
+                }
                 break;
             case 1:
 

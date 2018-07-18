@@ -61,25 +61,6 @@ public class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
     @Override
     protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
 
-        ImageView imageView = holder.itemView.findViewById(R.id.image);
-        TextView textView = holder.itemView.findViewById(R.id.title_sdfd);
-
-        textView.setText(offsetTotal+"");
-
-        if(position == 6){
-            imageView.setVisibility(View.GONE);
-
-        }if(position == 7){
-            imageView.setVisibility(View.GONE);
-
-        }else {
-
-            imageView.setVisibility(View.VISIBLE);
-            GlideUtil.setGlideImage(contextontext
-                    , ImgDatasUtils.getUrl()
-                    ,(ImageView) holder.itemView.findViewById(R.id.image),R.drawable.hehe);
-        }
-
 
     }
 

@@ -152,16 +152,16 @@ public class ImmobilizationData {
     }
 
     public enum HomePages{
-        HEAD("head",0),
+        HEAD("HEAD",0),
         REC("正在热播",1),
         FILM(ImmobilizationData.FILM,2),
         TELEPLAY(ImmobilizationData.TELEPLAY,3),
-//        VARIETY(ImmobilizationData.VARIETY,4),
-//        ANIME(ImmobilizationData.ANIME,5),
-//        SPORTS(ImmobilizationData.SPORTS,6),
-//        OVERSEAS(ImmobilizationData.OVERSEAS,7),
-//        DOCUMENTARY(ImmobilizationData.DOCUMENTARY,8),
-//        GAME(ImmobilizationData.GAME,9)
+        VARIETY(ImmobilizationData.VARIETY,4),
+        ANIME(ImmobilizationData.ANIME,5),
+        SPORTS(ImmobilizationData.SPORTS,6),
+        OVERSEAS(ImmobilizationData.OVERSEAS,7),
+        DOCUMENTARY(ImmobilizationData.DOCUMENTARY,8),
+        GAME(ImmobilizationData.GAME,9)
         ;
 
         private String key;
