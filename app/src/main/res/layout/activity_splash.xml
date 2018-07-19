@@ -4,4 +4,11 @@
     android:layout_height="match_parent"
     >
 
+    <com.hr.videosplayertv.widget.layout.LoadingLayout
+        android:id="@+id/load_relayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </com.hr.videosplayertv.widget.layout.LoadingLayout>
+
 </FrameLayout>

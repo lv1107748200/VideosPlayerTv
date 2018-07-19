@@ -185,6 +185,9 @@ public class DetailActivity extends BaseActivity {
                     if(newFocus.getId() == R.id.tab_layout){
                         return FocusBorder.OptionsFactory.get(1.0f, 1.0f, 0);
                     }
+                    if(newFocus.getId() == R.id.image_poster){
+                        return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
+                    }
                 }
 
                 return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
@@ -578,7 +581,7 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onError(HttpException e) {
                 if(e.getCode() == 1){
-                  //  NToast.shortToastBaseApp(e.getMsg());
+                    NToast.shortToastBaseApp(e.getMsg());
                 }else {
                     LoadingDialog.disMiss();
                 }

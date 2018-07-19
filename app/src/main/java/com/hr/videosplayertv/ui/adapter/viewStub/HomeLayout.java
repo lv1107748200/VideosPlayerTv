@@ -51,6 +51,7 @@ import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,6 +90,7 @@ public class HomeLayout {
     private void initData(){
          adapters = new LinkedList<>();
         homePagesListMap = new HashMap<>();
+        setSimulationData();//模拟数据
     }
 
     private void setListener() {
@@ -491,6 +493,25 @@ public class HomeLayout {
 
             }
         }, baseFragment.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
+    }
+
+    private void setSimulationData(){
+        List<WhatList> whatListList = new ArrayList<>();
+        for(int i =0; i<8; i++){
+            WhatList whatList = new WhatList();
+            whatList.setTitle("... ...");
+            whatList.setImgPath("");
+            whatListList.add(whatList);
+        }
+        if(!CheckUtil.isEmpty(whatListList)){
+            if(whatListList.size() >= 8){
+                setUpData(ImmobilizationData.HomePages.HEAD.getKey(),whatListList.subList(0, 8));
+
+                setUpData(ImmobilizationData.HomePages.REC.getKey(),whatListList.subList(0, 7));
+
+                setDelegateAdapter();
+            }
+        }
     }
 
 }

@@ -112,6 +112,11 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
             @Override
             public FocusBorder.Options onFocus(View oldFocus, View newFocus) {
+                if(null != newFocus){
+                    if(newFocus.getId() == R.id.tag_flayout_one || newFocus.getId() == R.id.tag_flayout_two){
+                        return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
+                    }
+                }
                 return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
             }
         });

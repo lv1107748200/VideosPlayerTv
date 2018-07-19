@@ -127,7 +127,6 @@ public class MultipleFragment extends BaseFragment {
         super.init();
 
         switch (type){
-
             case 0:
                 viewStub.setLayoutResource(R.layout.item_multiple_home);
                 homeLayout = new HomeLayout(viewStub.inflate(),this);

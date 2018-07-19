@@ -2,6 +2,7 @@ package com.hr.videosplayertv.ui.activity;
 
 import android.content.Intent;
 import android.util.DisplayMetrics;
+import android.view.View;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
@@ -15,14 +16,21 @@ import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.widget.layout.LoadingLayout;
 import com.hr.videosplayertv.widget.single.UserInfoManger;
+
+import butterknife.BindView;
 
 
 /**
  * Created by 吕 on 2018/3/13.
  */
 
-public class SplashActiity extends BaseActivity {
+public class SplashActiity extends BaseActivity implements LoadingLayout.LoadingCallBack {
+
+
+    @BindView(R.id.load_relayout)
+    LoadingLayout load_relayout;
 
     @Override
     public int getLayout() {
@@ -33,7 +41,11 @@ public class SplashActiity extends BaseActivity {
     public void init() {
         super.init();
 
-        if(CheckUtil.isEmpty(UserInfoManger.getInstance().getToken())){
+        load_relayout.setLoadingCallBack(this);
+        //userAutoLogin();
+
+        if(CheckUtil.isEmpty(UserInfoManger.getInstance().getUserToken())){
+            load_relayout.setLoadingLayout(LoadingLayout.ONE,null);
             userAutoLogin();
         }else {
             Intent intent = new Intent();
@@ -49,7 +61,17 @@ public class SplashActiity extends BaseActivity {
                 new HttpCallback<BaseResponse<InfoToken>>() {
             @Override
             public void onError(HttpException e) {
+                load_relayout.setLoadingLayout(LoadingLayout.TWO,new LoadingLayout.ShowMain(){
+                    @Override
+                    public String getBtnText() {
+                        return "重新认证";
+                    }
 
+                    @Override
+                    public String getText() {
+                        return "机顶盒认证失败！";
+                    }
+                });
             }
 
             @Override
@@ -73,14 +95,23 @@ public class SplashActiity extends BaseActivity {
         baseService.validate(baseDataRequest, new HttpCallback<BaseResponse<BaseDataResponse<UserInfo>>>() {
             @Override
             public void onError(HttpException e) {
+                load_relayout.setLoadingLayout(LoadingLayout.TWO,new LoadingLayout.ShowMain(){
+                    @Override
+                    public String getBtnText() {
+                        return "重新认证";
+                    }
 
+                    @Override
+                    public String getText() {
+                        return "机顶盒认证失败！";
+                    }
+                });
             }
 
             @Override
             public void onSuccess(BaseResponse<BaseDataResponse<UserInfo>> baseDataResponseBaseResponse) {
                 if(!CheckUtil.isEmpty(baseDataResponseBaseResponse.getData().getInfo()))
                 UserInfoManger.getInstance().setUserToken(baseDataResponseBaseResponse.getData().getInfo().get(0).getUserToken());
-
 
                 Intent intent = new Intent();
                 intent.setClass(SplashActiity.this,MainActivity.class);
@@ -110,5 +141,11 @@ public class SplashActiity extends BaseActivity {
                 + "\n屏幕密度 : "+density
                 +"\n屏幕密度DPI: "+densityDpi;
         NLog.e(NLog.TAGOther, info);
+    }
+
+    @Override
+    public void btnCallBack() {
+        load_relayout.setLoadingLayout(LoadingLayout.ONE,null);
+        userAutoLogin();
     }
 }

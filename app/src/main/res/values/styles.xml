@@ -55,18 +55,18 @@
 
     <style name="ThreeWayView" parent="TwoWayViewBase">
         <item name="android:scrollbars">none</item>
-        <item name="android:paddingTop">@dimen/x30</item>
-        <item name="android:paddingLeft">@dimen/x60</item>
-        <item name="android:paddingRight">@dimen/x60</item>
-        <item name="android:paddingBottom">@dimen/x60</item>
+        <item name="android:paddingTop">@dimen/x40</item>
+        <item name="android:paddingLeft">@dimen/x40</item>
+        <item name="android:paddingRight">@dimen/x40</item>
+        <item name="android:paddingBottom">@dimen/x40</item>
     </style>
     <style name="FourWayView" parent="TwoWayViewBase">
         <item name="android:orientation">horizontal</item>
         <item name="android:scrollbars">none</item>
-        <item name="android:paddingTop">@dimen/x30</item>
-        <item name="android:paddingLeft">@dimen/x60</item>
-        <item name="android:paddingRight">@dimen/x60</item>
-        <item name="android:paddingBottom">@dimen/x60</item>
+        <item name="android:paddingTop">@dimen/x40</item>
+        <item name="android:paddingLeft">@dimen/x40</item>
+        <item name="android:paddingRight">@dimen/x40</item>
+        <item name="android:paddingBottom">@dimen/x40</item>
     </style>
     <style name="TwomuewVideoView" parent="TwoWayViewBase">
         <item name="android:orientation">horizontal</item>

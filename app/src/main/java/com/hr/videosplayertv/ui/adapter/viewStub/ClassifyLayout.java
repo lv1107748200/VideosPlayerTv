@@ -2,6 +2,7 @@ package com.hr.videosplayertv.ui.adapter.viewStub;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.hr.videosplayertv.R;
 import com.hr.videosplayertv.base.BaseActivity;
@@ -11,6 +12,9 @@ import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.widget.page.PagerGridLayoutManager;
+import com.hr.videosplayertv.widget.page.PagerGridSnapHelper;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
@@ -25,16 +29,27 @@ import static com.hr.videosplayertv.ui.adapter.GridAdapter.CLASSIFYLAYOUT;
 public class ClassifyLayout {
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
-
+    private int mRows = 2;
+    private int mColumns = 4;
     private GridAdapter gridAdapter;
     private BaseActivity mContext;
+    private PagerGridLayoutManager mLayoutManager;
 
     public ClassifyLayout(View view, BaseActivity context) {
         ButterKnife.bind(this,view);
         mContext = context;
         setListener();
+
+        mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager
+                .VERTICAL);
+        PagerGridSnapHelper pageSnapHelper = new PagerGridSnapHelper();
+        pageSnapHelper.attachToRecyclerView(tvList);
+        tvList.setLayoutManager(mLayoutManager);
+
         tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x40), DisplayUtils.getDimen(R.dimen.x40));
+
         gridAdapter = new GridAdapter(mContext,CLASSIFYLAYOUT);
+
         tvList.setAdapter(gridAdapter);
 
         initData();
@@ -56,6 +71,16 @@ public class ClassifyLayout {
     }
 
     private void setListener() {
+//        tvList.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                tvList.getViewTreeObserver().removeOnPreDrawListener(this);
+//
+//                NLog.e(NLog.TAGOther,"tvlist 高度 ---》"+ tvList.getHeight());
+//
+//                return true;
+//            }
+//        });
 
 
         tvList.setOnItemListener(new SimpleOnItemListener() {

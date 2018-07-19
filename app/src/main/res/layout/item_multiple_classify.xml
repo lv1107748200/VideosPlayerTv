@@ -4,13 +4,20 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <!--<com.owen.tvrecyclerview.widget.TvRecyclerView-->
+        <!--android:layout_weight="1"-->
+        <!--android:id="@+id/tv_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--style="@style/FourWayView"-->
+        <!--android:orientation="vertical"-->
+        <!--app:spanCount="4"-->
+        <!--app:tv_layoutManager="V7GridLayoutManager"/>-->
+
     <com.owen.tvrecyclerview.widget.TvRecyclerView
         android:layout_weight="1"
         android:id="@+id/tv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/FourWayView"
-        android:orientation="vertical"
-        app:spanCount="4"
-        app:tv_layoutManager="V7GridLayoutManager"/>
+        style="@style/FourWayView" />
 </FrameLayout>

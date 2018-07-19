@@ -120,6 +120,9 @@ public class CommonLayout {
     }
 
     private void setIenten(int i,Intent intent){
+        if(CheckUtil.isEmpty(whatList)){
+            return;
+        }
         if(whatList.size() >= (i+1)){
             intent.putExtra("Iddddd",new Iddddd(whatList.get(i).getID(),whatList.get(i).getContxt()));
         }
