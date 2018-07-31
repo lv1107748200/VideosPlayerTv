@@ -69,8 +69,8 @@ public class GridAdapter extends CommonRecyclerViewAdapter {
 
         if(CLASSIFYLAYOUT == type){
             if(item instanceof ListData)
-            helper.getHolder().setText(R.id.title,((ListData) item).getTitle());
-            helper.getHolder().getView(R.id.classly_layout).setBackgroundColor(ColorUtils.getColor());
+          //  helper.getHolder().setText(R.id.title,((ListData) item).getTitle());
+            helper.getHolder().getView(R.id.classly_layout).setBackgroundResource(((ListData) item).getBack());
 
         }else if(FAVORITELAYOUT == type){
             if(item instanceof Result)

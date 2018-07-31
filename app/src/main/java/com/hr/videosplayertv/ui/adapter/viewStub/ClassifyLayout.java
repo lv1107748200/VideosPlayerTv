@@ -55,6 +55,10 @@ public class ClassifyLayout {
         initData();
     }
     private void initData(){
+
+        int[] ic = {0,1,R.drawable.ic_dianying,R.drawable.ic_dianshijv,R.drawable.ic_zongyi,R.drawable.ic_dongman
+        ,R.drawable.ic_tiyu,R.drawable.ic_huanren,R.drawable.ic_jilupian,R.drawable.ic_youxi};
+
         List<ListData> listData = new ArrayList<>();
 
         for (int i = 0, j = ImmobilizationData.Tags.values().length; i< j; i++){
@@ -62,7 +66,7 @@ public class ClassifyLayout {
             if(i==0 || i==1){
 
             }else {
-                listData.add(new ListData(ImmobilizationData.Tags.getNameByIndex(i)));
+                listData.add(new ListData(ImmobilizationData.Tags.getNameByIndex(i)).setBack(ic[i]));
             }
 
         }

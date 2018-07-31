@@ -40,7 +40,7 @@ public class RealmDBManger {
     }
 
     public  static  Realm getMyRealm(){
-        if(null == getRealmSingle().myRealm){
+        if(null == getRealmSingle().myRealm || getRealmSingle().myRealm.isClosed()){
             getRealmSingle().myRealm = Realm.getDefaultInstance();
         }
         return getRealmSingle().myRealm;

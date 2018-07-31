@@ -68,7 +68,7 @@ public class HomeLayout {
     private BaseFragment baseFragment;
     private Map<String,List> homePagesListMap;
 
-    List<DelegateAdapter.Adapter> adapters;
+   // List<DelegateAdapter.Adapter> adapters;
 
     private boolean isMore = true;
     private boolean isLoadMore = false;
@@ -88,9 +88,7 @@ public class HomeLayout {
     }
 
     private void initData(){
-         adapters = new LinkedList<>();
         homePagesListMap = new HashMap<>();
-        setSimulationData();//模拟数据
     }
 
     private void setListener() {
@@ -143,20 +141,29 @@ public class HomeLayout {
         isLoadMore = false;
          pageNo = 3;
 
+        setSimulationData();//模拟数据
+
+
         index();
         ComList();
     }
 
     private void setUpData(String key,List  whatLists){
 
+//        if(null != homePagesListMap.get(key)){
+//            homePagesListMap.put(key,null);
+//        }
         NLog.e(NLog.TAGOther,"名字 --->" + key);
-
         homePagesListMap.put(key,whatLists);
+
     }
     private void setDelegateAdapter(){
 
         if(!CheckUtil.isEmpty(homePagesListMap)){
-            adapters.clear();
+            int  sizee = homePagesListMap.size();
+            NLog.e(NLog.TAGOther," sise : "+ sizee);
+
+            List<DelegateAdapter.Adapter> adapters = new ArrayList<>();
 
             for (ImmobilizationData.HomePages c : ImmobilizationData.HomePages.values()) {
                 List list = homePagesListMap.get(c.getKey());
@@ -226,6 +233,9 @@ public class HomeLayout {
                 }
             }
             delegateAdapter.setAdapters(adapters);
+
+            if( sizee == 2 || sizee == 3 )
+            delegateAdapter.notifyDataSetChanged();
         }
 
 
@@ -406,7 +416,7 @@ public class HomeLayout {
                 "13",
                 ""+1
         );
-        data.setIsindex(true);
+        data.setIsindex(1);
         baseFragment.baseService.index(data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
             @Override
             public void onError(HttpException e) {

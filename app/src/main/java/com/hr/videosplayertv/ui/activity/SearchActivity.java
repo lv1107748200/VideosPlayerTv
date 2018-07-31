@@ -5,6 +5,7 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +52,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     public static int pp = 0;
 
     @BindView(R.id.tv_show_message)
-    TextView tv_show_message;
+    EditText tv_show_message;
     @BindView(R.id.tv_title_child)
     TextView tvTitleChild;
     @BindView(R.id.skbContainer)
@@ -68,7 +69,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     private boolean isLoadMore = false;
     private int pageNo = 1;
 
-    private String Tags = "讨债人";
+    private String Tags = "A";
 
     @Override
     public int getLayout() {
@@ -189,7 +190,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
         gridAdapter = new GridAdapter(this);
         tvList.setAdapter(gridAdapter);
 
-        initData();
+       // initData();
 
         load(Tags);
     }

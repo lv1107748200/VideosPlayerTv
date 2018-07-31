@@ -16,7 +16,9 @@
         android:background="@drawable/hehe"
         android:layout_gravity="center_vertical"
         android:layout_width="30dp"
-        android:layout_height="30dp" />
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        />
 
     <TextView
         android:layout_weight="1"
@@ -38,6 +40,7 @@
         android:layout_height="wrap_content"
         android:textColor="@drawable/foc_tv_two"
         android:text="好烂啊"
+        android:layout_marginRight="10dp"
         />
 
 </com.hr.videosplayertv.widget.layout.RoundLineLayout>

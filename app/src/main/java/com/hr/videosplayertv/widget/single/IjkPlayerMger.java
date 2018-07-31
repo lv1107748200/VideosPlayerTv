@@ -71,7 +71,7 @@ public class IjkPlayerMger {
         if(null != mediaPlayer){
 
             mediaPlayer.stop();
-            mediaPlayer.reset();
+          //  mediaPlayer.reset();
             mediaPlayer.release();
 
             mediaPlayer = null;

@@ -360,6 +360,8 @@ public class DetailActivity extends BaseActivity {
         if(CheckUtil.isEmpty(GuestSeriesList) || GuestSeriesList.size() == 1){
 
             tabLayout.setVisibility(View.GONE);
+            selectCollect.setVisibility(View.GONE);
+
 
         }else {
           //  tabLayout.setVisibility(View.VISIBLE);
@@ -416,6 +418,28 @@ public class DetailActivity extends BaseActivity {
                                   .setText("61-"+VipSeriesList.size())
                   );
                   break;
+                case 5:
+                    tabLayout.addTab(
+                            tabLayout.newTab()
+                                    .setText("1-20")
+                            , true);
+                    tabLayout.addTab(
+                            tabLayout.newTab()
+                                    .setText("21-40")
+                    );
+                    tabLayout.addTab(
+                            tabLayout.newTab()
+                                    .setText("41-60")
+                    );
+                    tabLayout.addTab(
+                            tabLayout.newTab()
+                                    .setText("61-"+"80")
+                    );
+                    tabLayout.addTab(
+                            tabLayout.newTab()
+                                    .setText("81-"+VipSeriesList.size())
+                    );
+                    break;
           }
             listDataMenuAdapter.repaceDatas(splitList(VipSeriesList,20).get(0));
         }

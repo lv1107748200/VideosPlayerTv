@@ -60,7 +60,7 @@ public class WhatCom extends BaseDataRequest {
             String size,
             String page,
             String tags,
-            boolean isindex) {
+            int isindex) {
         super(token, CID, UID, GID, sign, expire);
         Size = size;
         Page = page;
@@ -78,7 +78,7 @@ public class WhatCom extends BaseDataRequest {
     private String ID;
     private String PageSize;
     private String PageIndex;
-    private boolean Isindex;
+    private int Isindex;
 
     private String VideoID;
 
@@ -122,14 +122,13 @@ public class WhatCom extends BaseDataRequest {
         Tags = tags;
     }
 
-    public boolean isIsindex() {
+    public int getIsindex() {
         return Isindex;
     }
 
-    public void setIsindex(boolean isindex) {
+    public void setIsindex(int isindex) {
         Isindex = isindex;
     }
-
     public String getVideoID() {
         return VideoID;
     }

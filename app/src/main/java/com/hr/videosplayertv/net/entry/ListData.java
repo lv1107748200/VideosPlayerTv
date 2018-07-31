@@ -10,6 +10,8 @@ public class ListData {
 
     private ImmobilizationData.Tags tags;
 
+    private int back;
+
     public ListData() {
     }
 
@@ -54,5 +56,14 @@ public class ListData {
 
     public void setTags(ImmobilizationData.Tags tags) {
         this.tags = tags;
+    }
+
+    public int getBack() {
+        return back;
+    }
+
+    public ListData setBack(int back) {
+        this.back = back;
+        return this;
     }
 }
