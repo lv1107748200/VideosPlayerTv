@@ -19,6 +19,8 @@ public interface FocusBorder {
     
     void unBoundGlobalFocusListener();
 
+    void showOrDiss(boolean is);
+
     interface OnFocusCallback {
         Options onFocus(View oldFocus, View newFocus);
     }

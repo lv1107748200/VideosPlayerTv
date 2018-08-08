@@ -45,9 +45,9 @@ public class BaseActivity extends AbstractBaseActivity {
 //            mFocusBorder = new FocusBorder.Builder().asDrawable().borderResId(R.drawable.focus).build(this);
             mFocusBorder = new FocusBorder.Builder()
                     .asColor()
-                    .borderColor(getResources().getColor(R.color.c_0a1))
-                    .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 0)
-                    .shadowColor(getResources().getColor(R.color.c_082))
+                    .borderColor(getResources().getColor(R.color.c_008))
+                    .borderWidth(TypedValue.COMPLEX_UNIT_DIP, 1)
+                    .shadowColor(getResources().getColor(R.color.c_007))
                     .shadowWidth(TypedValue.COMPLEX_UNIT_DIP, 5)
                     .build(this);
         }
@@ -63,6 +63,12 @@ public class BaseActivity extends AbstractBaseActivity {
     public void onMoveFocusBorder(View focusedView, float scale, float roundRadius) {
         if(null != mFocusBorder) {
             mFocusBorder.onFocus(focusedView, FocusBorder.OptionsFactory.get(scale, scale, roundRadius));
+        }
+    }
+
+    public void setShowOrDiss(boolean is){
+        if(null != mFocusBorder) {
+            mFocusBorder.showOrDiss(false);
         }
     }
 

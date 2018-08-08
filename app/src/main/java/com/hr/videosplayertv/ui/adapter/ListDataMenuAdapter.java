@@ -139,7 +139,7 @@ public class ListDataMenuAdapter extends CommonRecyclerViewAdapter {
                 helper.getHolder().setText(R.id.title, ((ListData) item).getTitle());
             }
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.width = DisplayUtils.getWide(getmDatas().size(),DisplayUtils.getDimen(R.dimen.x30),DisplayUtils.getDimen(R.dimen.x60));
+            params.width = DisplayUtils.getWide(getmDatas().size(),DisplayUtils.getDimen(R.dimen.x30),DisplayUtils.getDimen(R.dimen.x40));
             helper.getHolder().getView(R.id.main_layout).setLayoutParams(params);
         } else {
             if(item instanceof ListData){

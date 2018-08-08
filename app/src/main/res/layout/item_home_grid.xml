@@ -6,7 +6,10 @@
         android:layout_height="match_parent"
         app:rfl_radius="@dimen/rfl_radius"
         android:focusable="true"
-        android:clickable="true">
+        android:clickable="true"
+           android:background="@drawable/foc_back_seven"
+           android:padding="@dimen/x4"
+    >
 
        <ImageView
         android:id="@+id/image_grid"

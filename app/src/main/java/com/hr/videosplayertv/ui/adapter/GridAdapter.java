@@ -28,6 +28,7 @@ import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewAdapter;
 import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
 import com.hr.videosplayertv.utils.ColorUtils;
+import com.hr.videosplayertv.utils.Formatter;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.UrlUtils;
 
@@ -82,7 +83,9 @@ public class GridAdapter extends CommonRecyclerViewAdapter {
             if(item instanceof PHData)
                 helper.getHolder()
                         .showImage(R.id.image, UrlUtils.getUrl(((PHData) item).getImgPath()))
-                        .setText(R.id.title,((PHData) item).getTitle());
+                        .setText(R.id.title,((PHData) item).getTitle()
+                                + "\n" + ((PHData) item).getName()
+                                + "\n" + Formatter.formatTime((int) ((PHData) item).getPress()));
 
         } else{
             if(item instanceof WhatList){

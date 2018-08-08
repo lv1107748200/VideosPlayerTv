@@ -2,6 +2,8 @@ package com.hr.videosplayertv.ui.activity;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -29,7 +31,9 @@ import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.widget.dialog.LoadingDialog;
+import com.hr.videosplayertv.widget.layout.AddLineLayout;
 import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -63,6 +67,8 @@ public class ListDataActivity extends BaseActivity {
     TvRecyclerView tvList;
     @BindView(R.id.list_menu)
     TvRecyclerView listMenu;
+    @BindView(R.id.addLayout)
+    AddLineLayout addLayout;
 
     private boolean isMore = true;
     private boolean isLoadMore = false;
@@ -75,6 +81,12 @@ public class ListDataActivity extends BaseActivity {
     private String type;
 
     private String CID;
+
+    private String pid = null;
+
+    private int select = -1;
+
+    private boolean isCanBack = false;
 
     @Override
     public int getLayout() {
@@ -93,8 +105,6 @@ public class ListDataActivity extends BaseActivity {
         listMenu.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x10), 0);
         listDataMenuAdapter = new ListDataMenuAdapter(this,ListDataMenuAdapter.THREE,true);
         listMenu.setAdapter(listDataMenuAdapter);
-        listMenu.setmSelectedPosition(1);
-
 
         initData();
     }
@@ -103,12 +113,16 @@ public class ListDataActivity extends BaseActivity {
 
         Intent intent = getIntent();
         type = intent.getStringExtra("TYPE");
+        select = intent.getIntExtra("SELECTddfdf",-1);
+
+     //   NLog.e(NLog.TAGOther,"SELECT 选中的条幅 ---> " + select);
+
         if(!CheckUtil.isEmpty(type)){
             huoqv();
         }
         tvTitleChild.setText(type+getString(R.string.svp_list));
 
-        load("0,1");
+      //  load("0,1");
     }
 
     private void huoqv(){
@@ -124,7 +138,17 @@ public class ListDataActivity extends BaseActivity {
                         whatTypeList.add(new WhatType());
                         whatTypeList.addAll(realmResults.get(0).getRealmList());
                         if(!CheckUtil.isEmpty(whatTypeList)){
+
+                            pid = whatTypeList.get(1).getPID();
+
                             listDataMenuAdapter.repaceDatas(whatTypeList);
+
+                            if(-1 != select){
+                                listMenu.setSelection(select + 1);
+                            }else {
+                                listMenu.setSelection(1);
+                            }
+
                         }else {
                             ComType();
                         }
@@ -170,6 +194,7 @@ public class ListDataActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                setShowOrDiss(false);
                 onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
 
                 if(position > 0){
@@ -179,6 +204,7 @@ public class ListDataActivity extends BaseActivity {
                         isMore = true;
                         isLoadMore = false;
                         pageNo = 1;
+                        tvList.setHasMoreData(true);
 
                         if(((WhatType) listDataMenuAdapter.getItem(position)).getPath().equals(CID)){
                             return;
@@ -200,6 +226,7 @@ public class ListDataActivity extends BaseActivity {
                  Intent intent = new Intent();
                  intent.setClass(ListDataActivity.this, SearchActivity.class);
                  intent.putExtra("TYPE",type);
+                 intent.putExtra("PID",pid);
                  startActivity(intent);
                 }
 
@@ -210,6 +237,7 @@ public class ListDataActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                setShowOrDiss(true);
                 onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
             }
 
@@ -258,10 +286,13 @@ public class ListDataActivity extends BaseActivity {
             }
         });
 
+        tvList.addOnScrollListener(mOnScrollListener);
+
     }
 
     private void load(String s){
           CID = s;
+          addLayout.showClick();
           ComList();
     }
     /**
@@ -275,21 +306,30 @@ public class ListDataActivity extends BaseActivity {
             public void onError(HttpException e) {
 
                 if(e.getCode() == 1){
-                    LoadingDialog.showText(ListDataActivity.this,e.getMsg());
+                    NToast.shortToastBaseApp(e.getMsg());
                 }else {
-                    LoadingDialog.disMiss();
                 }
+
 
             }
 
             @Override
             public void onSuccess(BaseResponse<BaseDataResponse<WhatType>> baseDataResponseBaseResponse) {
-                LoadingDialog.disMiss();
 
                 BaseDataResponse<WhatType> baseDataResponse = baseDataResponseBaseResponse.getData();
                 List<WhatType> whatTypeList = baseDataResponse.getInfo();
                 baocun(whatTypeList);
+                whatTypeList.add(new WhatType());
                 listDataMenuAdapter.repaceDatas(whatTypeList);
+                if(!CheckUtil.isEmpty(whatTypeList)){
+                    pid = whatTypeList.get(1).getPID();
+                    if(-1 != select){
+                        listMenu.setSelection(select + 1);
+                    }else {
+                        listMenu.setSelection(1);
+                    }
+                }
+
             }
         },ListDataActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }
@@ -314,10 +354,12 @@ public class ListDataActivity extends BaseActivity {
         baseService.ComList( ImmobilizationData.Tags.getUrlByName(type),data, new HttpCallback<BaseResponse<BaseDataResponse<WhatList>>>() {
             @Override
             public void onError(HttpException e) {
+
+                addLayout.hideClick();
+
                 if(e.getCode() == 1){
-                    LoadingDialog.showText(ListDataActivity.this,e.getMsg());
+                    NToast.shortToastBaseApp(e.getMsg());
                 }else {
-                    LoadingDialog.disMiss();
                 }
                 if(isLoadMore){
                     tvList.setLoadingMore(false);
@@ -326,7 +368,7 @@ public class ListDataActivity extends BaseActivity {
 
             @Override
             public void onSuccess(BaseResponse<BaseDataResponse<WhatList>> baseDataResponseBaseResponse) {
-
+                addLayout.hideClick();
                 setTvList(baseDataResponseBaseResponse);
 
             }
@@ -355,10 +397,49 @@ public class ListDataActivity extends BaseActivity {
             }else {
                 gridAdapter.clearDatas();
                 gridAdapter.notifyDataSetChanged();
-
+                addLayout.hideAndShowMessage(getString(R.string.svp_null_data));
             }
 
         }
     }
 
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
+          //是否滑到顶部
+            if(!recyclerView.canScrollVertically(-1)){
+                isCanBack = false;
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView rv, int i, int i2) {
+
+            if(i2 > 0){
+                isCanBack = true;
+            }
+
+        }
+
+    };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+
+                if(isCanBack){
+                    NToast.shortToastBaseApp("返回顶部");
+                    tvList.setSelection(0);
+                    isCanBack = false;
+                    return true;
+                }
+
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 }

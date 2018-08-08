@@ -91,6 +91,7 @@ public class ClassifyLayout {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                mContext.setShowOrDiss(true);
                 mContext.onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
             }
 
@@ -98,8 +99,9 @@ public class ClassifyLayout {
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
                 Intent intent = new Intent(mContext,ListDataActivity.class);
 
-                if(gridAdapter.getItem(position) instanceof ListData)
-                intent.putExtra("TYPE",((ListData) gridAdapter.getItem(position)).getTitle());
+                if(gridAdapter.getItem(position) instanceof ListData){
+                    intent.putExtra("TYPE",((ListData) gridAdapter.getItem(position)).getTitle());
+                }
                 mContext. startActivity(intent);
             }
         });
@@ -108,7 +110,7 @@ public class ClassifyLayout {
         tvList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                // mFocusBorder.setVisible(hasFocus);
+                mContext.mFocusBorder.setVisible(hasFocus);
             }
         });
 

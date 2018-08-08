@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.base.BaseFragment;
 import com.hr.videosplayertv.common.Iddddd;
 import com.hr.videosplayertv.common.ImmobilizationData;
+import com.hr.videosplayertv.event.Event;
 import com.hr.videosplayertv.net.base.BaseDataResponse;
 import com.hr.videosplayertv.net.base.BaseResponse;
 import com.hr.videosplayertv.net.entry.request.WhatCom;
@@ -34,6 +36,7 @@ import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.activity.DetailActivity;
 import com.hr.videosplayertv.ui.activity.DiversityActivity;
 import com.hr.videosplayertv.ui.activity.ListDataActivity;
+import com.hr.videosplayertv.ui.activity.MainActivity;
 import com.hr.videosplayertv.ui.adapter.SubAdapter;
 import com.hr.videosplayertv.ui.adapter.viewholder.MainViewHolder;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
@@ -47,9 +50,14 @@ import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.utils.UrlUtils;
 import com.hr.videosplayertv.widget.dialog.LoadingDialog;
 import com.hr.videosplayertv.widget.single.UserInfoManger;
+import com.hr.videosplayertv.widget.single.WhatView;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.trello.rxlifecycle2.android.FragmentEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,12 +78,21 @@ public class HomeLayout {
 
    // List<DelegateAdapter.Adapter> adapters;
 
+    private ImageView imageView;
+    private TextView textView;
+
     private boolean isMore = true;
     private boolean isLoadMore = false;
     private int pageNo = 3;
 
+    public static boolean isUpOrDown = true;
+    public static boolean isUp = false; //鸡肋判断
+    public static boolean isCanBack = false;
+
     public HomeLayout(View view , BaseFragment baseFragment) {
         ButterKnife.bind(this,view);
+        EventBus.getDefault().register(this);
+
         mContext = (BaseActivity) baseFragment.getActivity();
         this.baseFragment = baseFragment;
         setListener();
@@ -101,10 +118,44 @@ public class HomeLayout {
 
                // NLog.e(NLog.TAGOther,"首页选中序号--->" + position);
 
+                if(position == 6){
+                    isUp = true;
+                }else {
+                    isUp = false;
+                }
+
+                if( 0 <= position && position<6){
+                    List list = homePagesListMap.get(ImmobilizationData.HomePages.HEAD.getKey());
+                    if(!CheckUtil.isEmpty(list)){
+                        WhatList whatList = (WhatList) list.get(position);
+
+                        if(null != imageView){
+                            GlideUtil.setGlideImage(mContext
+                                    , UrlUtils.getUrl(whatList.getImgPath())
+                                    ,imageView,R.drawable.hehe);
+                            textView.setText(whatList.getTitle());
+                        }
+                    }
+                }
+
+
+                mContext.setShowOrDiss(true);
                 if(position < 8){
                     mContext. onMoveFocusBorder(itemView, 1.05f, DisplayUtils.dip2px(3));
                 }else {
-                    mContext. onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                    if(itemView.getId() == R.id.title_layout){
+                        mContext. onMoveFocusBorder(itemView, 1.0f, 0);
+
+                        NLog.e(NLog.TAGOther," HomeLayout title 上下滚动 ---> " + isUpOrDown);
+                        if(isUpOrDown){
+                            tvList.setSelection(position + 1);
+                        }else {
+                            tvList.setSelection(position - 1);
+                        }
+
+                    }else {
+                        mContext. onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                    }
                 }
 
 
@@ -122,24 +173,30 @@ public class HomeLayout {
         tvList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                mContext.  mFocusBorder.setVisible(hasFocus);
+                mContext.mFocusBorder.setVisible(hasFocus);
             }
         });
 
         tvList.setOnLoadMoreListener(new TvRecyclerView.OnLoadMoreListener() {
             @Override
             public boolean onLoadMore() {
+
+            //    NLog.e(NLog.TAGOther," HomeLayout 加载更多 ---> ");
+
                 tvList.setLoadingMore(true); //正在加载数据
                 isLoadMore = true;
                 ComList();
                 return isMore; //是否还有更多数据
             }
         });
+        tvList.addOnScrollListener(mOnScrollListener);
     }
     public void load(){
         isMore = true;
         isLoadMore = false;
          pageNo = 3;
+        tvList.setLoadingMore(false);
+        tvList.setHasMoreData(true);
 
         setSimulationData();//模拟数据
 
@@ -153,7 +210,7 @@ public class HomeLayout {
 //        if(null != homePagesListMap.get(key)){
 //            homePagesListMap.put(key,null);
 //        }
-        NLog.e(NLog.TAGOther,"名字 --->" + key);
+       // NLog.e(NLog.TAGOther,"名字 --->" + key);
         homePagesListMap.put(key,whatLists);
 
     }
@@ -161,7 +218,7 @@ public class HomeLayout {
 
         if(!CheckUtil.isEmpty(homePagesListMap)){
             int  sizee = homePagesListMap.size();
-            NLog.e(NLog.TAGOther," sise : "+ sizee);
+         //   NLog.e(NLog.TAGOther," sise : "+ sizee);
 
             List<DelegateAdapter.Adapter> adapters = new ArrayList<>();
 
@@ -241,7 +298,7 @@ public class HomeLayout {
 
     }
 
-  static   class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
+  class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
 
         public final static int GRADONE = 987;
         public final static int GRADTWO = 789;
@@ -315,6 +372,11 @@ public class HomeLayout {
                 ImageView imageView = holder.itemView.findViewById(R.id.image_grid);
                 TextView textView = holder.itemView.findViewById(R.id.title_grid);
 
+                if(position == 0){
+                    HomeLayout.this.imageView = imageView;
+                    HomeLayout.this.textView = textView;
+                }
+
              final    Intent intent = new Intent();
 
                 if(position == 6){
@@ -342,7 +404,9 @@ public class HomeLayout {
                             ,imageView,R.drawable.foc_image_three);
 
                 }else {
-                    textView.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
+                    textView.setText(((WhatList) o).getTitle());
+
                     GlideUtil.setGlideImage(contextontext
                             , UrlUtils.getUrl(((WhatList) o).getImgPath())
                             ,imageView,R.drawable.hehe);
@@ -429,13 +493,26 @@ public class HomeLayout {
                 List<WhatList> whatLists = baseDataResponseBaseResponse.getData().getInfo();
 
                 if(!CheckUtil.isEmpty(whatLists)){
-                    if(whatLists.size() >= 8){
-                        setUpData(ImmobilizationData.HomePages.HEAD.getKey(),whatLists.subList(0, 8));
 
-                        setUpData(ImmobilizationData.HomePages.REC.getKey(),whatLists.subList(0, 7));
+                    if(whatLists.size() == 13){
+                        if(whatLists.size() >= 8){
+                            setUpData(ImmobilizationData.HomePages.HEAD.getKey(),whatLists.subList(0, 8));
 
-                        setDelegateAdapter();
+                            setUpData(ImmobilizationData.HomePages.REC.getKey(),whatLists.subList(6, 13));
+
+                            setDelegateAdapter();
+                        }
+                    }else {
+                        if(whatLists.size() >= 8){
+                            setUpData(ImmobilizationData.HomePages.HEAD.getKey(),whatLists.subList(0, 8));
+
+                            setUpData(ImmobilizationData.HomePages.REC.getKey(),whatLists.subList(0, 7));
+
+                            setDelegateAdapter();
+                        }
                     }
+
+
                 }
             }
         },baseFragment.bindUntilEvent(FragmentEvent.DESTROY_VIEW));
@@ -522,6 +599,33 @@ public class HomeLayout {
                 setDelegateAdapter();
             }
         }
+    }
+
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
+            //是否滑到顶部
+            if(!recyclerView.canScrollVertically(-1)){
+                isCanBack = false;
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView rv, int i, int i2) {
+
+            if(i2 > 0){
+                isCanBack = true;
+            }
+
+        }
+
+    };
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void helloEventBus(Event.HomeLayoutEvent message) {
+
+        tvList.setSelection(0);
+
     }
 
 }

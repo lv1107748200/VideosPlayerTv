@@ -114,6 +114,7 @@
         <item name="android:layout_margin">@dimen/x10</item>
         <item name="android:background">@drawable/foc_back_two</item>
         <item name="android:textColor">@drawable/foc_tv_two</item>
+        <item name="android:textSize">@dimen/sp_20</item>
     </style>
 
     <style name="round_layout_user_center">
@@ -153,6 +154,8 @@
         <item name="android:layout_weight">1</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/foc_back_seven</item>
+        <item name="android:padding">@dimen/x4</item>
     </style>
 
     <style name="tag_flayout_two">
@@ -163,17 +166,19 @@
         <item name="android:layout_weight">1</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/foc_back_seven</item>
+        <item name="android:padding">@dimen/x4</item>
     </style>
 
     <style name="tag_tv_one">
         <item name="android:duplicateParentState">true</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/x60</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">bottom</item>
         <item name="android:textColor">@drawable/foc_tv_two</item>
         <item name="android:background">@drawable/foc_back_two</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingLeft">@dimen/x10</item>
+        <item name="android:textSize">@dimen/sp_20</item>
     </style>
 
     <style name="tag_image_one">
@@ -182,4 +187,32 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@drawable/hehe</item>
     </style>
+
+    <style name="BaseTextSizeOne">
+        <item name="android:textSize">@dimen/sp_18</item>
+    </style>
+
+    <style name="BaseTextSizeTwo">
+        <item name="android:textSize">@dimen/sp_20</item>
+    </style>
+
+    <style name="BaseTextSizeThree">
+        <item name="android:textSize">@dimen/sp_22</item>
+    </style>
+
+    <style name="BaseTextStyleOne" parent="BaseTextSizeTwo">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BaseTextStyleTwo" parent="BaseTextSizeThree">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RoundStyle">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/foc_back_seven</item>
+        <item name="android:padding">@dimen/x4</item>
+    </style>
+
 </resources>

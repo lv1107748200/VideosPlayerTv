@@ -1,5 +1,6 @@
 package com.hr.videosplayertv.ui.activity;
 
+import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.hr.videosplayertv.net.entry.response.WhatType;
 import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.utils.CheckUtil;
+import com.hr.videosplayertv.utils.DateUtils;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.NLog;
@@ -53,8 +55,10 @@ public class PlayerActivity extends BaseActivity {
     private String url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
     private long firstTime=0;
 
-    private String playId;
+    private String playId;//加密的
+    private String name;//名字
     private Detail detail;
+    private String ID;
 
 
     @BindView(R.id.ControlPlayer)
@@ -67,7 +71,12 @@ public class PlayerActivity extends BaseActivity {
     public void init() {
         super.init();
 
-        playId = getIntent().getStringExtra("PLAYID");
+        Intent intent = getIntent();
+
+        playId = intent.getStringExtra("PLAYID");
+        name = intent.getStringExtra("NAME");
+
+        NLog.e(NLog.TAGOther,"playId 播放 ---> " + playId);
 //
 //        if(null != guestSeries){
 //
@@ -158,6 +167,7 @@ public class PlayerActivity extends BaseActivity {
                  detail = baseDataResponseBaseResponse.getData().getInfo().get(0);
 
                 if(null != detail){
+
                     VL VL = detail.getVL();
 
                     String PlayRecordURL = detail.getPlayRecordURL();
@@ -166,20 +176,36 @@ public class PlayerActivity extends BaseActivity {
                     if(!CheckUtil.isEmpty(vipSeriesList)){
 
                         String u = vipSeriesList.get(0).getKey();
+
+                        for(int i = 0; i<vipSeriesList.size(); i++){
+                            VipSeries vipSeries = vipSeriesList.get(i);
+                            if(vipSeries.getName().equals(name)){
+                                u = vipSeries.getKey();
+                                ID = vipSeries.getID();
+                                break;
+                            }
+                        }
+
+
                         String s = UrlUtils.getUrl(PlayRecordURL);
                         String baseUrl = UrlUtils.UrlPage(s);
                         Map<String,String> stringMap = UrlUtils.URLRequest(s);
                         stringMap.put("key",u);
 
-            try {
-                url = UrlUtils.createLinkStringByGet(baseUrl,stringMap);
-                NLog.e(NLog.PLAYER," 播放地址 --->" + url);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            controlPlayer.setContext(PlayerActivity.this);
-            controlPlayer.setVideoUrl(url);
-            controlPlayer.initConPlay();//
+                        try {
+                            url = UrlUtils.createLinkStringByGet(baseUrl,stringMap);
+                            NLog.e(NLog.PLAYER," 播放地址 --->" + url);
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        controlPlayer.setContext(PlayerActivity.this);
+
+                        controlPlayer.setVideoUrl(url);
+                        controlPlayer.initConPlay();//
+                        controlPlayer.setTitle_video(VL.getTitle() +"   "+ name);
+
+
+                        baoCunJiLu();//接口保存
                     }
 
                 }
@@ -187,6 +213,35 @@ public class PlayerActivity extends BaseActivity {
         },PlayerActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
+
+    private void baoCunJiLu(){
+
+        if(null != detail){
+
+            NLog.e(NLog.DB," 播放记录保存 " + " ID = " + ID + "  name = " + name+ " key =  "+ playId);
+
+            PHData phData = new PHData();
+            phData.setID(ID);
+            phData.setName(name);
+            phData.setKey(playId);
+            phData.setTitle(detail.getVL().getTitle());
+            phData.setImgPath(detail.getImgPath());
+            phData.setUrl(controlPlayer.getVideoUrl());
+            phData.setPress(controlPlayer.getJinDu());
+            phData.setTime(DateUtils.getStringTodayl());
+            RealmDBManger.setInsertOrUpdate(phData, new DBResultCallback() {
+                @Override
+                public void onSuccess(Object o) {
+                    NLog.e(NLog.DB," 播放记录保存  onSuccess--->" );
+                }
+
+                @Override
+                public void onError(String errString) {
+                    NLog.e(NLog.DB," 播放记录保存  onError--->" + errString);
+                }
+            });
+        }
+    }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -333,15 +388,7 @@ public class PlayerActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(null != detail){
-            PHData phData = new PHData();
-            phData.setContxt(playId);
-                phData.setTitle(detail.getVL().getTitle());
-                phData.setImgPath(detail.getImgPath());
-            phData.setUrl(controlPlayer.getVideoUrl());
-            phData.setPress(controlPlayer.getJinDu());
-            RealmDBManger.copyToRealmOrUpdate(phData,null);
-        }
+        baoCunJiLu();//结束时保存
 
         controlPlayer.destroy();
         IjkPlayerMger.getInstance().setOnDesry();

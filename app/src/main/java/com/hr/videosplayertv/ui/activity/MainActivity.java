@@ -14,17 +14,22 @@ import com.hr.videosplayertv.base.BaseActivity;
 import com.hr.videosplayertv.base.BaseFragment;
 import com.hr.videosplayertv.common.ImmobilizationData;
 import com.hr.videosplayertv.db.RealmDBManger;
+import com.hr.videosplayertv.event.Event;
 import com.hr.videosplayertv.net.entry.ListData;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
 import com.hr.videosplayertv.ui.adapter.MainFragmentAdapter;
+import com.hr.videosplayertv.ui.adapter.viewStub.HomeLayout;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.FocusUtil;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.widget.focus.FocusBorder;
 import com.hr.videosplayertv.widget.single.WhatView;
 import com.hr.videosplayertv.widget.view.TvViewPager;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,6 +47,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.view.View.GONE;
+import static com.hr.videosplayertv.ui.adapter.viewStub.HomeLayout.isUpOrDown;
 /*
 *
 * */
@@ -66,6 +72,14 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
     TextView tvNotification;
     @BindView(R.id.tv_time)
     TextView tvTime;
+
+    @BindView(R.id.btn_search)
+    TextView btn_search;
+    @BindView(R.id.btn_personal_center)
+    TextView btn_personal_center;
+
+    private View selectView; //被选中的 View;
+
 
     @OnClick({R.id.btn_search,R.id.btn_personal_center})
     public void Onclick(View v){
@@ -112,9 +126,24 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         mFocusBorder.boundGlobalFocusListener(new FocusBorder.OnFocusCallback() {
             @Override
             public FocusBorder.Options onFocus(View oldFocus, View newFocus) {
+
+                setShowOrDiss(false);
+
                 if(null != newFocus){
+
+                  //  NLog.e(NLog.TAGOther," 主页面焦点问题 ---> " + newFocus.getId());
+
                     if(newFocus.getId() == R.id.tag_flayout_one || newFocus.getId() == R.id.tag_flayout_two){
                         return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
+                    }else {
+                        switch (newFocus.getId()){
+                            case R.id.main_layout:
+                                return FocusBorder.OptionsFactory.get(1.0f, 1.0f, 0);
+                            case R.id.tag_flayout_three:
+                            case R.id.tag_flayout_four:
+                            case R.id.tag_flayout_five:
+                                return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
+                        }
                     }
                 }
                 return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
@@ -125,12 +154,20 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
+               // onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
+
+
                 if(position == tvViewPager.getCurrentItem()){
 
                 }else {
                     tvViewPager.setCurrentItem(position);
+                    if(selectView != null)
+                        selectView.setActivated(false);
                 }
+                selectView = itemView;
+                itemView.setActivated(true);
+
+
             }
 
             @Override
@@ -164,11 +201,25 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         }
         listDataMenuAdapter.repaceDatas(listData);
         mainFragmentAdapter.upData(multipleFragments);
+        mainMenu.setSelection(0);
     }
 
     @Override
     public FocusBorder getFocusBorder() {
         return mFocusBorder;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+            if(HomeLayout.isUp){
+                if(event.getAction() == KeyEvent.ACTION_DOWN  && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP){
+                HomeLayout.isUp = false;
+                FocusUtil.setFocus(mainMenu);
+                return true;
+            }
+           }
+        return super.dispatchKeyEvent(event);
     }
 
     @Override
@@ -183,6 +234,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
 
                 break;
             case KeyEvent.KEYCODE_DPAD_UP:
+                break;
             case KeyEvent.KEYCODE_DPAD_DOWN:
 
                 WhatView.getInstance().whatOperation(rootview.findFocus(),false);
@@ -195,14 +247,44 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_DOWN){
-            if (System.currentTimeMillis()-firstTime>2000){
-                Toast.makeText(MainActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
-                firstTime=System.currentTimeMillis();
-            }else{
-                finish();
-            }
-            return true;
+
+        switch (keyCode){
+
+            case KeyEvent.KEYCODE_DPAD_UP:
+                isUpOrDown = false;
+                break;
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                isUpOrDown = true;
+                break;
+
+            case KeyEvent.KEYCODE_DPAD_LEFT: //向左键
+
+                if(btn_search.isFocused()){
+                    return true;
+                }
+
+                break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+
+                break;
+
+            case KeyEvent.KEYCODE_BACK:
+
+                if(HomeLayout.isCanBack){
+
+                    HomeLayout.isCanBack = false;
+                    EventBus.getDefault().post(new Event.HomeLayoutEvent());
+
+                    return true;
+                }
+
+                if (System.currentTimeMillis()-firstTime>2000){
+                    Toast.makeText(MainActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
+                    firstTime=System.currentTimeMillis();
+                }else{
+                    finish();
+                }
+                return true;
         }
         return super.onKeyDown(keyCode, event);
     }

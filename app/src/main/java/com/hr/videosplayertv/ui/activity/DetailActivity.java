@@ -108,24 +108,11 @@ public class DetailActivity extends BaseActivity {
     private List<VipSeries> VipSeriesList;
     private List<GuestSeries> GuestSeriesList;
 
-    @OnClick({R.id.btn_player,R.id.btn_collect,R.id.btn_like,R.id.btn_stamp,R.id.image_poster})
+    @OnClick({R.id.btn_player,R.id.btn_collect,R.id.btn_like,R.id.btn_stamp,R.id.haibao_layout})
     public void Onclick(View view){
         switch (view.getId()){
             case R.id.btn_player:
-                if(true){
-                    Intent intent = new Intent();
-                    intent.setClass(this,PlayerActivity.class);
-                    if(listDataMenuAdapter.getSelectData() != null){
-                        intent.putExtra("PLAYID",((VipSeries)listDataMenuAdapter.getSelectData()).getKey());
-                        startActivity(intent);
-                    } else  if(!CheckUtil.isEmpty(VipSeriesList)){
-                        intent.putExtra("PLAYID",VipSeriesList.get(0).getKey());
-                        startActivity(intent);
-                    }else {
-                        NToast.shortToastBaseApp("不能播放");
-                    }
-
-                }
+                boFang();
                 break;
             case R.id.btn_collect:
                 AddToScj();
@@ -136,21 +123,8 @@ public class DetailActivity extends BaseActivity {
             case R.id.btn_stamp:
                 VideoDisLike();
                 break;
-            case R.id.image_poster:
-                if(true){
-                    Intent intent = new Intent();
-                    intent.setClass(this,PlayerActivity.class);
-                    if(listDataMenuAdapter.getSelectData() != null){
-                        intent.putExtra("PLAYID",((VipSeries)listDataMenuAdapter.getSelectData()).getKey());
-                        startActivity(intent);
-                    } else  if(!CheckUtil.isEmpty(VipSeriesList)){
-                        intent.putExtra("PLAYID",VipSeriesList.get(0).getKey());
-                        startActivity(intent);
-                    }else {
-                        NToast.shortToastBaseApp("不能播放");
-                    }
-
-                }
+            case R.id.haibao_layout:
+                boFang();
                 break;
 
         }
@@ -185,7 +159,7 @@ public class DetailActivity extends BaseActivity {
                     if(newFocus.getId() == R.id.tab_layout){
                         return FocusBorder.OptionsFactory.get(1.0f, 1.0f, 0);
                     }
-                    if(newFocus.getId() == R.id.image_poster){
+                    if(newFocus.getId() == R.id.haibao_layout){
                         return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
                     }
                 }
@@ -209,6 +183,25 @@ public class DetailActivity extends BaseActivity {
         initData();
         setTab();
 
+    }
+
+    private void boFang(){
+        if(true){
+            Intent intent = new Intent();
+            intent.setClass(this,PlayerActivity.class);
+            if(listDataMenuAdapter.getSelectData() != null){
+                intent.putExtra("PLAYID",((VipSeries)listDataMenuAdapter.getSelectData()).getKey());
+                intent.putExtra("NAME",((VipSeries)listDataMenuAdapter.getSelectData()).getName());
+                startActivity(intent);
+            } else  if(!CheckUtil.isEmpty(VipSeriesList)){
+                intent.putExtra("PLAYID",VipSeriesList.get(0).getKey());
+                intent.putExtra("NAME",VipSeriesList.get(0).getName());
+                startActivity(intent);
+            }else {
+                NToast.shortToastBaseApp("不能播放");
+            }
+
+        }
     }
 
     private void initData(){
@@ -251,6 +244,7 @@ public class DetailActivity extends BaseActivity {
                 if(null != listDataMenuAdapter.getSelectView()){
                     listDataMenuAdapter.getSelectView().setActivated(true);
                 }
+                setShowOrDiss(false);
                 onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
 
             }
@@ -267,8 +261,10 @@ public class DetailActivity extends BaseActivity {
                 intent.setClass(DetailActivity.this,PlayerActivity.class);
                 if(o instanceof VipSeries){
                     intent.putExtra("PLAYID",((VipSeries) o).getKey());
+                    intent.putExtra("NAME",((VipSeries) o).getName());
                 }else if(o instanceof GuestSeries){
                     intent.putExtra("PLAYID",((GuestSeries) o).getKey());
+                    intent.putExtra("NAME",((GuestSeries) o).getName());
                 }
                 startActivity(intent);
 
@@ -280,6 +276,7 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                setShowOrDiss(false);
                 onMoveFocusBorder(itemView, 1.01f, DisplayUtils.dip2px(3));
             }
 
@@ -365,6 +362,13 @@ public class DetailActivity extends BaseActivity {
 
         }else {
           //  tabLayout.setVisibility(View.VISIBLE);
+
+            if(CheckUtil.isEmpty(VipSeriesList)){
+                tabLayout.setVisibility(View.GONE);
+                selectCollect.setVisibility(View.GONE);
+                return;
+            }
+
 
           int i = splitList(VipSeriesList,20).size();
 

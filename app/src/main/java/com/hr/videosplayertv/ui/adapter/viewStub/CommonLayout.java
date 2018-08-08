@@ -164,6 +164,7 @@ public class CommonLayout {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                mContext.setShowOrDiss(false);
                 mContext. onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
 
             }
@@ -172,6 +173,7 @@ public class CommonLayout {
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
                 Intent intent = new Intent(mContext, ListDataActivity.class);
                 intent.putExtra("TYPE",type);
+                intent.putExtra("SELECTddfdf",position);
                 mContext.startActivity(intent);
             }
         });

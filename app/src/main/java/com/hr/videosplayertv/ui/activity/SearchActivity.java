@@ -2,6 +2,7 @@ package com.hr.videosplayertv.ui.activity;
 
 import android.content.Intent;
 import android.graphics.RectF;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.hr.videosplayertv.widget.dialog.LoadingDialog;
 import com.hr.videosplayertv.widget.keyboard.SkbContainer;
 import com.hr.videosplayertv.widget.keyboard.SoftKey;
 import com.hr.videosplayertv.widget.keyboard.SoftKeyBoardListener;
+import com.hr.videosplayertv.widget.layout.AddLineLayout;
 import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -59,6 +61,8 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     SkbContainer skbContainer;
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
+    @BindView(R.id.addLayout)
+    AddLineLayout addLayout;
 
     private String type;
     private GridAdapter gridAdapter;
@@ -71,6 +75,10 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
     private String Tags = "A";
 
+    private String PID = null;
+
+    private boolean isCanBack = false;
+
     @Override
     public int getLayout() {
         return R.layout.activity_search;
@@ -80,8 +88,11 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     public void init() {
         super.init();
 
-        Intent intent = getIntent();
-        type = intent.getStringExtra("TYPE");
+        type = getIntent().getStringExtra("TYPE");
+        PID = getIntent().getStringExtra("PID");
+
+      //  NLog.e(NLog.TAGOther,"PID 搜索项目 ---> " + PID);
+
         if(!CheckUtil.isEmpty(type)){
             tvTitleChild.setText(type+getString(R.string.svp_search));
         }else {
@@ -212,6 +223,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                setShowOrDiss(true);
                 onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
             }
 
@@ -255,6 +267,9 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
                 return isMore; //是否还有更多数据
             }
         });
+
+        tvList.addOnScrollListener(mOnScrollListener);
+
     }
 
     private void load(String T){
@@ -264,6 +279,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
         Tags = T;
 
+        addLayout.showClick();
         Search();
     }
 
@@ -283,14 +299,21 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
                 ""+pageNo,
                 Tags
         );
+
+        if(!CheckUtil.isEmpty(PID)){
+            data.setCID(PID);
+        }
+
         baseService.Search(data, new HttpCallback<BaseResponse<BaseDataResponse<SearchList>>>() {
             @Override
             public void onError(HttpException e) {
+                addLayout.hideClick();
+
                 if(e.getCode() == 1){
                     NToast.shortToastBaseApp(e.getMsg());
                 }else {
-                    LoadingDialog.disMiss();
                 }
+
                 if(isLoadMore){
                     tvList.setLoadingMore(false);
                 }
@@ -299,7 +322,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
             @Override
             public void onSuccess(BaseResponse<BaseDataResponse<SearchList>> baseDataResponseBaseResponse) {
 
-
+                addLayout.hideClick();
                 List<WhatList>  whatLists = baseDataResponseBaseResponse.getData().getInfo().get(0).getResult();
                 setTvList(whatLists);
 
@@ -327,7 +350,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
             }else {
                 gridAdapter.clearDatas();
                 gridAdapter.notifyDataSetChanged();
-
+                addLayout.hideAndShowMessage(getString(R.string.svp_null_data));
             }
 
         }
@@ -391,8 +414,43 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
     SoftKey mOldSoftKey;
 
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
+            //是否滑到顶部
+            if(!recyclerView.canScrollVertically(-1)){
+                isCanBack = false;
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView rv, int i, int i2) {
+
+            if(i2 > 0){
+                isCanBack = true;
+            }
+
+        }
+
+    };
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+
+                if(isCanBack){
+                        NToast.shortToastBaseApp("返回顶部");
+                        tvList.setSelection(0);
+                        isCanBack = false;
+                        return true;
+                }
+
+                break;
+        }
+
         if (skbContainer.onSoftKeyDown(keyCode, event))
             return true;
 
@@ -440,6 +498,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
         isMore = true;
         isLoadMore = false;
         pageNo = 1;
+        tvList.setHasMoreData(true);
 
         load(stringBuffer.toString());
     }

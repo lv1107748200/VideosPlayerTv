@@ -79,7 +79,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -87,16 +87,25 @@
             >
 
             <com.owen.tvrecyclerview.widget.TvRecyclerView
-                android:layout_weight="1"
                 android:id="@+id/tv_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/TwoWayView"
                 android:orientation="vertical"
+                app:tv_selectedItemIsCentered="true"
                 app:spanCount="3"
                 app:tv_layoutManager="V7GridLayoutManager"/>
 
-        </LinearLayout>
+
+            <com.hr.videosplayertv.widget.layout.AddLineLayout
+                android:id="@+id/addLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                >
+            </com.hr.videosplayertv.widget.layout.AddLineLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 

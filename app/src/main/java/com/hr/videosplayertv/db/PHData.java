@@ -12,12 +12,30 @@ import io.realm.annotations.RealmClass;
 public class PHData implements RealmModel {
     @PrimaryKey
     private String ID;
+    private String key;
+    private String name;
     private String Contxt;
     private String ImgPath;
     private String Title;
     private String url;
-    private String time;
+    private long time;
     private long press;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getID() {
         return ID;
@@ -51,11 +69,11 @@ public class PHData implements RealmModel {
         Title = title;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

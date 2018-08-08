@@ -11,17 +11,25 @@
             android:layout_height="@dimen/x500"
             android:orientation="horizontal"
             >
+            <com.hr.videosplayertv.widget.layout.RoundFrameLayout
+                android:id="@+id/haibao_layout"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:rfl_radius="@dimen/rfl_radius"
+                android:layout_margin="@dimen/x40"
+                style="@style/RoundStyle">
                 <ImageView
-                    android:layout_weight="1"
-                    android:layout_margin="@dimen/x40"
-                    android:focusable="true"
-                    android:clickable="true"
+                    android:focusable="false"
                     android:id="@+id/image_poster"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/hehe"
                     android:scaleType="fitXY"
                     />
+
+            </com.hr.videosplayertv.widget.layout.RoundFrameLayout>
+
             <LinearLayout
                 android:layout_weight="1"
                 android:layout_width="match_parent"
@@ -46,6 +54,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:textColor="@color/c_f0f"
+                        style="@style/BaseTextStyleOne"
                         />
 
 
@@ -94,9 +103,9 @@
                     app:tabIndicatorGravity="bottom"
                     app:tabIndicatorHeight="@dimen/x4"
                     app:tabGravity="center"
-                    app:tabTexSize="16sp"
+                    app:tabTexSize="20sp"
                     app:tabTextColor="@drawable/selector_tab_font_color"
-                    app:tabScrollMode="fixed"/>
+                    app:tabScrollMode="scrollable"/>
 
             <com.owen.tvrecyclerview.widget.TvRecyclerView
                 android:paddingTop="@dimen/x20"
@@ -125,6 +134,7 @@
             android:text="评论："
             android:textColor="@color/c_f0f"
             android:layout_marginLeft="@dimen/x40"
+            style="@style/BaseTextStyleOne"
             />
         <ImageView
             android:duplicateParentState="true"

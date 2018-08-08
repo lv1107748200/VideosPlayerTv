@@ -1,6 +1,8 @@
 package com.hr.videosplayertv.ui.activity;
 
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,7 +27,10 @@ import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.NLog;
+import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.widget.dialog.LoadingDialog;
+import com.hr.videosplayertv.widget.layout.AddLineLayout;
 import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -38,6 +43,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 import static com.hr.videosplayertv.ui.adapter.GridAdapter.FAVORITELAYOUT;
 import static com.hr.videosplayertv.ui.adapter.GridAdapter.PLAYERRECORDLAYOUT;
@@ -57,13 +63,18 @@ public class DiversityActivity extends BaseActivity {
     TextView tvTitleChild;
     @BindView(R.id.tv_list)
     TvRecyclerView tvList;
+    @BindView(R.id.addLayout)
+    AddLineLayout addLayout;
+
 
     private boolean isMore = true;
     private boolean isLoadMore = false;
     private int pageNo = 1;
+    private boolean isCanBack = false;
 
 
     private GridAdapter gridAdapter;
+
 
     @Override
     public int getLayout() {
@@ -126,7 +137,8 @@ public class DiversityActivity extends BaseActivity {
                     case PLAYERRECORD:
                         if(o instanceof PHData){
                             intent.setClass(DiversityActivity.this,PlayerActivity.class);
-                            intent.putExtra("PLAYID",((PHData) o).getContxt());
+                            intent.putExtra("PLAYID",((PHData) o).getKey());
+                            intent.putExtra("NAME",((PHData) o).getName());
                             startActivity(intent);
                         }
                         break;
@@ -162,6 +174,7 @@ public class DiversityActivity extends BaseActivity {
                 return isMore; //是否还有更多数据
             }
         });
+        tvList.addOnScrollListener(mOnScrollListener);
     }
 
     private void load(){
@@ -170,9 +183,11 @@ public class DiversityActivity extends BaseActivity {
 
                 break;
             case FAVORITE:
+                addLayout.showClick();
              FavoriteList();
                 break;
             case PLAYERRECORD:
+                addLayout.showClick();
                 getPHData();
                 break;
         }
@@ -187,14 +202,26 @@ public class DiversityActivity extends BaseActivity {
                 new DBResultCallback<RealmResults<PHData>>(){
                     @Override
                     public void onSuccess(RealmResults<PHData> phData) {
+
+                        addLayout.hideClick();
+
                         if(!CheckUtil.isEmpty(phData)){
-                            gridAdapter.repaceDatas(phData);
+                            NLog.e(NLog.DB," 播放记录 --->" + phData.size());
+                            phData = phData.sort("time", Sort.DESCENDING);
+                            if(phData.size() >  100){
+                                gridAdapter.repaceDatas(phData.subList(0,100));
+                            }else {
+                                gridAdapter.repaceDatas(phData);
+                            }
+
+                        }else {
+                            addLayout.hideAndShowMessage(getString(R.string.svp_null_data));
                         }
                     }
 
                     @Override
                     public void onError(String errString) {
-
+                        addLayout.hideClick();
                     }
                 }.onCallback(phData);
             }
@@ -221,15 +248,20 @@ public class DiversityActivity extends BaseActivity {
         baseService.FavoriteList(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<FavoriteList>>>() {
             @Override
             public void onError(HttpException e) {
+
+                addLayout.hideClick();
+
                 if(e.getCode() == 1){
-                    LoadingDialog.showText(DiversityActivity.this,e.getMsg());
+                    NToast.shortToastBaseApp(e.getMsg());
                 }else {
-                    LoadingDialog.disMiss();
+
                 }
             }
 
             @Override
             public void onSuccess(BaseResponse<BaseDataResponse<FavoriteList>> baseDataResponseBaseResponse) {
+
+                addLayout.hideClick();
                 if(isLoadMore){
                     tvList.setLoadingMore(false);
                 }
@@ -255,11 +287,52 @@ public class DiversityActivity extends BaseActivity {
                     }else {
                         gridAdapter.clearDatas();
                         gridAdapter.notifyDataSetChanged();
+
+                        addLayout.hideAndShowMessage(getString(R.string.svp_null_data));
                     }
 
                 }
             }
         },DiversityActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
+            //是否滑到顶部
+            if(!recyclerView.canScrollVertically(-1)){
+                isCanBack = false;
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView rv, int i, int i2) {
+
+            if(i2 > 0){
+                isCanBack = true;
+            }
+
+        }
+
+    };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+
+                if(isCanBack){
+                    NToast.shortToastBaseApp("返回顶部");
+                    tvList.setSelection(0);
+                    isCanBack = false;
+                    return true;
+                }
+
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
 }

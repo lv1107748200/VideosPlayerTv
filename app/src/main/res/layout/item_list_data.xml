@@ -6,7 +6,10 @@
     android:layout_height="@dimen/x350"
     app:rfl_radius="@dimen/rfl_radius"
     android:focusable="true"
-    android:clickable="true">
+    android:clickable="true"
+    android:background="@drawable/foc_back_seven"
+    android:padding="@dimen/x4"
+    >
     <ImageView
         android:id="@+id/image"
         android:scaleType="fitXY"
@@ -17,12 +20,13 @@
         android:duplicateParentState="true"
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x60"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:textColor="@drawable/foc_tv_two"
         android:background="@drawable/foc_back_two"
         android:gravity="center"
         android:paddingLeft="@dimen/x10"
+        style="@style/BaseTextStyleOne"
         />
 
 </com.hr.videosplayertv.widget.layout.RoundFrameLayout>

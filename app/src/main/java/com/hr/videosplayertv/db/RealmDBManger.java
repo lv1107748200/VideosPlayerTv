@@ -53,6 +53,32 @@ public class RealmDBManger {
         return getRealmSingle(). mainHandler;
     }
 
+    public static void setInsertOrUpdateCreat(final RealmModel data, final DBResultCallback callback){
+
+        getRealmSingle().getMyRealm().executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+
+                bgRealm.copyToRealm(data);
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                if(null != callback){
+                    callback.onCallback(data);
+                }
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                if(null != callback){
+                    callback.onFail(error.getMessage());
+                }
+            }
+        });
+
+    }
+
 
 
     public static void setInsertOrUpdate(final RealmModel data, final DBResultCallback callback){

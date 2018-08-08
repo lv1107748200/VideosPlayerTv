@@ -6,14 +6,30 @@
     android:layout_height="match_parent">
     <include layout="@layout/layout_title_child"/>
 
-    <com.owen.tvrecyclerview.widget.TvRecyclerView
-        android:layout_weight="1"
-        android:id="@+id/tv_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="@style/TwoWayView"
-        android:orientation="vertical"
-        app:spanCount="5"
-        app:tv_layoutManager="V7GridLayoutManager"/>
+        android:layout_height="match_parent">
+        <com.owen.tvrecyclerview.widget.TvRecyclerView
+            android:id="@+id/tv_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/TwoWayView"
+            android:orientation="vertical"
+            app:spanCount="5"
+            app:tv_layoutManager="V7GridLayoutManager"
+            app:tv_selectedItemIsCentered="true"
+            />
+
+        <com.hr.videosplayertv.widget.layout.AddLineLayout
+            android:id="@+id/addLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            >
+        </com.hr.videosplayertv.widget.layout.AddLineLayout>
+
+
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -71,6 +71,8 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
 
     private float mScaleX;
     private float mScaleY;
+
+    private boolean isShowKuang = false;
     
     protected AbsFocusBorder(Context context, int shimmerColor, long shimmerDuration, boolean isShimmerAnim, long animDuration, RectF paddingOfsetRectF) {
         super(context);
@@ -318,14 +320,24 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
         }
     }
 
+    @Override
+    public void showOrDiss(boolean is) {
+        setShowKuang(is);
+    }
+
     private void runFocusAnimation(View focusView, Options options) {
         setVisible(true);
         mScaleX = options.scaleX;
         mScaleY = options.scaleY;
         runFocusScaleAnimation(focusView, mScaleX, mScaleY); // 焦点缩放动画
-       // runBorderAnimation(focusView, options); // 移动边框的动画。
+        if(isShowKuang)
+        runBorderAnimation(focusView, options); // 移动边框的动画。
     }
-    
+
+    public void setShowKuang(boolean showKuang) {
+        isShowKuang = showKuang;
+    }
+
     protected void runBorderAnimation(View focusView, Options options) {
         if(null == focusView)
             return;
@@ -438,7 +450,7 @@ public abstract class AbsFocusBorder extends View implements FocusBorder, ViewTr
             mShimmerAnimator = ObjectAnimator.ofFloat(this, "shimmerTranslate", -1f, 1f);
             mShimmerAnimator.setInterpolator(new LinearInterpolator());
             mShimmerAnimator.setDuration(mShimmerDuration);
-            mShimmerAnimator.setStartDelay(400);
+            mShimmerAnimator.setStartDelay(300);
             mShimmerAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {

@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:textColor="@drawable/foc_tv_four"
         android:gravity="center"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+        style="@style/BaseTextStyleOne" />
 
 </com.hr.videosplayertv.widget.layout.RoundFrameLayout>

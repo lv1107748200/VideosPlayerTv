@@ -270,6 +270,7 @@ public class ControlPlayer extends FrameLayout implements
         this.contextPlayer = context;
     }
     public void setTitle_video(String title) {
+        if(null != controlView)
         controlView.setTitle_video(title);
     }
     /**

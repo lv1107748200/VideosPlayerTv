@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:textColor="@drawable/foc_tv_two"
         android:text="好烂啊"
+        style="@style/BaseTextStyleOne"
         />
 
     <TextView
@@ -41,6 +42,7 @@
         android:textColor="@drawable/foc_tv_two"
         android:text="好烂啊"
         android:layout_marginRight="10dp"
+        style="@style/BaseTextStyleOne"
         />
 
 </com.hr.videosplayertv.widget.layout.RoundLineLayout>

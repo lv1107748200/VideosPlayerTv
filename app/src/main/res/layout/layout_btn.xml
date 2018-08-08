@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="false"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x400"
+        android:layout_marginTop="@dimen/x200"
+        >
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="暂无数据"
+            style="@style/BaseTextStyleTwo"
+            android:textColor="@color/c_f0f"
+            android:visibility="invisible"
+            />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:layout_gravity="center"
+            android:id="@+id/bufferingIndicator"
+            android:layout_width="@dimen/x120"
+            android:layout_height="@dimen/x120"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            android:padding="10dp"
+            app:indicatorColor="@color/c_f0f"
+            app:indicatorName="BallSpinFadeLoaderIndicator" />
+
+    </FrameLayout>
+
+
+
+
+</RelativeLayout>

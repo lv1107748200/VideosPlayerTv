@@ -21,6 +21,7 @@
     <string name="svp_collect">收藏</string>
     <string name="svp_like">点赞</string>
     <string name="svp_stamp">踩</string>
+    <string name="svp_null_data">暂无数据</string>
 
 
     <!-- 键盘自定义按键，这只是DEMO，你可以自定义自己的 -->
