@@ -10,30 +10,35 @@
     android:background="@drawable/foc_back_seven"
     android:padding="@dimen/x4"
     >
-    <ImageView
-        android:id="@+id/image"
-        android:scaleType="fitXY"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        />
-    <FrameLayout
+
+    <LinearLayout
+        android:duplicateParentState="true"
         android:id="@+id/classly_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-    </FrameLayout>
-
-    <TextView
-        android:duplicateParentState="true"
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@drawable/foc_tv_two"
+        android:layout_height="match_parent"
         android:gravity="center"
-       style="@style/BaseTextStyleTwo"
-        />
+        android:orientation="vertical"
+        android:background="@color/c_008"
+        >
+        <ImageView
+            android:id="@+id/image"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/x120"
+            android:layout_height="@dimen/x120"
+            android:layout_marginBottom="@dimen/x20"
+            />
+        <TextView
+            android:duplicateParentState="true"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@drawable/foc_tv_two"
+            android:gravity="center"
+            style="@style/BaseTextStyleTwo"
+            />
+    </LinearLayout>
+
+
 
 </com.hr.videosplayertv.widget.layout.RoundFrameLayout>

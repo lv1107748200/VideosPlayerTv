@@ -69,9 +69,10 @@ public class GridAdapter extends CommonRecyclerViewAdapter {
     public void onBindItemHolder(CommonRecyclerViewHolder helper, Object item, int position) {
 
         if(CLASSIFYLAYOUT == type){
-            if(item instanceof ListData)
-          //  helper.getHolder().setText(R.id.title,((ListData) item).getTitle());
-            helper.getHolder().getView(R.id.classly_layout).setBackgroundResource(((ListData) item).getBack());
+            if(item instanceof ListData){
+                helper.getHolder().setText(R.id.title,((ListData) item).getTitle());
+                helper.getHolder().getView(R.id.image).setBackgroundResource(((ListData) item).getBack());
+            }
 
         }else if(FAVORITELAYOUT == type){
             if(item instanceof Result)
@@ -97,5 +98,11 @@ public class GridAdapter extends CommonRecyclerViewAdapter {
                         .showImage(R.id.image, ImgDatasUtils.getUrl());
             }
         }
+    }
+
+    //左右移动删除的方法
+    public void Swiped(int adapterPosition) {
+        getmDatas().remove(adapterPosition);
+        this.notifyItemRemoved(adapterPosition);
     }
 }

@@ -2,7 +2,7 @@
 <com.hr.videosplayertv.widget.layout.RoundFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="@dimen/x280"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/x64"
     android:focusable="true"
     android:clickable="true"

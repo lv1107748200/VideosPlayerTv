@@ -1,5 +1,6 @@
 package com.hr.videosplayertv.utils;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 /**
@@ -56,5 +57,31 @@ public class Formatter {
 
         return finalStr;
 
+    }
+
+
+    public static float getScale(float wight,float hight,float padding){
+        float is=1.02f;
+
+        if(wight > 0){
+
+            if(hight > wight){
+                wight = hight;
+            }
+
+            DecimalFormat df = new DecimalFormat("#.00");
+
+            float f =  ((wight + padding * 2)/wight);
+           // NLog.e(NLog.TAGOther," itemView 的放大比例 ---> " + f);
+            is = Float.parseFloat(df.format(f));
+        }
+       // NLog.e(NLog.TAGOther," itemView 的放大比例 ---> " + is);
+
+        return is;
+    }
+
+    public static int  getRoundRadius(){
+
+        return DisplayUtils.dip2px(3);
     }
 }

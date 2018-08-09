@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.hr.videosplayertv.widget.layout.RoundLineLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:rfl_radius="@dimen/rfl_radius"
+        android:background="@color/c_687"
+        >
+
+        <ProgressBar
+            android:layout_marginTop="@dimen/x50"
+            style="@style/InitProgressBar"
+            android:layout_width="@dimen/x60"
+            android:layout_height="@dimen/x60"
+            android:id="@+id/progressBar"
+            />
+        <TextView
+            android:id="@+id/tv_dialog"
+            android:layout_marginTop="@dimen/x50"
+            android:layout_marginBottom="@dimen/x50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文本"
+            android:focusable="false"
+            android:textColor="@color/c_f0f"
+            style="@style/BaseTextStyleOne"
+            />
+
+        <LinearLayout
+            android:focusable="false"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x65"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutBF"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:focusable="true"
+                android:background="@drawable/foc_btn_two"
+                >
+                <TextView
+                    android:duplicateParentState="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="播放"
+                    android:textColor="@color/c_f0f"
+                    style="@style/BaseTextStyleOne"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutSC"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:focusable="true"
+                android:background="@drawable/foc_btn_one"
+                >
+                <TextView
+                    android:duplicateParentState="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="删除"
+                    android:textColor="@color/c_f0f"
+                    style="@style/BaseTextStyleOne"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutQX"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:focusable="true"
+                android:background="@drawable/foc_btn_three"
+                >
+                <TextView
+                    android:duplicateParentState="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="取消"
+                    android:textColor="@color/c_f0f"
+                    style="@style/BaseTextStyleOne"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.hr.videosplayertv.widget.layout.RoundLineLayout>
+
+
+
+</LinearLayout>

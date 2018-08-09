@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
@@ -27,9 +29,11 @@ import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.adapter.ListDataMenuAdapter;
+import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.Formatter;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.widget.dialog.LoadingDialog;
@@ -88,6 +92,8 @@ public class ListDataActivity extends BaseActivity {
 
     private boolean isCanBack = false;
 
+    private int itemHight = -1;
+
     @Override
     public int getLayout() {
         return R.layout.activity_list_data;
@@ -99,7 +105,15 @@ public class ListDataActivity extends BaseActivity {
 
         setListener();
         tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
-        gridAdapter = new GridAdapter(this);
+        gridAdapter = new GridAdapter(this){
+            @Override
+            public void onBindItemHolder(CommonRecyclerViewHolder helper, Object item, int position) {
+                if(itemHight != -1){
+                    helper.itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)itemHight));
+                }
+                super.onBindItemHolder(helper, item, position);
+            }
+        };
         tvList.setAdapter(gridAdapter);
 
         listMenu.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x10), 0);
@@ -189,6 +203,27 @@ public class ListDataActivity extends BaseActivity {
         });
     }
     private void setListener() {
+        tvList.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                tvList.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                //NLog.e(NLog.TAGOther,"tvlist 高度 ---》"+ tvList.getHeight());
+
+              itemHight = DisplayUtils.getWide(4,DisplayUtils.getDimen(R.dimen.x22),
+                      tvList.getPaddingBottom(),tvList.getWidth())/3;
+
+              itemHight = itemHight * 4;
+
+             // NLog.e(NLog.TAGOther,"tvlist 高度 ---》" + itemHight);
+
+              if(!CheckUtil.isEmpty(gridAdapter.getmDatas())){
+                  gridAdapter.notifyDataSetChanged();
+              }
+
+                return true;
+            }
+        });
 
         listMenu.setOnItemListener(new SimpleOnItemListener() {
 
@@ -238,7 +273,13 @@ public class ListDataActivity extends BaseActivity {
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 setShowOrDiss(true);
-                onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                onMoveFocusBorder(itemView,
+                        Formatter.getScale(
+                                itemView.getWidth()
+                                ,itemView.getHeight()
+                                ,DisplayUtils.getDimen(R.dimen.x15)
+                        ),
+                        Formatter.getRoundRadius());
             }
 
             @Override

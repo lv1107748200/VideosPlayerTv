@@ -22,6 +22,7 @@ import com.hr.videosplayertv.ui.adapter.viewStub.HomeLayout;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.DisplayUtils;
 import com.hr.videosplayertv.utils.FocusUtil;
+import com.hr.videosplayertv.utils.Formatter;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.widget.focus.FocusBorder;
 import com.hr.videosplayertv.widget.single.WhatView;
@@ -131,20 +132,16 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
 
                 if(null != newFocus){
 
-                  //  NLog.e(NLog.TAGOther," 主页面焦点问题 ---> " + newFocus.getId());
-
-                    if(newFocus.getId() == R.id.tag_flayout_one || newFocus.getId() == R.id.tag_flayout_two){
-                        return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
-                    }else {
-                        switch (newFocus.getId()){
+                    switch (newFocus.getId()){
                             case R.id.main_layout:
                                 return FocusBorder.OptionsFactory.get(1.0f, 1.0f, 0);
-                            case R.id.tag_flayout_three:
-                            case R.id.tag_flayout_four:
-                            case R.id.tag_flayout_five:
-                                return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
+                        case R.id.btn_search:
+                        case R.id.btn_personal_center:
+                            return FocusBorder.OptionsFactory.get(1.2f, 1.2f, 0);
+                          default:
+                              return FocusBorder.OptionsFactory.get(Formatter.getScale(newFocus.getWidth(),newFocus.getHeight(),DisplayUtils.getDimen(R.dimen.x15)),
+                                      Formatter.getScale(newFocus.getWidth(),newFocus.getHeight(),DisplayUtils.getDimen(R.dimen.x15)), Formatter.getRoundRadius());
                         }
-                    }
                 }
                 return FocusBorder.OptionsFactory.get(1.1f, 1.1f, 0); //返回null表示不使用焦点框框架
             }
@@ -202,6 +199,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
         listDataMenuAdapter.repaceDatas(listData);
         mainFragmentAdapter.upData(multipleFragments);
         mainMenu.setSelection(0);
+        tvViewPager.setCurrentItem(0,false);
     }
 
     @Override

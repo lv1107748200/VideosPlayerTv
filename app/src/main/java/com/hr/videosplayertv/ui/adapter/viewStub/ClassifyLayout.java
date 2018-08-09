@@ -12,6 +12,7 @@ import com.hr.videosplayertv.ui.activity.ListDataActivity;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.Formatter;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.widget.page.PagerGridLayoutManager;
 import com.hr.videosplayertv.widget.page.PagerGridSnapHelper;
@@ -92,7 +93,9 @@ public class ClassifyLayout {
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 mContext.setShowOrDiss(true);
-                mContext.onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                mContext.onMoveFocusBorder(itemView,
+                        Formatter.getScale(itemView.getWidth(),itemView.getHeight(),DisplayUtils.getDimen(R.dimen.x15)),
+                        Formatter.getRoundRadius());
             }
 
             @Override

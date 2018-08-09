@@ -12,7 +12,6 @@
         android:scrollbars="vertical"
         android:clipToPadding="true"
         style="@style/ThreeWayView"
-        app:tv_selectedItemIsCentered="true"
         />
 
 </FrameLayout>

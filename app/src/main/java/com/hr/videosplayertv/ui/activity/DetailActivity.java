@@ -123,9 +123,9 @@ public class DetailActivity extends BaseActivity {
             case R.id.btn_stamp:
                 VideoDisLike();
                 break;
-            case R.id.haibao_layout:
-                boFang();
-                break;
+//            case R.id.haibao_layout:
+//                boFang();
+//                break;
 
         }
     }
@@ -158,9 +158,6 @@ public class DetailActivity extends BaseActivity {
                 if(null != newFocus){
                     if(newFocus.getId() == R.id.tab_layout){
                         return FocusBorder.OptionsFactory.get(1.0f, 1.0f, 0);
-                    }
-                    if(newFocus.getId() == R.id.haibao_layout){
-                        return FocusBorder.OptionsFactory.get(1.05f, 1.05f, 0);
                     }
                 }
 

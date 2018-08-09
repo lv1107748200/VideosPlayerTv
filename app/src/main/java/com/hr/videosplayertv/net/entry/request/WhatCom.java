@@ -81,6 +81,7 @@ public class WhatCom extends BaseDataRequest {
     private int Isindex;
 
     private String VideoID;
+    private String Favoriteids;
 
     public String getPageSize() {
         return PageSize;
@@ -143,5 +144,13 @@ public class WhatCom extends BaseDataRequest {
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public String getFavoriteids() {
+        return Favoriteids;
+    }
+
+    public void setFavoriteids(String favoriteids) {
+        Favoriteids = favoriteids;
     }
 }

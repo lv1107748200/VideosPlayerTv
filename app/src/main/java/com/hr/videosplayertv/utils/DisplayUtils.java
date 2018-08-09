@@ -158,4 +158,12 @@ public class DisplayUtils {
       return weid/ge;
 
     }
+
+    public static int getWide(int ge,int pssding,int ether,int wight){
+
+        int weid = wight  - ((ge-1)*pssding + 2 * ether);
+       // NLog.e(NLog.TAGOther,"参数 --->"+ ge +"  " + pssding+"  "  + ether+"  "  + wight+"  "+weid/ge);
+        return weid/ge;
+
+    }
 }

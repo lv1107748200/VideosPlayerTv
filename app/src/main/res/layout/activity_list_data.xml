@@ -16,7 +16,7 @@
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:layout_marginLeft="@dimen/x60"
             android:id="@+id/list_menu"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/x360"
             android:layout_height="match_parent"
             android:padding="@dimen/x40"
             app:tv_selectedItemIsCentered="true"

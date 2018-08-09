@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.ColorUtils;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.FocusUtil;
+import com.hr.videosplayertv.utils.Formatter;
 import com.hr.videosplayertv.utils.GlideUtil;
 import com.hr.videosplayertv.utils.ImgDatasUtils;
 import com.hr.videosplayertv.utils.NLog;
@@ -59,6 +62,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -75,6 +79,7 @@ public class HomeLayout {
     private BaseActivity mContext;
     private BaseFragment baseFragment;
     private Map<String,List> homePagesListMap;
+    private VirtualLayoutManager layoutManager;
 
    // List<DelegateAdapter.Adapter> adapters;
 
@@ -89,6 +94,8 @@ public class HomeLayout {
     public static boolean isUp = false; //鸡肋判断
     public static boolean isCanBack = false;
 
+    private int listHight = -1;
+
     public HomeLayout(View view , BaseFragment baseFragment) {
         ButterKnife.bind(this,view);
         EventBus.getDefault().register(this);
@@ -97,7 +104,7 @@ public class HomeLayout {
         this.baseFragment = baseFragment;
         setListener();
 
-        final VirtualLayoutManager layoutManager = new VirtualLayoutManager(mContext);
+        layoutManager = new VirtualLayoutManager(mContext);
         tvList.setLayoutManager(layoutManager);
         delegateAdapter = new DelegateAdapter(layoutManager, true);
         tvList.setAdapter(delegateAdapter);
@@ -109,6 +116,17 @@ public class HomeLayout {
     }
 
     private void setListener() {
+        tvList.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                tvList.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                //NLog.e(NLog.TAGOther,"tvlist 高度 ---》"+ tvList.getHeight());
+                listHight = tvList.getHeight();
+
+                return true;
+            }
+        });
 
 
         tvList.setOnItemListener(new SimpleOnItemListener() {
@@ -140,23 +158,34 @@ public class HomeLayout {
 
 
                 mContext.setShowOrDiss(true);
-                if(position < 8){
-                    mContext. onMoveFocusBorder(itemView, 1.05f, DisplayUtils.dip2px(3));
-                }else {
+//                if(position < 8){
+//                    mContext.onMoveFocusBorder(itemView, 1.05f, DisplayUtils.dip2px(3));
+//                }else {
                     if(itemView.getId() == R.id.title_layout){
-                        mContext. onMoveFocusBorder(itemView, 1.0f, 0);
+                        mContext.onMoveFocusBorder(itemView, 1.0f, 0);
 
-                        NLog.e(NLog.TAGOther," HomeLayout title 上下滚动 ---> " + isUpOrDown);
+                       // NLog.e(NLog.TAGOther," HomeLayout title 上下滚动 ---> " + isUpOrDown);
+                        int offset = 0;
+                        if(-1 != listHight){
+                            offset = listHight/2;
+                        }
                         if(isUpOrDown){
                             tvList.setSelection(position + 1);
+                            //layoutManager.scrollToPositionWithOffset(position + 1,0);
                         }else {
                             tvList.setSelection(position - 1);
+                            //layoutManager.scrollToPositionWithOffset(position - 1,0);
                         }
 
                     }else {
-                        mContext. onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                       // NLog.e(NLog.TAGOther," itemView 的宽度 ---> " + itemView.getWidth());
+
+                        mContext.onMoveFocusBorder(itemView,
+                                Formatter.getScale(itemView.getWidth(),itemView.getHeight(),DisplayUtils.getDimen(R.dimen.x15)),
+                                Formatter.getRoundRadius());
+
                     }
-                }
+               // }
 
 
             }
@@ -252,6 +281,10 @@ public class HomeLayout {
 
                             }
                             if(true){
+
+//                                int wight = DisplayUtils.getWide(7,DisplayUtils.getDimen(R.dimen.x20)
+//                                        ,DisplayUtils.getDimen(R.dimen.x40))/3;
+
                                 VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x180));
                                  GridLayoutHelper helper = new GridLayoutHelper(7, list.size(),DisplayUtils.getDimen(R.dimen.x20));
                                 adapters.add(new SubAdapter(mContext, helper, 7,c.getKey(),list,layoutParams) {
@@ -275,7 +308,11 @@ public class HomeLayout {
 
                             }
                             if(true){
-                                VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.getDimen(R.dimen.x280));
+
+                                int wight = DisplayUtils.getWide(6,DisplayUtils.getDimen(R.dimen.x20)
+                                        ,DisplayUtils.getDimen(R.dimen.x40))/3;
+
+                                VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, wight*4);
                                 GridLayoutHelper helper = new GridLayoutHelper(6, list.size(),DisplayUtils.getDimen(R.dimen.x20));
                                 adapters.add(new SubAdapter(mContext, helper, 7,c.getKey(),list,layoutParams) {
                                     @Override
@@ -494,14 +531,14 @@ public class HomeLayout {
 
                 if(!CheckUtil.isEmpty(whatLists)){
 
-                    if(whatLists.size() == 13){
-                        if(whatLists.size() >= 8){
+                    if(whatLists.size() >= 13){
+
                             setUpData(ImmobilizationData.HomePages.HEAD.getKey(),whatLists.subList(0, 8));
 
                             setUpData(ImmobilizationData.HomePages.REC.getKey(),whatLists.subList(6, 13));
 
                             setDelegateAdapter();
-                        }
+
                     }else {
                         if(whatLists.size() >= 8){
                             setUpData(ImmobilizationData.HomePages.HEAD.getKey(),whatLists.subList(0, 8));

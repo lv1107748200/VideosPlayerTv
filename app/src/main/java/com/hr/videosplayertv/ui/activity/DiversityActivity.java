@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.hr.videosplayertv.R;
@@ -25,11 +27,14 @@ import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
+import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.Formatter;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.widget.dialog.LoadingDialog;
+import com.hr.videosplayertv.widget.dialog.OperationDialog;
 import com.hr.videosplayertv.widget.layout.AddLineLayout;
 import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
@@ -51,7 +56,7 @@ import static com.hr.videosplayertv.ui.adapter.GridAdapter.PLAYERRECORDLAYOUT;
 /**
  * 播放记录，收藏。。。
  */
-public class DiversityActivity extends BaseActivity {
+public class DiversityActivity extends BaseActivity implements OperationDialog.DiaLogCallBack {
 
     public final static int HISTORIESRECORD = 1001;//历史记录
     public final static int FAVORITE = 1002;//收藏夹
@@ -71,10 +76,14 @@ public class DiversityActivity extends BaseActivity {
     private boolean isLoadMore = false;
     private int pageNo = 1;
     private boolean isCanBack = false;
-
+    private int itemHight = -1;
 
     private GridAdapter gridAdapter;
 
+    private OperationDialog operationDialog;
+
+    private Result result;
+    private int deleteNumber = -1;
 
     @Override
     public int getLayout() {
@@ -85,7 +94,7 @@ public class DiversityActivity extends BaseActivity {
     public void init() {
         super.init();
 
-         type = getIntent().getIntExtra("DiversityType",-1);
+        type = getIntent().getIntExtra("DiversityType",-1);
         setListener();
         tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
 
@@ -94,12 +103,29 @@ public class DiversityActivity extends BaseActivity {
                 tvTitleChild.setText(getString(R.string.svp_histories));
                 break;
             case FAVORITE:
+                operationDialog = new OperationDialog(this).setCallBack(this).creatDialog();
                 tvTitleChild.setText(getString(R.string.svp_favorite));
-                gridAdapter = new GridAdapter(this,FAVORITELAYOUT);
+                gridAdapter = new GridAdapter(this,FAVORITELAYOUT){
+                    @Override
+                    public void onBindItemHolder(CommonRecyclerViewHolder helper, Object item, int position) {
+                        if(itemHight != -1){
+                            helper.itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)itemHight));
+                        }
+                        super.onBindItemHolder(helper, item, position);
+                    }
+                };
                 break;
             case PLAYERRECORD:
                 tvTitleChild.setText(getString(R.string.svp_recently_played_videos));
-                gridAdapter = new GridAdapter(this,PLAYERRECORDLAYOUT);
+                gridAdapter = new GridAdapter(this,PLAYERRECORDLAYOUT){
+                    @Override
+                    public void onBindItemHolder(CommonRecyclerViewHolder helper, Object item, int position) {
+                        if(itemHight != -1){
+                            helper.itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)itemHight));
+                        }
+                        super.onBindItemHolder(helper, item, position);
+                    }
+                };
                 break;
 
         }
@@ -108,14 +134,66 @@ public class DiversityActivity extends BaseActivity {
         load();
     }
 
-    private void setListener() {
+    @Override
+    public void BFCallBack() {
+                     if(result != null){
+                         Intent intent = new Intent();
+                         intent.setClass(DiversityActivity.this,DetailActivity.class);
+                         intent.putExtra("Iddddd",new Iddddd(result.getVideoID(),result.getSecretVID()));
+                         startActivity(intent);
+                     }
+    }
 
+    @Override
+    public void SCCallBack() {
+
+        if(null != result){
+            operationDialog.ShanChu("... 正在删除 ...");
+            RemoveFavorite(result.getFavoriteID()+"",deleteNumber);
+        }else {
+            if(null != operationDialog){
+                operationDialog.ShanChuOr(false,"删除失败");
+            }
+        }
+
+
+    }
+
+    private void setListener() {
+        tvList.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+
+                tvList.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                //NLog.e(NLog.TAGOther,"tvlist 高度 ---》"+ tvList.getHeight());
+
+                itemHight = DisplayUtils.getWide(5,DisplayUtils.getDimen(R.dimen.x22),
+                        tvList.getPaddingBottom(),tvList.getWidth())/3;
+
+                itemHight = itemHight * 4;
+
+                // NLog.e(NLog.TAGOther,"tvlist 高度 ---》" + itemHight);
+
+                if(!CheckUtil.isEmpty(gridAdapter.getmDatas())){
+                    gridAdapter.notifyDataSetChanged();
+                }
+
+                return true;
+            }
+        });
 
         tvList.setOnItemListener(new SimpleOnItemListener() {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                onMoveFocusBorder(itemView,
+                        Formatter.getScale(
+                                itemView.getWidth()
+                                ,itemView.getHeight()
+                                ,DisplayUtils.getDimen(R.dimen.x15)
+                        ),
+                        Formatter.getRoundRadius());
             }
 
             @Override
@@ -127,20 +205,26 @@ public class DiversityActivity extends BaseActivity {
 
                         break;
                     case FAVORITE:
+                        deleteNumber = position;
+                         if(o instanceof Result){
+                           result = (Result) o;
+                         }
 
-                     if(o instanceof Result){
-                         intent.setClass(DiversityActivity.this,DetailActivity.class);
-                         intent.putExtra("Iddddd",new Iddddd(((Result) o).getVideoID(),((Result) o).getSecretVID()));
-                         startActivity(intent);
-                     }
+                        if(null != operationDialog){
+
+                            operationDialog.show(result.getTitle());
+                        }
+
                         break;
                     case PLAYERRECORD:
+
                         if(o instanceof PHData){
                             intent.setClass(DiversityActivity.this,PlayerActivity.class);
                             intent.putExtra("PLAYID",((PHData) o).getKey());
                             intent.putExtra("NAME",((PHData) o).getName());
                             startActivity(intent);
                         }
+
                         break;
                 }
 
@@ -292,6 +376,47 @@ public class DiversityActivity extends BaseActivity {
                     }
 
                 }
+            }
+        },DiversityActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+//删除收藏
+    private void RemoveFavorite(String Favoriteids, final int number){
+
+        UserToken userToken = UserInfoManger.getInstance().getUserToken();
+        if(null == userToken && null != Favoriteids){
+            return;
+        }
+        WhatCom whatCom = new WhatCom(
+                UserInfoManger.getInstance().getToken(),
+                null,
+                userToken.getUID(),
+                userToken.getGID(),
+                userToken.getSign(),
+                userToken.getExpire()
+        );
+        whatCom.setFavoriteids(Favoriteids);
+
+        baseService.RemoveFavorite(whatCom, new HttpCallback<BaseResponse<BaseDataResponse<String>>>() {
+            @Override
+            public void onError(HttpException e) {
+                if(e.getCode() == 1){
+
+                    if(null != operationDialog){
+                        operationDialog.ShanChuOr(false,e.getMsg());
+                    }
+
+                }else {
+                    if(null != operationDialog){
+                        operationDialog.ShanChuOr(false,"删除失败");
+                    }
+                }
+            }
+
+            @Override
+            public void onSuccess(BaseResponse<BaseDataResponse<String>> baseDataResponseBaseResponse) {
+                operationDialog.ShanChuOr(true,"删除成功");
+                gridAdapter.Swiped(number);
+
             }
         },DiversityActivity.this.bindUntilEvent(ActivityEvent.DESTROY));
     }

@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +26,11 @@ import com.hr.videosplayertv.net.entry.response.WhatList;
 import com.hr.videosplayertv.net.http.HttpCallback;
 import com.hr.videosplayertv.net.http.HttpException;
 import com.hr.videosplayertv.ui.adapter.GridAdapter;
+import com.hr.videosplayertv.ui.adapter.base.CommonRecyclerViewHolder;
 import com.hr.videosplayertv.ui.fragment.MultipleFragment;
 import com.hr.videosplayertv.utils.CheckUtil;
 import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.Formatter;
 import com.hr.videosplayertv.utils.NLog;
 import com.hr.videosplayertv.utils.NToast;
 import com.hr.videosplayertv.widget.AffPasWindow;
@@ -78,6 +82,7 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
     private String PID = null;
 
     private boolean isCanBack = false;
+    private int itemHight = -1;
 
     @Override
     public int getLayout() {
@@ -198,7 +203,15 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
         setListener();
         tvList.setSpacingWithMargins(DisplayUtils.getDimen(R.dimen.x22), DisplayUtils.getDimen(R.dimen.x22));
-        gridAdapter = new GridAdapter(this);
+        gridAdapter = new GridAdapter(this){
+            @Override
+            public void onBindItemHolder(CommonRecyclerViewHolder helper, Object item, int position) {
+                if(itemHight != -1){
+                    helper.itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)itemHight));
+                }
+                super.onBindItemHolder(helper, item, position);
+            }
+        };
         tvList.setAdapter(gridAdapter);
 
        // initData();
@@ -218,13 +231,39 @@ public class SearchActivity extends BaseActivity implements AffPasWindow.AffPasW
 
     private void setListener() {
 
+        tvList.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                tvList.getViewTreeObserver().removeOnPreDrawListener(this);
 
+                //NLog.e(NLog.TAGOther,"tvlist 高度 ---》"+ tvList.getHeight());
+
+                itemHight = DisplayUtils.getWide(3,DisplayUtils.getDimen(R.dimen.x22),
+                        tvList.getPaddingBottom(),tvList.getWidth())/3;
+
+                itemHight = itemHight * 4;
+
+                // NLog.e(NLog.TAGOther,"tvlist 高度 ---》" + itemHight);
+
+                if(!CheckUtil.isEmpty(gridAdapter.getmDatas())){
+                    gridAdapter.notifyDataSetChanged();
+                }
+
+                return true;
+            }
+        });
         tvList.setOnItemListener(new SimpleOnItemListener() {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 setShowOrDiss(true);
-                onMoveFocusBorder(itemView, 1.1f, DisplayUtils.dip2px(3));
+                onMoveFocusBorder(itemView,
+                        Formatter.getScale(
+                                itemView.getWidth()
+                                ,itemView.getHeight()
+                                ,DisplayUtils.getDimen(R.dimen.x15)
+                        ),
+                        Formatter.getRoundRadius());
             }
 
             @Override
