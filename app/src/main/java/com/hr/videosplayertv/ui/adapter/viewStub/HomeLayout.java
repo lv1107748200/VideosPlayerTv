@@ -96,7 +96,7 @@ public class HomeLayout {
 
     private int listHight = -1;
 
-    public HomeLayout(View view , BaseFragment baseFragment) {
+    public  HomeLayout(View view , BaseFragment baseFragment) {
         ButterKnife.bind(this,view);
         EventBus.getDefault().register(this);
 
