@@ -3,6 +3,7 @@ package com.hr.videosplayertv.ui.adapter.viewStub;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v17.leanback.widget.VerticalGridView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -74,7 +75,7 @@ import butterknife.ButterKnife;
 
 public class HomeLayout {
     @BindView(R.id.tv_list)
-    TvRecyclerView tvList;
+    VerticalGridView tvList;
     private DelegateAdapter delegateAdapter;
     private BaseActivity mContext;
     private BaseFragment baseFragment;
@@ -224,8 +225,6 @@ public class HomeLayout {
         isMore = true;
         isLoadMore = false;
          pageNo = 3;
-        tvList.setLoadingMore(false);
-        tvList.setHasMoreData(true);
 
         setSimulationData();//模拟数据
 

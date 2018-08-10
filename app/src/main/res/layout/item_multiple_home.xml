@@ -3,15 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.owen.tvrecyclerview.widget.TvRecyclerView
-        android:id="@+id/tv_list"
+    <android.support.v17.leanback.widget.VerticalGridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:requiresFadingEdge="none"
-        android:scrollbars="vertical"
-        android:clipToPadding="true"
         style="@style/ThreeWayView"
-        />
+        android:id="@+id/tv_list"
+        >
+
+    </android.support.v17.leanback.widget.VerticalGridView>
 
 </FrameLayout>
