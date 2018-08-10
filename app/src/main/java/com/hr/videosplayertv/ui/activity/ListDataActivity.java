@@ -41,6 +41,7 @@ import com.hr.videosplayertv.widget.layout.AddLineLayout;
 import com.hr.videosplayertv.widget.single.UserInfoManger;
 import com.owen.tvrecyclerview.widget.SimpleOnItemListener;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
@@ -93,6 +94,8 @@ public class ListDataActivity extends BaseActivity {
     private boolean isCanBack = false;
 
     private int itemHight = -1;
+
+
 
     @Override
     public int getLayout() {
@@ -229,6 +232,7 @@ public class ListDataActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+
                 setShowOrDiss(false);
                 onMoveFocusBorder(itemView, 1.0f, DisplayUtils.dip2px(3));
 

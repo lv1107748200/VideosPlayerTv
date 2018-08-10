@@ -2,7 +2,9 @@ package com.hr.videosplayertv.ui.activity;
 
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -97,6 +99,12 @@ public class MainActivity extends BaseActivity implements BaseFragment.FocusBord
 
                 break;
         }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+       // super.onSaveInstanceState(outState);
     }
 
     @Override
