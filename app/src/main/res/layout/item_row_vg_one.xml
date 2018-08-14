@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v17.leanback.widget.VerticalGridView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/row_vg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x300"
+        android:orientation="vertical"
+        >
+
+</android.support.v17.leanback.widget.VerticalGridView>

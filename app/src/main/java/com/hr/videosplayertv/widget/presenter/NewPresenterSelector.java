@@ -6,12 +6,15 @@ import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.PresenterSelector;
 
+import static android.support.v17.leanback.widget.FocusHighlight.ZOOM_FACTOR_NONE;
+import static android.support.v17.leanback.widget.FocusHighlight.ZOOM_FACTOR_SMALL;
+
 /**
  * 多个选择器.
  */
 public class NewPresenterSelector extends PresenterSelector {
     private ListRowPresenter mListRowPresenter = new ListRowPresenter();
-    private NewListRowPresenter mShadowDisabledRowPresenter = new NewListRowPresenter();
+    private NewListRowPresenter mShadowDisabledRowPresenter = new NewListRowPresenter(ZOOM_FACTOR_NONE);
     private InvisibleRowPresenter mTestRowPresenter = new InvisibleRowPresenter();
 
     public NewPresenterSelector() {
@@ -24,8 +27,7 @@ public class NewPresenterSelector extends PresenterSelector {
 
     @Override
     public Presenter getPresenter(Object item) {
-        ListRow listRow = (ListRow) item;
-        if ((item instanceof ButtonListRow))
+        if ((item instanceof HeadListRow))
             return mTestRowPresenter;
 
         return mShadowDisabledRowPresenter;

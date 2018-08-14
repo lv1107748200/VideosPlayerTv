@@ -13,12 +13,26 @@
  */
 package com.hr.videosplayertv.widget.presenter;
 
+import android.support.v17.leanback.transition.TransitionHelper;
+import android.support.v17.leanback.widget.ArrayObjectAdapter;
+import android.support.v17.leanback.widget.ItemBridgeAdapter;
+import android.support.v17.leanback.widget.ListRow;
+import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.support.v17.leanback.widget.VerticalGridView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.hr.videosplayertv.R;
+import com.hr.videosplayertv.ui.adapter.SubAdapter;
+import com.hr.videosplayertv.utils.DisplayUtils;
+import com.hr.videosplayertv.utils.NLog;
+
+import java.util.List;
 
 
 /**
@@ -35,30 +49,22 @@ public class InvisibleRowPresenter extends RowPresenter {
      */
     @Override
     protected ViewHolder createRowViewHolder(ViewGroup parent) {
-//        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.test_patch_wall_view,
-//                null, false);
-        return new ViewHolder(null);
-    }
+        LinearLayout root = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_head,
+                null, false);
+        int wight = DisplayUtils.getWide(1,DisplayUtils.getDimen(R.dimen.x20)
+                ,DisplayUtils.getDimen(R.dimen.x40));
 
+        root.setLayoutParams(new ViewGroup.LayoutParams(wight
+                , DisplayUtils.getDimen(R.dimen.x550)));
+        return new ViewHolder(root);
+    }
     @Override
     protected void onBindRowViewHolder(RowPresenter.ViewHolder holder, Object item) {
         super.onBindRowViewHolder(holder, item);
-        ViewGroup vg = (ViewGroup) holder.view;
-        for (int i = 0; i < vg.getChildCount(); i++) {
-            View childView = vg.getChildAt(i);
-            childView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        v.animate().scaleY(1.2f).scaleX(1.2f).start();
-                    } else {
-                        v.animate().scaleY(1.0f).scaleX(1.0f).start();
-                    }
-                }
-            });
-        }
-    }
 
+
+
+    }
 
     @Override
     protected void onUnbindRowViewHolder(ViewHolder holder) {

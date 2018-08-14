@@ -86,7 +86,7 @@ dependencies {
     implementation externalAndroidAppCompatV7
     implementation externalAndroidSupportV4
     implementation externalAndroidConstraintLayout
-    implementation leanbackv17
+    api leanbackv17
     implementation externalAndroidDesign
     testImplementation externalJunit
     androidTestImplementation externalAndroidTestRunner
