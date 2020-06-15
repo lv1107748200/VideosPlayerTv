@@ -57,7 +57,7 @@ import static com.hr.videosplayertv.ui.adapter.viewStub.HomeLayout.isUpOrDown;
 
 public class MainActivity extends BaseActivity implements BaseFragment.FocusBorderHelper {
 
-    private MainFragmentAdapter mainFragmentAdapter;
+    private MainFragmentAdapter  mainFragmentAdapter;
     private List<MultipleFragment> multipleFragments;
 
     private ListDataMenuAdapter listDataMenuAdapter;
